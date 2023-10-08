@@ -18,14 +18,14 @@ export interface Anime extends AnimeFields {
   id: number;
 }
 
-enum Subtype {
+export enum Subtype {
   ONA = 'ONA',
   OVA = 'OVA',
   TV = 'TV',
   MOVIE = 'movie',
 }
 
-enum Status {
+export enum Status {
   current = 'current',
   finished = 'finished',
 }

@@ -1,4 +1,4 @@
-import { Anime } from '@/types/animes';
+import { Anime } from '@/types/anime-types';
 
 export interface AnimesResponse {
   success: boolean;

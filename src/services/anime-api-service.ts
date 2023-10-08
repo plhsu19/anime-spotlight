@@ -1,10 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
 import { AnimeResponse, AnimesResponse, DeleteAnimeRespone } from '@/types/anime-api-service-types';
-import { AnimeFields } from '@/types/animes';
+import { AnimeFields } from '@/types/anime-types';
 
-class AnimesApiService {
+class AnimeApiService {
   private restClient: AxiosInstance;
   private static TIMEOUT: number = 30000;
+  
   // move host host to .env
   private static DEVELOPMENT_BASE_URL: string = 'http://localhost:8080';
   private static PRODUCTION_BASE_URL: string = 'http://production-host';
@@ -14,28 +15,28 @@ class AnimesApiService {
     this.restClient = axios.create({
       baseURL:
         process.env.NODE_ENV === 'development'
-          ? AnimesApiService.DEVELOPMENT_BASE_URL
-          : AnimesApiService.PRODUCTION_BASE_URL,
-      timeout: AnimesApiService.TIMEOUT,
+          ? AnimeApiService.DEVELOPMENT_BASE_URL
+          : AnimeApiService.PRODUCTION_BASE_URL,
+      timeout: AnimeApiService.TIMEOUT,
     });
   }
 
   // get anime list
   public async getAnimes(): Promise<AnimesResponse> {
-    const response = await this.restClient.get(`${AnimesApiService.URL}`);
+    const response = await this.restClient.get(`${AnimeApiService.URL}`);
     return response.data;
   }
 
   // get anime by id
   public async getAnimeById(id: number): Promise<AnimeResponse> {
-    const response = await this.restClient.get(`${AnimesApiService.URL}/${id}`);
+    const response = await this.restClient.get(`${AnimeApiService.URL}/${id}`);
     return response.data;
   }
 
   // create anime
   public async createAnime(animeFields: AnimeFields): Promise<AnimeResponse> {
     const response = await this.restClient.post(
-      `${AnimesApiService.URL}`,
+      `${AnimeApiService.URL}`,
       animeFields,
     );
     return response.data;
@@ -46,8 +47,8 @@ class AnimesApiService {
     id: number,
     animeFields: AnimeFields,
   ): Promise<AnimeResponse> {
-    const response = await this.restClient.post(
-      `${AnimesApiService.URL}/${id}`,
+    const response = await this.restClient.put(
+      `${AnimeApiService.URL}/${id}`,
       animeFields,
     );
     return response.data;
@@ -55,11 +56,11 @@ class AnimesApiService {
 
   // delete anime by id
   public async deleteAnimeById(id: number): Promise<DeleteAnimeRespone> {
-    const response = await this.restClient.delete(`${AnimesApiService.URL}/${id}`);
+    const response = await this.restClient.delete(`${AnimeApiService.URL}/${id}`);
     return response.data;
   }
 }
 
-const animesApiService = new AnimesApiService();
+const animeApiService = new AnimeApiService();
 
-export default animesApiService;
+export default animeApiService;
