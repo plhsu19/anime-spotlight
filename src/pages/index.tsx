@@ -3,7 +3,7 @@ import styles from '@/styles/Home.module.css';
 import { Button, Grid, List, Stack } from '@mui/material';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AnimeContext from '@/contexts/anime-context';
 import { Anime } from '@/types/anime-types';
 
@@ -23,12 +23,13 @@ export default function Home(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const { state, setAnimes } = useContext(AnimeContext);
-  console.log('initial state animes in context', state.animes);
+  // const [stateAnimes, setStateAnimes] = useState(props.animes);
+  console.log('initial context animes', state.animes);
 
-  useEffect(() => {
-    console.log('useEffect: state.animes', state.animes);
-    setAnimes(props.animes);
-  }, []);
+  // useEffect(() => {
+  //   console.log('useEffect: state.animes', state.animes);
+  //   setAnimes(props.animes);
+  // }, []);
 
   return (
     <>

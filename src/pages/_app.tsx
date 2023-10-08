@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <AnimeProvider>
+      <AnimeProvider initialAnimes={pageProps.animes}>
         <Component {...pageProps} />
       </AnimeProvider>
     </ThemeProvider>

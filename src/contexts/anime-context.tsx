@@ -4,11 +4,11 @@ import animeApiService from '@/services/anime-api-service';
 
 const AnimeContext = createContext(null);
 
-export const AnimeProvider = ({ children }) => {
+export const AnimeProvider = ({ children, initialAnimes }) => {
   const initialState = {
     loading: false,
     error: null,
-    animes: null, 
+    animes: initialAnimes, 
   };
 
   const [state, dispatch] = useReducer(animeReducer, initialState);
