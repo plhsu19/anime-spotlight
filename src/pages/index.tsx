@@ -3,9 +3,10 @@ import styles from '@/styles/Home.module.css';
 import { Button, Grid, List, Stack } from '@mui/material';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import AnimeContext from '@/contexts/anime-context';
 import { Anime } from '@/types/anime-types';
+import Card from '@/components/card';
 
 export const getServerSideProps: GetServerSideProps<{
   animes: Anime[];
@@ -22,14 +23,11 @@ export const getServerSideProps: GetServerSideProps<{
 export default function Home(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
-  const { state, setAnimes } = useContext(AnimeContext);
-  // const [stateAnimes, setStateAnimes] = useState(props.animes);
-  console.log('initial context animes', state.animes);
+  const { state, deleteAnime } = useContext(AnimeContext);
 
-  // useEffect(() => {
-  //   console.log('useEffect: state.animes', state.animes);
-  //   setAnimes(props.animes);
-  // }, []);
+  const deleteHandler = () => {
+    deleteAnime(50);
+  };
 
   return (
     <>
@@ -49,25 +47,18 @@ export default function Home(
           the three dots to edit, and the top-right '+' to add new favorites to
           the list. <br /> Enhance your anime journey!
         </p>
+        <p>{state.error}</p>
+        <Button onClick={deleteHandler}>Delete ID = 5</Button>
         <div>
-          {state.animes === null ? (
-            <ul>
-              {props.animes.map((anime) => (
-                <li key={anime.id}>{anime.title}</li>
-              ))}
-            </ul>
-          ) : (
-            <ul>
-              {state.animes.map((anime) => (
-                <li key={anime.id}>{anime.title}</li>
-              ))}
-            </ul>
-          )}
-          {/* <ul>
-            {state.animes.map((anime) => (
-              <li key={anime.id}>{anime.title}</li>
-            ))}
-          </ul> */}
+          {state.animes.map((anime) => (
+            <Card
+              key={anime.id}
+              id={anime.id}
+              title={anime.title}
+              posterImage={anime.posterImage}
+              deleteAnime={deleteAnime}
+            />
+          ))}
         </div>
       </main>
     </>
