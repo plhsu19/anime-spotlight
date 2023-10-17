@@ -44,7 +44,7 @@ export default function Home(
         <h1>Anime Trends Spotlight</h1>
         <p>
           Discover top series on Anime Hub. Tap cards for detailed insights. Use
-          the three dots to edit, and the top-right '+' to add new favorites to
+          the three dots to edit or remove the animes, and the top-right '+' to add new favorites to
           the list. <br /> Enhance your anime journey!
         </p>
         <p>{state.error}</p>
@@ -55,6 +55,9 @@ export default function Home(
               key={anime.id}
               id={anime.id}
               title={anime.title}
+              subtype={anime.subtype}
+              rating={anime.rating}            
+              startDate={anime.startDate}
               posterImage={anime.posterImage}
               deleteAnime={deleteAnime}
             />
