@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
-// TODO: server-side return 404 if no anime found (404 from backend)
+// TODO: server-side return 404 if no anime found, currently 500 (404 from anime-api)
 export const getServerSideProps = async ({ params }) => {
   const res = await animeApiService.getAnimeById(params.id);
   return {

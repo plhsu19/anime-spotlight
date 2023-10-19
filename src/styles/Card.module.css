@@ -1,7 +1,16 @@
 .card {
   display: flex;
+  width: 60%;
+  gap: 15px;
+  border: 1px solid white;
+  border-radius: 9px;  
+}
+
+.cardInfo {
+  cursor: pointer;
+  width: 70%;
 }
 
 .borderCircle {
-  border-radius: 9999px;
+  border-radius: 9px;
 }

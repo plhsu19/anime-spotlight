@@ -1,3 +1,12 @@
+.cardList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 4rem 0;
+}
+
 .btnTest {
   color: red;
 }

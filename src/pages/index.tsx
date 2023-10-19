@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import styles from '@/styles/Home.module.css';
-import { Button, Grid, List, Stack } from '@mui/material';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { useContext } from 'react';
@@ -47,9 +46,7 @@ export default function Home(
           the three dots to edit or remove the animes, and the top-right '+' to add new favorites to
           the list. <br /> Enhance your anime journey!
         </p>
-        <p>{state.error}</p>
-        <Button onClick={deleteHandler}>Delete ID = 5</Button>
-        <div>
+        <div className={styles.cardList}>
           {state.animes.map((anime) => (
             <Card
               key={anime.id}

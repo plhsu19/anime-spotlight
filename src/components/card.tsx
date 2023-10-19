@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import cardStyles from '@/styles/Card.module.css';
 import {
   IconButton,
@@ -12,8 +13,9 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { animesPath } from '@/constants/paths';
 
-//TODO: 
+//TODO:
 // 1. understand props of IconButton
 // 2. understand props of Menu
 
@@ -41,7 +43,7 @@ export default function AnimeCard({
     () => startDate.split('-')[0] ?? 'unkown',
     [startDate]
   );
-  
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -52,23 +54,28 @@ export default function AnimeCard({
     deleteAnime(id);
     setAnchorEl(null);
   };
-  const handleEdit = () => {
-    router.push(`/animes/${id}?edit=true`);
+  const handleDirectToAnimePage = (edit: boolean) => {
+    router.push(`${animesPath}/${id}?${edit ? 'edit=true' : ''}`);
   };
 
-  //TODO: understand <Image> and its source URL registration
   return (
     <>
       <div className={cardStyles.card}>
-        <Image
-          priority
-          src={posterImage}
-          className={cardStyles.borderCircle}
-          height={88}
-          width={62}
-          alt=""
-        />
-        <div>
+        <Link href={`/animes/${id}`}>
+          <Image
+            priority
+            src={posterImage}
+            className={cardStyles.borderCircle}
+            height={176}
+            width={124}
+            alt=""
+          />
+        </Link>
+        <div className={cardStyles.cardInfo}
+          onClick={() => {
+            handleDirectToAnimePage(false);
+          }}
+        >
           <h3>{title}</h3>
           <p>{startYear}</p>
           <p>{subtype}</p>
@@ -92,7 +99,9 @@ export default function AnimeCard({
               'aria-labelledby': 'basic-button'
             }}
           >
-            <MenuItem onClick={handleEdit}>
+            <MenuItem onClick={() => {
+              handleDirectToAnimePage(true)
+            }}>
               <ListItemIcon>
                 <EditIcon fontSize="small" />
               </ListItemIcon>
