@@ -1,16 +1,40 @@
 .card {
   display: flex;
-  width: 60%;
-  gap: 15px;
+  width: 70%;
+  gap: 20px;
   border: 1px solid white;
-  border-radius: 9px;  
+  border-radius: 9px;
 }
 
 .cardInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   cursor: pointer;
-  width: 70%;
+  width: 60%;
 }
 
-.borderCircle {
+.title {
+  font-style: italic;
+  font-size: 23px;
+}
+
+.details {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.ratingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.cardImage {
+  cursor: pointer;
   border-radius: 9px;
 }

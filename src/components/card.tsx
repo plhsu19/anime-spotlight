@@ -8,11 +8,13 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Chip
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import StarRateIcon from '@mui/icons-material/StarRate';
 import { animesPath } from '@/constants/paths';
 
 //TODO:
@@ -23,6 +25,7 @@ export default function AnimeCard({
   id,
   title,
   subtype,
+  episodeCount,
   startDate,
   rating,
   posterImage,
@@ -31,6 +34,7 @@ export default function AnimeCard({
   id: number;
   title: string;
   subtype: string;
+  episodeCount: number;
   startDate: string;
   rating: number;
   posterImage: string;
@@ -42,6 +46,11 @@ export default function AnimeCard({
   const startYear = useMemo(
     () => startDate.split('-')[0] ?? 'unkown',
     [startDate]
+  );
+
+  const type = useMemo(
+    () => (subtype === 'TV' ? 'TV Series' : subtype),
+    [subtype]
   );
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -61,34 +70,48 @@ export default function AnimeCard({
   return (
     <>
       <div className={cardStyles.card}>
-        <Link href={`/animes/${id}`}>
-          <Image
-            priority
-            src={posterImage}
-            className={cardStyles.borderCircle}
-            height={176}
-            width={124}
-            alt=""
-          />
-        </Link>
-        <div className={cardStyles.cardInfo}
+        <Image
+          priority
+          src={posterImage}
+          className={cardStyles.cardImage}
+          height={158.4}
+          width={111.6}
+          alt=""
+          onClick={handleClick}
+        />
+        <div
+          className={cardStyles.cardInfo}
           onClick={() => {
             handleDirectToAnimePage(false);
           }}
         >
-          <h3>{title}</h3>
-          <p>{startYear}</p>
-          <p>{subtype}</p>
+          <h3 className={cardStyles.title}>{title}</h3>
+          <div className={cardStyles.details}>
+            <span className={cardStyles.year}>{startYear}</span>
+            <Chip
+              label={type}
+              color="success"
+              variant="outlined"
+              size="small"
+            />
+            <Chip
+              label={`${episodeCount ?? 'unkown'} episode(s)`}
+              color="warning"
+              variant="outlined"
+              size="small"
+            />
+          </div>
         </div>
         <div>
           <IconButton
-            id="basic-button"
+            id="edit-button"
             aria-controls={open ? 'basic-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
+            size="medium"
             onClick={handleClick}
           >
-            <MoreVertIcon />
+            <MoreVertIcon fontSize="large" />
           </IconButton>
           <Menu
             id="basic-menu"
@@ -99,9 +122,11 @@ export default function AnimeCard({
               'aria-labelledby': 'basic-button'
             }}
           >
-            <MenuItem onClick={() => {
-              handleDirectToAnimePage(true)
-            }}>
+            <MenuItem
+              onClick={() => {
+                handleDirectToAnimePage(true);
+              }}
+            >
               <ListItemIcon>
                 <EditIcon fontSize="small" />
               </ListItemIcon>
@@ -114,7 +139,10 @@ export default function AnimeCard({
               <ListItemText>Delete</ListItemText>
             </MenuItem>
           </Menu>
-          <p>{rating}</p>
+          <div className={cardStyles.ratingContainer}>
+            <StarRateIcon color="warning" fontSize="large" />
+            <span>{`${rating}/10`}</span>
+          </div>
         </div>
       </div>
     </>

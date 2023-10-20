@@ -40,25 +40,28 @@ export default function Home(
         <link rel="icon" href="/favicon.png" />
       </Head>
       <main>
-        <h1>Anime Trends Spotlight</h1>
-        <p>
-          Discover top series on Anime Hub. Tap cards for detailed insights. Use
-          the three dots to edit or remove the animes, and the top-right '+' to add new favorites to
-          the list. <br /> Enhance your anime journey!
-        </p>
-        <div className={styles.cardList}>
-          {state.animes.map((anime) => (
-            <Card
-              key={anime.id}
-              id={anime.id}
-              title={anime.title}
-              subtype={anime.subtype}
-              rating={anime.rating}            
-              startDate={anime.startDate}
-              posterImage={anime.posterImage}
-              deleteAnime={deleteAnime}
-            />
-          ))}
+        <div className={styles.main}>
+          <h1>Anime Trends Spotlight 🔦</h1>
+          <p>
+            Discover top anime series. Tap cards for detailed insights.
+            Use the three dots to edit or remove the animes, and the top-right
+            '+' to add new favorites to the list. Enhance your anime journey!
+          </p>
+          <div className={styles.cardList}>
+            {state.animes.map((anime) => (
+              <Card
+                key={anime.id}
+                id={anime.id}
+                title={anime.title}
+                subtype={anime.subtype}
+                rating={anime.rating}
+                episodeCount={anime.episodeCount}
+                startDate={anime.startDate}
+                posterImage={anime.posterImage}
+                deleteAnime={deleteAnime}
+              />
+            ))}
+          </div>
         </div>
       </main>
     </>

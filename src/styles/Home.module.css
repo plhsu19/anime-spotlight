@@ -4,20 +4,19 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
-  padding: 4rem 0;
+  padding: 2rem 0;
+}
+
+.main {
+  padding: 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .btnTest {
   color: red;
-}
-
-.main {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6rem;
-  min-height: 100vh;
 }
 
 .description {
