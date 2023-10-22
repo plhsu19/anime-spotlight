@@ -6,6 +6,8 @@ import { useContext } from 'react';
 import AnimeContext from '@/contexts/anime-context';
 import { Anime } from '@/types/anime-types';
 import Card from '@/components/card';
+import { IconButton } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 export const getServerSideProps: GetServerSideProps<{
   animes: Anime[];
@@ -43,10 +45,13 @@ export default function Home(
         <div className={styles.main}>
           <h1>Anime Trends Spotlight 🔦</h1>
           <p>
-            Discover top anime series. Tap cards for detailed insights.
-            Use the three dots to edit or remove the animes, and the top-right
-            '+' to add new favorites to the list. Enhance your anime journey!
+            Discover top anime series. Tap cards for detailed insights. Use the
+            three dots to edit or remove the animes, and the top-right '+' to
+            add new favorites to the list. Enhance your anime journey!
           </p>
+          <IconButton aria-label="addAnime" size='medium' color="primary" className={styles.btnAdd}>
+            <AddCircleIcon fontSize='large'/>
+          </IconButton>
           <div className={styles.cardList}>
             {state.animes.map((anime) => (
               <Card

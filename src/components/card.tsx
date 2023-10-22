@@ -14,7 +14,7 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import StarRateIcon from '@mui/icons-material/StarRate';
+import StarIcon from '@mui/icons-material/Star';
 import { animesPath } from '@/constants/paths';
 
 //TODO:
@@ -53,7 +53,7 @@ export default function AnimeCard({
     [subtype]
   );
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -77,10 +77,12 @@ export default function AnimeCard({
           height={158.4}
           width={111.6}
           alt=""
-          onClick={handleClick}
+          onClick={() => {
+            handleDirectToAnimePage(false);
+          }}
         />
         <div
-          className={cardStyles.cardInfo}
+          className={cardStyles.cardInfoContainer}
           onClick={() => {
             handleDirectToAnimePage(false);
           }}
@@ -102,14 +104,15 @@ export default function AnimeCard({
             />
           </div>
         </div>
-        <div>
+        <div className={cardStyles.cardEditContainer}>
           <IconButton
             id="edit-button"
             aria-controls={open ? 'basic-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
             size="medium"
-            onClick={handleClick}
+            onClick={handleMenuButtonClick}
+            className={cardStyles.menuButton}
           >
             <MoreVertIcon fontSize="large" />
           </IconButton>
@@ -139,9 +142,14 @@ export default function AnimeCard({
               <ListItemText>Delete</ListItemText>
             </MenuItem>
           </Menu>
-          <div className={cardStyles.ratingContainer}>
-            <StarRateIcon color="warning" fontSize="large" />
-            <span>{`${rating}/10`}</span>
+          <div
+            className={cardStyles.ratingContainer}
+            onClick={() => {
+              handleDirectToAnimePage(false);
+            }}
+          >
+            <StarIcon color="warning" fontSize="large" />
+            <span>{`${rating % 1 !== 0 ? rating : rating + '.0'}`}</span>
           </div>
         </div>
       </div>
