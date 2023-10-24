@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 import styles from '@/styles/Home.module.css';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
-import { useContext } from 'react';
-import AnimeContext from '@/contexts/anime-context';
+import AnimeContext, {
+  useGetAnimeContextValue
+} from '@/contexts/anime-context';
 import { Anime } from '@/types/anime-types';
 import Card from '@/components/card';
 import { IconButton } from '@mui/material';
@@ -26,7 +27,7 @@ export const getServerSideProps: GetServerSideProps<{
 export default function Home(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
-  const { state, deleteAnime } = useContext(AnimeContext);
+  const { state, deleteAnime } = useGetAnimeContextValue();
   const router = useRouter();
 
   const deleteHandler = () => {

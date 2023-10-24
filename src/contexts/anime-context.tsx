@@ -1,10 +1,10 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useReducer, useContext } from 'react';
 import animeReducer from './anime-reducer';
 import animeApiService from '@/services/anime-api-service';
 import { Anime } from '@/types/anime-types';
 import {
   AnimeState,
-  AnimeContextType,
+  AnimeContextValueType,
   AnimeProviderProps
 } from './anime-context-types';
 
@@ -13,16 +13,15 @@ const DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE =
 const DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE =
   'Unable to delete the anime as it was not found. Please refresh the page and try again.';
 
-const defaultAnimeContextValue = {
-  state: {
-    loading: false,
-    error: null,
-    animes: []
-  },
-  deleteAnime: async (id: number) => {}
-};
+const AnimeContext = createContext<AnimeContextValueType | null>(null);
 
-const AnimeContext = createContext<AnimeContextType>(defaultAnimeContextValue);
+export const useGetAnimeContextValue = (): AnimeContextValueType => {
+  const animeContextValue = useContext(AnimeContext);
+  if (!animeContextValue) {
+    throw new Error('useGetAnimeContextValue must be used within a Provider');
+  }
+  return animeContextValue;
+};
 
 export const AnimeProvider = ({
   children,
@@ -62,7 +61,6 @@ export const AnimeProvider = ({
       }
       const updatedAnime = state.animes.toSpliced(index, 1);
       dispatch({ type: 'SET_ANIMES', payload: updatedAnime });
-      
     } catch (e) {
       if (e.response.status === 404) {
         dispatch({

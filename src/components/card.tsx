@@ -63,7 +63,7 @@ export default function AnimeCard({
     setAnchorEl(null);
   };
   const handleDirectToAnimePage = (edit: boolean) => {
-    router.push(`${animesPath}/${id}?${edit ? 'edit=true' : ''}`);
+    router.push(`${animesPath}/${id}${edit ? '?edit=true' : ''}`);
   };
 
   return (

@@ -13,7 +13,7 @@ export type AnimeAction =
   | { type: 'SET_ERROR'; payload: string | null }
   | { type: 'SET_ANIMES'; payload: Anime[] };
 
-export interface AnimeContextType {
+export interface AnimeContextValueType {
   state: AnimeState;
   deleteAnime: (id: number) => Promise<void>;
 }
