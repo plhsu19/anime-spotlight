@@ -1,15 +1,24 @@
 .card {
   display: flex;
-  align-items: center;
-  gap: 0.7rem;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  column-gap: 0.7rem;
+  flex-wrap: wrap;
+  width: 100%;
   border: 1px solid white;
   border-radius: 9px;
+
+  @media screen and (min-width: 330px) {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
   @media screen and (min-width: 600px) {
     width: 80%;
-    gap: 1rem;
+    column-gap: 1rem;
   }
-  @media screen and (min-width: 1200px) {
-    width: 883px;
+  @media screen and (min-width: 1100px) {
+    width: 804px;
   }
 }
 
@@ -17,7 +26,17 @@
   box-shadow: 0 0 12px 0 white;
 }
 
-.cardImage {
+.cardImageContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 1rem;
+  @media screen and (min-width: 330px) {
+    margin: 0;
+  }
+}
+
+.image {
   cursor: pointer;
   border-radius: 9px;
 }
@@ -27,22 +46,34 @@
   flex-direction: column;
   justify-content: space-around;
   cursor: pointer;
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
+  @media screen and (min-width: 330px) {
+    margin: 0;
+  }
 }
 
 .title {
   font-style: italic;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
+  text-align: center;
+  @media screen and (min-width: 330px) {
+    text-align:left;
+  }
 }
 
 .details {
   display: flex;
-  justify-content: flex-start;
-  gap: 10px;
+  justify-content: center;
+  gap: 0.6rem;
   flex-wrap: wrap;
   margin-bottom: 1rem;
+  @media screen and (min-width: 330px) {
+    justify-content: flex-start;
+  }
 }
 
-.cardEditContainer{
+.cardEditContainer {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -62,4 +93,3 @@
   cursor: pointer;
   margin-bottom: 1rem;
 }
-

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import cardStyles from '@/styles/Card.module.css';
 import {
   IconButton,
@@ -34,7 +33,7 @@ export default function AnimeCard({
   id: number;
   title: string;
   subtype: string;
-  episodeCount: number;
+  episodeCount: number | null;
   startDate: string;
   rating: number;
   posterImage: string;
@@ -70,17 +69,19 @@ export default function AnimeCard({
   return (
     <>
       <div className={cardStyles.card}>
-        <Image
-          priority
-          src={posterImage}
-          className={cardStyles.cardImage}
-          height={158.4}
-          width={111.6}
-          alt=""
-          onClick={() => {
-            handleDirectToAnimePage(false);
-          }}
-        />
+        <div className={cardStyles.cardImageContainer}>
+          <Image
+            priority
+            src={posterImage}
+            className={cardStyles.image}
+            height={158.4}
+            width={111.6}
+            alt=""
+            onClick={() => {
+              handleDirectToAnimePage(false);
+            }}
+          />
+        </div>
         <div
           className={cardStyles.cardInfoContainer}
           onClick={() => {
@@ -97,7 +98,7 @@ export default function AnimeCard({
               size="small"
             />
             <Chip
-              label={`${episodeCount ?? 'unkown'} episode(s)`}
+              label={`${episodeCount ?? 'unkown'} ep(s)`}
               color="warning"
               variant="outlined"
               size="small"

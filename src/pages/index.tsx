@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import styles from '@/styles/Home.module.css';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
@@ -8,6 +9,7 @@ import { Anime } from '@/types/anime-types';
 import Card from '@/components/card';
 import { IconButton } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { newAnimePath } from '@/constants/paths';
 
 export const getServerSideProps: GetServerSideProps<{
   animes: Anime[];
@@ -25,9 +27,13 @@ export default function Home(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const { state, deleteAnime } = useContext(AnimeContext);
+  const router = useRouter();
 
   const deleteHandler = () => {
     deleteAnime(50);
+  };
+  const handleDirectToCreateAnimePage = () => {
+    router.push(newAnimePath);
   };
 
   return (
@@ -49,8 +55,14 @@ export default function Home(
             three dots to edit or remove the animes, and the top-right '+' to
             add new favorites to the list. Enhance your anime journey!
           </p>
-          <IconButton aria-label="addAnime" size='medium' color="primary" className={styles.btnAdd}>
-            <AddCircleIcon fontSize='large'/>
+          <IconButton
+            aria-label="addAnime"
+            size="medium"
+            color="primary"
+            className={styles.btnAdd}
+            onClick={handleDirectToCreateAnimePage}
+          >
+            <AddCircleIcon fontSize="large" />
           </IconButton>
           <div className={styles.cardList}>
             {state.animes.map((anime) => (
