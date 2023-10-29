@@ -1,69 +1,63 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import styles from './layout.module.css';
-import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
+import layoutStyles from '@/styles/components/Layout.module.css';
+import { ReactNode } from 'react';
+import { Button } from '@mui/material';
 
-const name = 'Pei-Lun';
-export const siteTitle = 'Next.js Sample Website';
+export const siteTitle = 'Anime Spotlight';
 
-export default function Layout({ children, home }) {
+export default function Layout({
+  children,
+  page
+}: {
+  children: ReactNode;
+  page: string;
+}) {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
+        <meta name="og:title" content={siteTitle} />
         <meta
           name="description"
-          content="Learn how to build a personal website using Next.js"
+          content="Explore and personalize your anime adventure with trending series, comprehensive details, editing options, and the option to curate your list of favorite animes."
         />
-        <meta
-          property="og:image"
-          content={`https://og-image.vercel.app/${encodeURI(
-            siteTitle,
-          )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
-        />
-        <meta name="og:title" content={siteTitle} />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter-card" content="summary_large_image" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* <meta property="og:image" content={} /> */}
       </Head>
-      <header className={styles.header}>
-        {home ? (
-          <>
-            <Image
-              priority
-              src="/images/profile.jpg"
-              className={utilStyles.borderCircle}
-              height={144}
-              width={144}
-              alt=""
-            />
-            <h1 className={utilStyles.heading2Xl}>{name}</h1>
-          </>
-        ) : (
-          <>
-            <Link href="/">
-              <Image
-                priority
-                src="/images/profile.jpg"
-                className={utilStyles.borderCircle}
-                height={108}
-                width={108}
-                alt=""
-              />
-            </Link>
-            <h2 className={utilStyles.headingLg}>
-              <Link href="/" className={utilStyles.colorInherit}>
-                {name}
-              </Link>
-            </h2>
-          </>
-        )}
+      <header className={layoutStyles.header}>
+        <Link href="/">
+          <Image
+            priority
+            width={162}
+            height={128}
+            src="/images/logo.png"
+            alt="Anime Spotlight logo"
+          />
+        </Link>
+        <div className={layoutStyles.headerItemContainer}>
+          <Link href="/">
+            <Button size="large" className={layoutStyles.headerBtn}>Home</Button>
+          </Link>
+          <Link href="/new-anime">
+            <Button size="large" className={layoutStyles.headerBtn}>Create</Button>
+          </Link>
+        </div>
       </header>
       <main>{children}</main>
-      {!home && (
-        <div className={styles.backToHome}>
-          <Link href="/">← Back to home</Link>
-        </div>
-      )}
+      <footer className={layoutStyles.footer}>
+        <Link href="/">
+          <Image
+            priority
+            width={135}
+            height={107}
+            src="/images/logo.png"
+            alt="Anime Spotlight logo"
+          />
+        </Link>
+      </footer>
     </div>
   );
 }

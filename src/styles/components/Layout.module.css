@@ -1,0 +1,28 @@
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #24292f;
+}
+
+.headerItemContainer {
+  display: flex;
+  justify-content: end;
+  gap: 5%;
+}
+
+.headerBtn {
+  font-size: 1.3rem;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  justify-content:flex-start;
+  align-items: center;
+  background-color: #24292f;
+}
+
+

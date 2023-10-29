@@ -10,6 +10,7 @@ import { Anime } from '@/types/anime-types';
 import Card from '@/components/card';
 import { IconButton } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Layout from '@/components/layout';
 import { newAnimePath } from '@/constants/paths';
 
 export const getServerSideProps: GetServerSideProps<{
@@ -38,50 +39,42 @@ export default function Home(
   };
 
   return (
-    <>
+    <Layout page="Home">
       <Head>
-        <title>Anime Hub</title>
-        <meta
-          name="description"
-          content="Anime hub to manage your favorite animes"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.png" />
+        <title>Anime Spotlight</title>
       </Head>
-      <main>
-        <div className={styles.main}>
-          <h1>Anime Trends Spotlight 🔦</h1>
-          <p>
-            Discover top anime series. Tap cards for detailed insights. Use the
-            three dots to edit or remove the animes, and the top-right '+' to
-            add new favorites to the list. Enhance your anime journey!
-          </p>
-          <IconButton
-            aria-label="addAnime"
-            size="medium"
-            color="primary"
-            className={styles.btnAdd}
-            onClick={handleDirectToCreateAnimePage}
-          >
-            <AddCircleIcon fontSize="large" />
-          </IconButton>
-          <div className={styles.cardList}>
-            {state.animes.map((anime) => (
-              <Card
-                key={anime.id}
-                id={anime.id}
-                title={anime.title}
-                subtype={anime.subtype}
-                rating={anime.rating}
-                episodeCount={anime.episodeCount}
-                startDate={anime.startDate}
-                posterImage={anime.posterImage}
-                deleteAnime={deleteAnime}
-              />
-            ))}
-          </div>
+      <div className={styles.main}>
+        <h1>Anime Spotlight 🔦</h1>
+        <p>
+          Discover top anime series. Tap cards for detailed insights. Use the
+          three dots to edit or remove the animes, and the top-right '+' to add
+          new favorites to the list. Enhance your anime journey!
+        </p>
+        <IconButton
+          aria-label="addAnime"
+          size="medium"
+          color="primary"
+          className={styles.btnAdd}
+          onClick={handleDirectToCreateAnimePage}
+        >
+          <AddCircleIcon fontSize="large" />
+        </IconButton>
+        <div className={styles.cardList}>
+          {state.animes.map((anime) => (
+            <Card
+              key={anime.id}
+              id={anime.id}
+              title={anime.title}
+              subtype={anime.subtype}
+              rating={anime.rating}
+              episodeCount={anime.episodeCount}
+              startDate={anime.startDate}
+              posterImage={anime.posterImage}
+              deleteAnime={deleteAnime}
+            />
+          ))}
         </div>
-      </main>
-    </>
+      </div>
+    </Layout>
   );
 }

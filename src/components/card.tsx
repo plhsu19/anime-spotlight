@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import cardStyles from '@/styles/Card.module.css';
+import cardStyles from '@/styles/components/Card.module.css';
 import {
   IconButton,
   Menu,
