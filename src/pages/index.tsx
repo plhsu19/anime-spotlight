@@ -52,7 +52,7 @@ export default function Home(
         </p>
         <IconButton
           aria-label="addAnime"
-          size="medium"
+          size="small"
           color="primary"
           className={styles.btnAdd}
           onClick={handleDirectToCreateAnimePage}

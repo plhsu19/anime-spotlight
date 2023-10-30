@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import layoutStyles from '@/styles/components/Layout.module.css';
+import utilStyles from '@/styles/utils.module.css';
 import { ReactNode } from 'react';
 import { Button } from '@mui/material';
 
@@ -27,36 +28,57 @@ export default function Layout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* <meta property="og:image" content={} /> */}
       </Head>
-      <header className={layoutStyles.header}>
-        <Link href="/">
-          <Image
-            priority
-            width={162}
-            height={128}
-            src="/images/logo.png"
-            alt="Anime Spotlight logo"
-          />
-        </Link>
-        <div className={layoutStyles.headerItemContainer}>
+      <header>
+        <div
+          className={[
+            layoutStyles.headerContainer,
+            utilStyles.horizontalContainer
+          ].join(' ')}
+        >
+          <Link className={layoutStyles.logoLink} href="/">
+            <Image
+              priority
+              height={104}
+              width={128}
+              src="/images/logo.png"
+              alt="Anime Spotlight logo"
+            />
+          </Link>
+          {/* <div className={layoutStyles.headerItemContainer}> */}
           <Link href="/">
-            <Button size="large" className={layoutStyles.headerBtn}>Home</Button>
+            <Button size="large" className={layoutStyles.headerBtn}>
+              Home
+            </Button>
           </Link>
           <Link href="/new-anime">
-            <Button size="large" className={layoutStyles.headerBtn}>Create</Button>
+            <Button size="large" className={layoutStyles.headerBtn}>
+              Create
+            </Button>
           </Link>
+          {/* </div> */}
         </div>
       </header>
       <main>{children}</main>
-      <footer className={layoutStyles.footer}>
-        <Link href="/">
-          <Image
-            priority
-            width={135}
-            height={107}
-            src="/images/logo.png"
-            alt="Anime Spotlight logo"
-          />
-        </Link>
+      <footer>
+        <div
+          className={[
+            layoutStyles.footerContainer,
+            utilStyles.horizontalContainer
+          ].join(' ')}
+        >
+          <Link href="/">
+            <Image
+              priority
+              height={78.25}
+              width={96}
+              src="/images/logo.png"
+              alt="Anime Spotlight logo"
+            />
+          </Link>
+          <span className={layoutStyles.textAlignCenter}>
+            © 2023 Anime Spotlight. All Rights Reserved.
+          </span>
+        </div>
       </footer>
     </div>
   );

@@ -1,28 +1,35 @@
-
-.header {
+.headerContainer {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
-  background-color: #24292f;
+  gap: 1%;
+  flex-wrap: wrap;
+}
+
+.logoLink {
+  margin-right: auto;
 }
 
 .headerItemContainer {
   display: flex;
-  justify-content: end;
-  gap: 5%;
+  justify-content: center;
+  gap: 0.3rem;
 }
 
 .headerBtn {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
+  text-transform: capitalize;
 }
 
-.footer {
+.footerContainer {
   display: flex;
   flex-direction: column;
-  justify-content:flex-start;
+  justify-content: flex-start;
   align-items: center;
-  background-color: #24292f;
+  gap: 0.2rem;
 }
 
-
+.textAlignCenter {
+  text-align: center;
+}

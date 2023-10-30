@@ -6,3 +6,13 @@
 body {
   box-sizing: border-box;
 }
+
+header {
+  background-color: #24292f;
+  padding: 0.5rem 0 0.25rem;
+}
+
+footer {
+  background-color: #24292f;
+  padding: 2rem 0;
+}
