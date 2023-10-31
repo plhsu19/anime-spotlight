@@ -35,7 +35,7 @@ export default function Layout({
             utilStyles.horizontalContainer
           ].join(' ')}
         >
-          <Link className={layoutStyles.logoLink} href="/">
+          <Link href="/">
             <Image
               priority
               height={104}
@@ -44,18 +44,18 @@ export default function Layout({
               alt="Anime Spotlight logo"
             />
           </Link>
-          {/* <div className={layoutStyles.headerItemContainer}> */}
-          <Link href="/">
-            <Button size="large" className={layoutStyles.headerBtn}>
-              Home
-            </Button>
-          </Link>
-          <Link href="/new-anime">
-            <Button size="large" className={layoutStyles.headerBtn}>
-              Create
-            </Button>
-          </Link>
-          {/* </div> */}
+          <div className={layoutStyles.headerItemContainer}>
+            <Link href="/">
+              <Button size="large" className={layoutStyles.headerBtn}>
+                Home
+              </Button>
+            </Link>
+            <Link href="/new-anime">
+              <Button size="large" className={layoutStyles.headerBtn}>
+                Create
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
       <main>{children}</main>
