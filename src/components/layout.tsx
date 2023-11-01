@@ -38,20 +38,32 @@ export default function Layout({
           <Link href="/">
             <Image
               priority
-              height={104}
-              width={128}
+              height={78.25}
+              width={96}
               src="/images/logo.png"
               alt="Anime Spotlight logo"
             />
           </Link>
           <div className={layoutStyles.headerItemContainer}>
             <Link href="/">
-              <Button size="large" className={layoutStyles.headerBtn}>
+              <Button
+                size="large"
+                className={[
+                  layoutStyles.headerBtn,
+                  page === 'home' ? utilStyles.seletcedBtn : ''
+                ].join(' ')}
+              >
                 Home
               </Button>
             </Link>
             <Link href="/new-anime">
-              <Button size="large" className={layoutStyles.headerBtn}>
+              <Button
+                size="large"
+                className={[
+                  layoutStyles.headerBtn,
+                  page === 'new-anime' ? utilStyles.seletcedBtn : ''
+                ].join(' ')}
+              >
                 Create
               </Button>
             </Link>
@@ -69,8 +81,8 @@ export default function Layout({
           <Link href="/">
             <Image
               priority
-              height={78.25}
-              width={96}
+              height={104}
+              width={128}
               src="/images/logo.png"
               alt="Anime Spotlight logo"
             />

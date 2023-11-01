@@ -1,5 +1,4 @@
-.main {
-  margin: 0 3rem 1rem 3rem;
+.mainContainer {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

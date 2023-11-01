@@ -12,6 +12,10 @@ header {
   padding: 0.5rem 0 0.25rem;
 }
 
+main {
+  padding: 1rem 0 2rem;
+}
+
 footer {
   background-color: #24292f;
   padding: 1.5rem 0 2rem;

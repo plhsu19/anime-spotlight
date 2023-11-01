@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import styles from '@/styles/Home.module.css';
+import utilStyles from '@/styles/utils.module.css';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import AnimeContext, {
@@ -24,7 +25,6 @@ export const getServerSideProps: GetServerSideProps<{
   };
 };
 
-// TODO: move Head to layout component
 export default function Home(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
@@ -39,11 +39,14 @@ export default function Home(
   };
 
   return (
-    <Layout page="Home">
+    <Layout page="home">
       <Head>
         <title>Anime Spotlight</title>
       </Head>
-      <div className={styles.main}>
+      <div className={[
+            styles.mainContainer,
+            utilStyles.horizontalContainer
+          ].join(' ')}>
         <h1>Anime Spotlight 🔦</h1>
         <p>
           Discover top anime series. Tap cards for detailed insights. Use the
