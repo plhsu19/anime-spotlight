@@ -10,6 +10,7 @@ import AnimeContext, {
 import { Anime } from '@/types/anime-types';
 import Card from '@/components/card';
 import { IconButton } from '@mui/material';
+import Alert from '@mui/material/Alert';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Layout from '@/components/layout';
 import { newAnimePath } from '@/constants/paths';
@@ -31,9 +32,6 @@ export default function Home(
   const { state, deleteAnime } = useGetAnimeContextValue();
   const router = useRouter();
 
-  const deleteHandler = () => {
-    deleteAnime(50);
-  };
   const handleDirectToCreateAnimePage = () => {
     router.push(newAnimePath);
   };
@@ -62,6 +60,7 @@ export default function Home(
         >
           <AddCircleIcon fontSize="large" />
         </IconButton>
+        {state.message && <Alert severity="success">{state.message}</Alert>}
         <div className={styles.cardList}>
           {state.animes.map((anime) => (
             <Card

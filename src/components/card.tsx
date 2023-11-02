@@ -37,7 +37,7 @@ export default function AnimeCard({
   startDate: string;
   rating: number;
   posterImage: string;
-  deleteAnime: (id: number) => Promise<void>;
+  deleteAnime: (id: number, title: string) => Promise<void>;
 }) {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -59,7 +59,7 @@ export default function AnimeCard({
     setAnchorEl(null);
   };
   const handleDelete = () => {
-    deleteAnime(id);
+    deleteAnime(id, title);
     setAnchorEl(null);
   };
   const handleDirectToAnimePage = (edit: boolean) => {

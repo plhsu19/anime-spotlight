@@ -4,18 +4,23 @@ import { Anime } from '@/types/anime-types';
 export interface AnimeState {
   loading: boolean;
   error: string | null;
+  message: string | null;
   animes: Anime[];
 }
 
 export type AnimeAction =
-  | { type: 'START_LOADING'; }
+  | { type: 'START_LOADING' }
+  | {
+      type: 'END_LOADING';
+      payload: { error: string | null; message: string | null };
+    }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null }
   | { type: 'SET_ANIMES'; payload: Anime[] };
 
 export interface AnimeContextValueType {
   state: AnimeState;
-  deleteAnime: (id: number) => Promise<void>;
+  deleteAnime: (id: number, title: string) => Promise<void>;
 }
 
 export interface AnimeProviderProps {
