@@ -47,11 +47,6 @@ export const AnimeProvider = ({
     if (id < 1 || id > state.animes[state.animes.length - 1].id) {
       error = DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace('%s', title);
       dispatch({ type: 'END_LOADING', payload: { message, error } });
-      // dispatch({
-      //   type: 'SET_ERROR',
-      //   payload: DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', title)
-      // });
-      // dispatch({ type: 'SET_LOADING', payload: false });
       return;
     }
 
@@ -63,30 +58,17 @@ export const AnimeProvider = ({
       if (index === -1) {
         error = DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', title);
         dispatch({ type: 'END_LOADING', payload: { message, error } });
-        // dispatch({
-        //   type: 'SET_ERROR',
-        //   payload: DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', title)
-        // });
-        // dispatch({ type: 'SET_LOADING', payload: false });
         return;
       }
-      
+
       const updatedAnime = state.animes.toSpliced(index, 1);
       dispatch({ type: 'SET_ANIMES', payload: updatedAnime });
       message = DELETE_ANIME_SUCCESSFUL_MESSAGE.replace('%s', title);
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response?.status === 404) {
         error = DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace('%s', title);
-        // dispatch({
-        //   type: 'SET_ERROR',
-        //   payload: DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace('%s', title)
-        // });
       } else {
         error = DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', title);
-        // dispatch({
-        //   type: 'SET_ERROR',
-        //   payload: DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', title)
-        // });
       }
     }
     dispatch({ type: 'END_LOADING', payload: { message, error } });
