@@ -29,9 +29,9 @@ export default function Home(
 ) {
   const router = useRouter();
   const { state, deleteAnime } = useGetAnimeContextValue();
-  const [alertOpen, setAlertOpen] = useState(false);
   const alertIsExist = !!state.message || !!state.error;
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   if (alertIsExist !== preAlertIsExist) {
     setAlertOpen(alertIsExist);

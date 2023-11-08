@@ -6,7 +6,7 @@ class AnimeApiService {
   private restClient: AxiosInstance;
   private static TIMEOUT: number = 30000;
   
-  // move host host to .env
+  // TODO: move host URLs to .env for prod/dev
   private static DEVELOPMENT_BASE_URL: string = 'http://localhost:8080';
   private static PRODUCTION_BASE_URL: string = 'http://production-host';
   private static URL: string = '/animes';

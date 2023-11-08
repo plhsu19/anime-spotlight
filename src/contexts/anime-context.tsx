@@ -1,18 +1,25 @@
 import { createContext, useReducer, useContext } from 'react';
+import { useRouter } from 'next/router';
 import animeReducer from './anime-reducer';
 import animeApiService from '@/services/anime-api-service';
-import { Anime } from '@/types/anime-types';
+import { AnimeFields } from '@/types/anime-types';
 import {
   AnimeState,
   AnimeContextValueType,
   AnimeProviderProps
 } from './anime-context-types';
+import { animesPath } from '@/constants/paths';
 
 const DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE =
   'Unable to delete the anime %s due to an unexpected error. Please try again later or contact us.';
 const DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE =
   'Unable to delete the anime %s as it was not found. Please refresh the page and try again.';
 const DELETE_ANIME_SUCCESSFUL_MESSAGE = 'Successfully deleted the anime %s.';
+const ADD_ANIME_SUCCESSFUL_MESSAGE = 'Successfully added the anime %s.';
+const ADD_ANIME_UNEXPECTED_ERROR_MESSAGE =
+  'Unable to create the anime %s due to an unexpected error. Please try again later or contact us.';
+const ADD_ANIME_BAD_REQUEST_MESSAGE =
+  'Unable to create the anime %s due to an invalid request. Please check your input and try again.';
 
 const AnimeContext = createContext<AnimeContextValueType | null>(null);
 
@@ -35,8 +42,34 @@ export const AnimeProvider = ({
     animes: initialAnimes
   };
 
-  // TODO: setup reducer (state, dispatch) types
   const [state, dispatch] = useReducer(animeReducer, initialState);
+  const router = useRouter();
+
+  // TODO: addAnime(field)
+  const addAnime = async (animeFields: AnimeFields): Promise<void> => {
+    dispatch({ type: 'START_LOADING' });
+    let message = null;
+    let error = null;
+
+    try {
+      const response = await animeApiService.createAnime(animeFields);
+      message = ADD_ANIME_SUCCESSFUL_MESSAGE.replace(
+        '%s',
+        response.data.anime.title
+      );
+      dispatch({ type: 'END_LOADING', payload: { message, error } });
+      router.push(`${animesPath}/${response.data.anime.id}`);
+    } catch (e) {
+      if (e.response?.status === 400) {
+        console.log(e.response?.data?.message);
+        // TODO: replace multiple in a string
+        error = ADD_ANIME_BAD_REQUEST_MESSAGE.replace('%s', animeFields.title,);
+      } else {
+        error = ADD_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', animeFields.title);
+      }
+    }
+    dispatch({ type: 'END_LOADING', payload: { message, error } });
+  };
 
   const deleteAnime = async (id: number, title: string): Promise<void> => {
     dispatch({ type: 'START_LOADING' });
@@ -74,8 +107,10 @@ export const AnimeProvider = ({
     dispatch({ type: 'END_LOADING', payload: { message, error } });
   };
 
+  //TODO: reset message and error state when navigating to another page
+
   return (
-    <AnimeContext.Provider value={{ state, deleteAnime }}>
+    <AnimeContext.Provider value={{ state, deleteAnime, addAnime }}>
       {children}
     </AnimeContext.Provider>
   );
