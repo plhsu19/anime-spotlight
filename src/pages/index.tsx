@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import Card from '@/components/card';
 import Layout from '@/components/layout';
@@ -27,18 +27,28 @@ export const getServerSideProps: GetServerSideProps<{
 export default function Home(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
+  //TODO: sync the animes state when the props.animes changes
   const router = useRouter();
-  const { state, deleteAnime } = useGetAnimeContextValue();
+  const { state, dispatch, deleteAnime } = useGetAnimeContextValue();
   const alertIsExist = !!state.message || !!state.error;
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
   const [alertOpen, setAlertOpen] = useState(false);
+
+  // useEffect(() => {
+  //   console.log('entered effect');
+  //   // console.log(typeof dispatch);
+  //   dispatch({ type: 'SET_ANIMES', payload: props.animes });
+  // }, [props, dispatch]);
+
+  // console.log(preValue);
+  // console.log(state.message);
 
   if (alertIsExist !== preAlertIsExist) {
     setAlertOpen(alertIsExist);
     setPreAlertIsExist(alertIsExist);
   }
 
-  const handleDirectToCreateAnimePage = () => {
+  const handleDirectToNewAnimePage = () => {
     router.push(newAnimePath);
   };
 
@@ -73,7 +83,7 @@ export default function Home(
           size="small"
           color="primary"
           className={styles.btnAdd}
-          onClick={handleDirectToCreateAnimePage}
+          onClick={handleDirectToNewAnimePage}
         >
           <AddCircleIcon fontSize="large" />
         </IconButton>
@@ -91,8 +101,13 @@ export default function Home(
             {state.error ?? state.message}
           </Alert>
         </Snackbar>
+        <ul>
+          {props.animes.map((anime) => (
+            <p key={anime.id}>{anime.title}</p>
+          ))}
+        </ul>
         <div className={styles.cardList}>
-          {state.animes.map((anime) => (
+          {state.animes?.map((anime) => (
             <Card
               key={anime.id}
               id={anime.id}

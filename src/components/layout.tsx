@@ -64,7 +64,7 @@ export default function Layout({
                   page === 'new-anime' ? utilStyles.seletcedBtn : ''
                 ].join(' ')}
               >
-                Create
+                Add
               </Button>
             </Link>
           </div>

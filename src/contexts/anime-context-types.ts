@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, Dispatch } from 'react';
 import { Anime, AnimeFields } from '@/types/anime-types';
 
 export interface AnimeState {
@@ -20,11 +20,12 @@ export type AnimeAction =
 
 export interface AnimeContextValueType {
   state: AnimeState;
+  dispatch: Dispatch<AnimeAction>;
   deleteAnime: (id: number, title: string) => Promise<void>;
   addAnime: (animeFields: AnimeFields) => Promise<void>;
 }
 
 export interface AnimeProviderProps {
   children: ReactNode;
-  initialAnimes: Anime[];
+  fetchedAnimes: Anime[];
 }

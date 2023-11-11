@@ -1,4 +1,4 @@
-import { createContext, useReducer, useContext } from 'react';
+import { createContext, useReducer, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import animeReducer from './anime-reducer';
 import animeApiService from '@/services/anime-api-service';
@@ -17,9 +17,9 @@ const DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE =
 const DELETE_ANIME_SUCCESSFUL_MESSAGE = 'Successfully deleted the anime %s.';
 const ADD_ANIME_SUCCESSFUL_MESSAGE = 'Successfully added the anime %s.';
 const ADD_ANIME_UNEXPECTED_ERROR_MESSAGE =
-  'Unable to create the anime %s due to an unexpected error. Please try again later or contact us.';
+  'Unable to add the anime %s due to an unexpected error. Please try again later or contact us.';
 const ADD_ANIME_BAD_REQUEST_MESSAGE =
-  'Unable to create the anime %s due to an invalid request. Please check your input and try again.';
+  'Unable to add the anime due to invalid input: %s. Please check your input and try again.';
 
 const AnimeContext = createContext<AnimeContextValueType | null>(null);
 
@@ -33,19 +33,24 @@ export const useGetAnimeContextValue = (): AnimeContextValueType => {
 
 export const AnimeProvider = ({
   children,
-  initialAnimes
+  fetchedAnimes
 }: AnimeProviderProps) => {
   const initialState: AnimeState = {
     loading: false,
     error: null,
     message: null,
-    animes: initialAnimes
+    animes: fetchedAnimes
   };
 
   const [state, dispatch] = useReducer(animeReducer, initialState);
+  const [preFetchedAnimes, setPreFetchedAnimes] = useState(fetchedAnimes);
   const router = useRouter();
 
-  // TODO: addAnime(field)
+  if (preFetchedAnimes !== fetchedAnimes) {
+    dispatch({ type: 'SET_ANIMES', payload: fetchedAnimes });
+    setPreFetchedAnimes(fetchedAnimes);
+  }
+
   const addAnime = async (animeFields: AnimeFields): Promise<void> => {
     dispatch({ type: 'START_LOADING' });
     let message = null;
@@ -61,11 +66,15 @@ export const AnimeProvider = ({
       router.push(`${animesPath}/${response.data.anime.id}`);
     } catch (e) {
       if (e.response?.status === 400) {
-        console.log(e.response?.data?.message);
-        // TODO: replace multiple in a string
-        error = ADD_ANIME_BAD_REQUEST_MESSAGE.replace('%s', animeFields.title,);
+        error = ADD_ANIME_BAD_REQUEST_MESSAGE.replace(
+          '%s',
+          e.response?.data?.message ?? 'unknown'
+        );
       } else {
-        error = ADD_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', animeFields.title);
+        error = ADD_ANIME_UNEXPECTED_ERROR_MESSAGE.replace(
+          '%s',
+          animeFields.title
+        );
       }
     }
     dispatch({ type: 'END_LOADING', payload: { message, error } });
@@ -110,7 +119,7 @@ export const AnimeProvider = ({
   //TODO: reset message and error state when navigating to another page
 
   return (
-    <AnimeContext.Provider value={{ state, deleteAnime, addAnime }}>
+    <AnimeContext.Provider value={{ state, dispatch, deleteAnime, addAnime }}>
       {children}
     </AnimeContext.Provider>
   );
