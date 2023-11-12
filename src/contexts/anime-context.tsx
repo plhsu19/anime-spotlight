@@ -46,7 +46,8 @@ export const AnimeProvider = ({
   const [preFetchedAnimes, setPreFetchedAnimes] = useState(fetchedAnimes);
   const router = useRouter();
 
-  if (preFetchedAnimes !== fetchedAnimes) {
+  if (preFetchedAnimes !== fetchedAnimes && !!fetchedAnimes) {
+    console.log('different non-null animes fetched from server')
     dispatch({ type: 'SET_ANIMES', payload: fetchedAnimes });
     setPreFetchedAnimes(fetchedAnimes);
   }

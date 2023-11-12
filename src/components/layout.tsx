@@ -32,7 +32,7 @@ export default function Layout({
         <div
           className={[
             layoutStyles.headerContainer,
-            utilStyles.horizontalContainer
+            utilStyles.horizontalAlignment
           ].join(' ')}
         >
           <Link href="/">
@@ -75,7 +75,7 @@ export default function Layout({
         <div
           className={[
             layoutStyles.footerContainer,
-            utilStyles.horizontalContainer
+            utilStyles.horizontalAlignment
           ].join(' ')}
         >
           <Link href="/">

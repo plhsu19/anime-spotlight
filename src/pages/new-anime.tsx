@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Layout from '@/components/layout';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
-import { Button, Alert, Snackbar } from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
 import { Subtype, Status } from '@/types/anime-types';
+import utilStyles from '@/styles/utils.module.css';
+import AnimeForm from '@/components/anime-form';
 
 export default function NewAnime() {
   const { state, addAnime } = useGetAnimeContextValue();
@@ -46,22 +48,36 @@ export default function NewAnime() {
 
   return (
     <Layout page="new-anime">
-      <h1>create new anime page</h1>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={alertOpen}
-        autoHideDuration={6000}
-        onClose={handleAlertClose}
+      <Head>
+        <title>Add New Anime</title>
+      </Head>
+      <div
+        className={[
+          utilStyles.verticalAlignItems,
+          utilStyles.horizontalAlignment
+        ].join(' ')}
       >
-        <Alert
-          severity={!!state.error ? 'error' : 'success'}
-          variant="filled"
+        <h1>Add New Anime</h1>
+        <p>
+          Add your new favorite series to the list by filling out a simple form,
+          and introduce new worlds to fellow anime enthusiasts!
+        </p>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={alertOpen}
+          autoHideDuration={6000}
           onClose={handleAlertClose}
         >
-          {state.error ?? state.message}
-        </Alert>
-      </Snackbar>
-      <Button onClick={handleCreate}>Create</Button>
+          <Alert
+            severity={!!state.error ? 'error' : 'success'}
+            variant="filled"
+            onClose={handleAlertClose}
+          >
+            {state.error ?? state.message}
+          </Alert>
+        </Snackbar>
+        <AnimeForm />
+      </div>
     </Layout>
   );
 }

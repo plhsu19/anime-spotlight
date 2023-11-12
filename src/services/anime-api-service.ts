@@ -33,7 +33,7 @@ class AnimeApiService {
     return response.data;
   }
 
-  // create anime
+  // create new anime
   public async createAnime(animeFields: AnimeFields): Promise<AnimeResponse> {
     const response = await this.restClient.post(
       `${AnimeApiService.URL}`,

@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import Card from '@/components/card';
 import Layout from '@/components/layout';
@@ -34,15 +34,6 @@ export default function Home(
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
   const [alertOpen, setAlertOpen] = useState(false);
 
-  // useEffect(() => {
-  //   console.log('entered effect');
-  //   // console.log(typeof dispatch);
-  //   dispatch({ type: 'SET_ANIMES', payload: props.animes });
-  // }, [props, dispatch]);
-
-  // console.log(preValue);
-  // console.log(state.message);
-
   if (alertIsExist !== preAlertIsExist) {
     setAlertOpen(alertIsExist);
     setPreAlertIsExist(alertIsExist);
@@ -68,7 +59,7 @@ export default function Home(
         <title>Anime Spotlight</title>
       </Head>
       <div
-        className={[styles.mainContainer, utilStyles.horizontalContainer].join(
+        className={[utilStyles.verticalAlignItems, utilStyles.horizontalAlignment].join(
           ' '
         )}
       >
@@ -101,11 +92,6 @@ export default function Home(
             {state.error ?? state.message}
           </Alert>
         </Snackbar>
-        <ul>
-          {props.animes.map((anime) => (
-            <p key={anime.id}>{anime.title}</p>
-          ))}
-        </ul>
         <div className={styles.cardList}>
           {state.animes?.map((anime) => (
             <Card
