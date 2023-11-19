@@ -2,14 +2,14 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Layout from '@/components/layout';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, Snackbar, Button } from '@mui/material';
 import { Subtype, Status } from '@/types/anime-types';
 import utilStyles from '@/styles/utils.module.css';
 import AnimeForm from '@/components/anime-form';
 
 export default function NewAnime() {
   const { state, addAnime } = useGetAnimeContextValue();
-  const alertIsExist = !!state.message || !!state.error;
+  const alertIsExist = !!state.error;
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
   const [alertOpen, setAlertOpen] = useState(false);
 
@@ -64,19 +64,24 @@ export default function NewAnime() {
         </p>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={state.loading}
+        >
+          <Alert severity="warning" variant="filled">
+            Adding anime...
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           open={alertOpen}
           autoHideDuration={6000}
           onClose={handleAlertClose}
         >
-          <Alert
-            severity={!!state.error ? 'error' : 'success'}
-            variant="filled"
-            onClose={handleAlertClose}
-          >
-            {state.error ?? state.message}
+          <Alert severity="error" variant="filled" onClose={handleAlertClose}>
+            {state.error}
           </Alert>
         </Snackbar>
         <AnimeForm />
+        <Button onClick={handleCreate}>Add Mock</Button>
       </div>
     </Layout>
   );
