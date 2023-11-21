@@ -5,8 +5,8 @@ export interface AnimeFields {
   rating: number;
   startDate: string;
   endDate: string | null;
-  subtype: Subtype;
-  status: Status;
+  subtype: 'ONA' | 'OVA' | 'TV' | 'movie';
+  status: 'current' | 'finished';
   posterImage: string;
   coverImage: string | null;
   episodeCount: number | null;
@@ -15,16 +15,4 @@ export interface AnimeFields {
 
 export interface Anime extends AnimeFields {
   id: number;
-}
-
-export enum Subtype {
-  ONA = 'ONA',
-  OVA = 'OVA',
-  TV = 'TV',
-  MOVIE = 'movie',
-}
-
-export enum Status {
-  current = 'current',
-  finished = 'finished',
 }

@@ -5,6 +5,8 @@ import layoutStyles from '@/styles/components/Layout.module.css';
 import utilStyles from '@/styles/utils.module.css';
 import { ReactNode } from 'react';
 import { Button } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
+import AddIcon from '@mui/icons-material/Add';
 
 export const siteTitle = 'Anime Spotlight';
 
@@ -52,6 +54,7 @@ export default function Layout({
                   layoutStyles.headerBtn,
                   page === 'home' ? utilStyles.seletcedBtn : ''
                 ].join(' ')}
+                startIcon={<HomeIcon />}
               >
                 Home
               </Button>
@@ -63,6 +66,7 @@ export default function Layout({
                   layoutStyles.headerBtn,
                   page === 'new-anime' ? utilStyles.seletcedBtn : ''
                 ].join(' ')}
+                startIcon={<AddIcon />}
               >
                 Add
               </Button>

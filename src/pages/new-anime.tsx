@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Layout from '@/components/layout';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { Alert, Snackbar, Button } from '@mui/material';
-import { Subtype, Status } from '@/types/anime-types';
 import utilStyles from '@/styles/utils.module.css';
 import AnimeForm from '@/components/anime-form';
 
@@ -36,8 +35,8 @@ export default function NewAnime() {
       rating: 6.5,
       startDate: '2023-08-03',
       endDate: '2024-12-27',
-      status: Status.current,
-      subtype: Subtype.MOVIE,
+      status: 'current',
+      subtype: 'movie',
       posterImage:
         'https://media.kitsu.io/anime/42765/poster_image/large-5ce19551c1a6cf995b378205b9149b5c.jpeg',
       coverImage: 'https://media.kitsu.io/anime/cover_images/42765/small.jpg',
