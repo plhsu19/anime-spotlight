@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import cardStyles from '@/styles/components/Card.module.css';
+import utilStyles from '@/styles/utils.module.css';
 import {
   IconButton,
   Menu,
@@ -40,7 +41,7 @@ export default function AnimeCard({
   deleteAnime: (id: number, title: string) => Promise<void>;
 }) {
   const router = useRouter();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const startYear = useMemo(
     () => startDate.split('-')[0] ?? 'unkown',
@@ -151,7 +152,12 @@ export default function AnimeCard({
             }}
           >
             <StarIcon color="warning" fontSize="large" />
-            <span>{`${rating % 1 !== 0 ? rating : rating + '.0'}`}</span>
+            <span>
+              <span className={utilStyles.largeContextFontSize}>{`${
+                rating % 1 !== 0 ? rating : rating + '.0'
+              }`}</span>
+              {' /10'}
+            </span>
           </div>
         </div>
       </div>

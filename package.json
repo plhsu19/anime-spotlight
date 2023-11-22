@@ -14,8 +14,10 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.14.11",
     "@mui/material": "^5.14.11",
+    "@mui/x-date-pickers": "^6.18.1",
     "axios": "^1.5.1",
     "clsx": "^2.0.0",
+    "dayjs": "^1.11.10",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
