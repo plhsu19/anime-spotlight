@@ -8,8 +8,11 @@ import {
   FormControl,
   InputLabel,
   Select,
-  SelectChangeEvent
+  SelectChangeEvent,
+  IconButton
 } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Anime, AnimeFields, Subtype, Status } from '@/types/anime-types';
 
@@ -33,8 +36,17 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
     posterImage: '',
     coverImage: '',
     episodeCount: null,
-    categories: []
+    categories: ['']
   });
+  const [preStartDate, setPreStartDate] = useState(fields.startDate);
+
+  if (
+    fields.startDate !== 'Invalid Date' &&
+    preStartDate !== fields.startDate
+  ) {
+    setFields({ ...fields, endDate: fields.startDate });
+    setPreStartDate(fields.startDate);
+  }
 
   const handleChange = (
     event:
@@ -43,16 +55,49 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
       | SelectChangeEvent<string>,
     value?: number | null
   ): void => {
-    setFields({
-      ...fields,
-      [event.target.name]: value !== undefined ? value : event.target.value
-    });
+    if (event.target.name === 'episodeCount') {
+      setFields({
+        ...fields,
+        [event.target.name]: !Number.isNaN(parseInt(event.target.value, 10))
+          ? parseInt(event.target.value, 10)
+          : null
+      });
+    } else {
+      setFields({
+        ...fields,
+        [event.target.name]: value !== undefined ? value : event.target.value
+      });
+    }
   };
 
   const handleDateChange = (name: string, value: dayjs.Dayjs | null): void => {
     setFields({
       ...fields,
       [name]: !!value ? value.format(dateFormat) : null
+    });
+  };
+
+  const handleCategoryChange = (
+    idx: number,
+    event?: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    const updatedCategories = [...fields.categories];
+    if (event === undefined) {
+      updatedCategories.splice(idx, 1);
+    } else {
+      updatedCategories[idx] = event.target.value;
+    }
+    setFields({
+      ...fields,
+      categories: updatedCategories
+    });
+  };
+
+  const addEmptyCategory = (): void => {
+    const updatedCategories = [...fields.categories, ''];
+    setFields({
+      ...fields,
+      categories: updatedCategories
     });
   };
 
@@ -98,14 +143,10 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
         <div>
           <DatePicker
             label="Start Date *"
-            // minDate={dayjs('1888-01-01', dateFormat)}
-            // maxDate={dayjs()}
             value={
               fields.startDate ? dayjs(fields.startDate, dateFormat) : null
             }
             onChange={(value, context) => {
-              console.log(value);
-              console.log(context);
               handleDateChange('startDate', value);
             }}
             slotProps={{
@@ -116,8 +157,7 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
           />
           <DatePicker
             label="End Date"
-            // minDate={dayjs('1888-01-01', dateFormat)}
-            // maxDate={dayjs()}
+            minDate={dayjs(fields.startDate, dateFormat)}
             value={fields.endDate ? dayjs(fields.endDate, dateFormat) : null}
             onChange={(value, context) => {
               handleDateChange('endDate', value);
@@ -130,7 +170,7 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
           />
         </div>
         <div>
-          {/* TODO: convert m(margin) and minWidth to class in CSS */}
+          {/* TODO: convert m(margin) and minWidth to the class in CSS */}
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id="subtype-label">Subtype *</InputLabel>
             <Select
@@ -171,6 +211,14 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
               ))}
             </Select>
           </FormControl>
+          <TextField
+            id="episode-count-input"
+            label="Episode Count"
+            name="episodeCount"
+            type="number"
+            value={fields.episodeCount ?? ''}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <TextField
@@ -178,11 +226,58 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
             id="poster-image-url-input"
             label="Poster Image URL"
             name="posterImage"
-            type='url'
+            type="url"
             fullWidth
             value={fields.posterImage}
             onChange={handleChange}
           />
+          <TextField
+            id="cover-image-url-input"
+            label="Cover Image URL"
+            name="coverImage"
+            type="url"
+            fullWidth
+            value={fields.coverImage}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="categories-container">Categories: </label>
+          {fields.categories.map((category, index) => {
+            return (
+              <div id="categories-container" key={index}>
+                <TextField
+                  id={`category-input-${index}`}
+                  placeholder="New Category"
+                  value={fields.categories[index]}
+                  onChange={(event) => {
+                    handleCategoryChange(index, event);
+                  }}
+                />
+                <IconButton
+                  aria-label="remove a category"
+                  id={`remove-catogery-button-${index}`}
+                  size="small"
+                  color="error"
+                  onClick={(event) => {
+                    handleCategoryChange(index);
+                  }}
+                >
+                  <RemoveCircleOutlineIcon fontSize="small" />
+                </IconButton>
+              </div>
+            );
+          })}
+          <IconButton
+            aria-label="add a new category"
+            size="small"
+            color="success"
+            onClick={(event) => {
+              addEmptyCategory();
+            }}
+          >
+            <AddCircleOutlineIcon fontSize="small" />
+          </IconButton>
         </div>
         <div>
           <TextField
@@ -197,7 +292,7 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
             onChange={handleChange}
           />
         </div>
-        <Button type="submit">Add</Button>
+        <Button type="submit">Submit</Button>
       </form>
     </>
   );
