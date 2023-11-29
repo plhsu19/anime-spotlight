@@ -21,3 +21,13 @@
 .largeContextFontSize {
   font-size: 1.25rem;
 }
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* .alignSelfFlexStart {
+  align-self: flex-start
+} */

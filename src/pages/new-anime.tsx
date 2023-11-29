@@ -81,7 +81,6 @@ export default function NewAnime() {
           </Alert>
         </Snackbar>
         <AnimeForm />
-        <Button onClick={handleCreate}>Add Mock</Button>
       </div>
     </Layout>
   );

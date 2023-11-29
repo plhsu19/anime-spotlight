@@ -15,6 +15,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Anime, AnimeFields, Subtype, Status } from '@/types/anime-types';
+import utilStyles from '@/styles/utils.module.css';
+import animeFormStyles from '@/styles/components/AnimeForm.module.css';
 
 export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
   //   {
@@ -111,189 +113,191 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
   // TODO: validate
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <TextField
-            required
-            id="title-input"
-            label="Title"
-            name="title"
-            value={fields.title}
-            onChange={handleChange}
-          />
-          <TextField
-            id="en-title-input"
-            label="English Title"
-            name="enTitle"
-            value={fields.enTitle}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Rating
-            name="rating"
-            value={fields.rating}
-            onChange={handleChange}
-            max={10}
-            precision={0.5}
-          />
-          <span>{fields.rating}</span>
-        </div>
-        <div>
-          <DatePicker
-            label="Start Date *"
-            value={
-              fields.startDate ? dayjs(fields.startDate, dateFormat) : null
+    <form className={animeFormStyles.form} onSubmit={handleSubmit}>
+      <div className={animeFormStyles.fieldsContainer}>
+        <TextField
+          className={animeFormStyles.textInput}
+          required
+          id="title-input"
+          label="Title"
+          name="title"
+          value={fields.title}
+          onChange={handleChange}
+        />
+        <TextField
+          className={animeFormStyles.textInput}
+          id="en-title-input"
+          label="English Title"
+          name="enTitle"
+          value={fields.enTitle}
+          onChange={handleChange}
+        />
+      </div>
+      <div className={animeFormStyles.fieldsContainer}>
+        <Rating
+          name="rating"
+          value={fields.rating}
+          onChange={handleChange}
+          max={10}
+          precision={0.5}
+        />
+        <span>{fields.rating}</span>
+      </div>
+      <div className={animeFormStyles.fieldsContainer}>
+        <DatePicker
+          label="Start Date *"
+          value={fields.startDate ? dayjs(fields.startDate, dateFormat) : null}
+          onChange={(value, context) => {
+            handleDateChange('startDate', value);
+          }}
+          slotProps={{
+            textField: {
+              helperText: 'MM/DD/YYYY'
             }
-            onChange={(value, context) => {
-              handleDateChange('startDate', value);
-            }}
-            slotProps={{
-              textField: {
-                helperText: 'MM/DD/YYYY'
-              }
-            }}
-          />
-          <DatePicker
-            label="End Date"
-            minDate={dayjs(fields.startDate, dateFormat)}
-            value={fields.endDate ? dayjs(fields.endDate, dateFormat) : null}
-            onChange={(value, context) => {
-              handleDateChange('endDate', value);
-            }}
-            slotProps={{
-              textField: {
-                helperText: 'MM/DD/YYYY'
-              }
-            }}
-          />
-        </div>
-        <div>
-          {/* TODO: convert m(margin) and minWidth to the class in CSS */}
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="subtype-label">Subtype *</InputLabel>
-            <Select
-              required
-              labelId="subtype-label"
-              id="subtype"
-              name="subtype"
-              value={fields.subtype}
-              label="Subtype *"
-              onChange={(event) => {
-                handleChange(event);
-              }}
-            >
-              {Object.values(Subtype).map((subtype, index) => (
-                <MenuItem key={index} value={subtype}>
-                  {subtype}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="status-label">Status *</InputLabel>
-            <Select
-              required
-              labelId="status-label"
-              id="status"
-              name="status"
-              value={fields.status}
-              label="Status *"
-              onChange={(event) => {
-                handleChange(event);
-              }}
-            >
-              {Object.values(Status).map((status, index) => (
-                <MenuItem key={index} value={status}>
-                  {status}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <TextField
-            id="episode-count-input"
-            label="Episode Count"
-            name="episodeCount"
-            type="number"
-            value={fields.episodeCount ?? ''}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <TextField
+          }}
+        />
+        <DatePicker
+          label="End Date"
+          minDate={dayjs(fields.startDate, dateFormat)}
+          value={fields.endDate ? dayjs(fields.endDate, dateFormat) : null}
+          onChange={(value, context) => {
+            handleDateChange('endDate', value);
+          }}
+          slotProps={{
+            textField: {
+              helperText: 'MM/DD/YYYY'
+            }
+          }}
+        />
+      </div>
+      <div className={animeFormStyles.fieldsContainer}>
+        {/* TODO: convert m(margin) and minWidth to the class in CSS */}
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="subtype-label">Subtype *</InputLabel>
+          <Select
             required
-            id="poster-image-url-input"
-            label="Poster Image URL"
-            name="posterImage"
-            type="url"
-            fullWidth
-            value={fields.posterImage}
-            onChange={handleChange}
-          />
-          <TextField
-            id="cover-image-url-input"
-            label="Cover Image URL"
-            name="coverImage"
-            type="url"
-            fullWidth
-            value={fields.coverImage}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="categories-container">Categories: </label>
-          {fields.categories.map((category, index) => {
-            return (
-              <div id="categories-container" key={index}>
-                <TextField
-                  id={`category-input-${index}`}
-                  placeholder="New Category"
-                  value={fields.categories[index]}
-                  onChange={(event) => {
-                    handleCategoryChange(index, event);
-                  }}
-                />
-                <IconButton
-                  aria-label="remove a category"
-                  id={`remove-catogery-button-${index}`}
-                  size="small"
-                  color="error"
-                  onClick={(event) => {
-                    handleCategoryChange(index);
-                  }}
-                >
-                  <RemoveCircleOutlineIcon fontSize="small" />
-                </IconButton>
-              </div>
-            );
-          })}
-          <IconButton
-            aria-label="add a new category"
-            size="small"
-            color="success"
-            onClick={(event) => {
-              addEmptyCategory();
+            labelId="subtype-label"
+            id="subtype"
+            name="subtype"
+            value={fields.subtype}
+            label="Subtype *"
+            onChange={(event) => {
+              handleChange(event);
             }}
           >
-            <AddCircleOutlineIcon fontSize="small" />
-          </IconButton>
-        </div>
-        <div>
-          <TextField
+            {Object.values(Subtype).map((subtype, index) => (
+              <MenuItem key={index} value={subtype}>
+                {subtype}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="status-label">Status *</InputLabel>
+          <Select
             required
-            id="description-input"
-            label="Description"
-            name="description"
-            fullWidth
-            multiline
-            rows={7}
-            value={fields.description}
-            onChange={handleChange}
-          />
-        </div>
-        <Button type="submit">Submit</Button>
-      </form>
-    </>
+            labelId="status-label"
+            id="status"
+            name="status"
+            value={fields.status}
+            label="Status *"
+            onChange={(event) => {
+              handleChange(event);
+            }}
+          >
+            {Object.values(Status).map((status, index) => (
+              <MenuItem key={index} value={status}>
+                {status}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <TextField
+          id="episode-count-input"
+          label="Episode Count"
+          name="episodeCount"
+          type="number"
+          value={fields.episodeCount ?? ''}
+          onChange={handleChange}
+        />
+      </div>
+      <div className={animeFormStyles.fieldsContainer}>
+        <TextField
+          required
+          className={animeFormStyles.textInput}
+          id="poster-image-url-input"
+          label="Poster Image URL"
+          name="posterImage"
+          type="url"
+          value={fields.posterImage}
+          onChange={handleChange}
+        />
+        <TextField
+          className={animeFormStyles.textInput}
+          id="cover-image-url-input"
+          label="Cover Image URL"
+          name="coverImage"
+          type="url"
+          value={fields.coverImage}
+          onChange={handleChange}
+        />
+      </div>
+      <div className={animeFormStyles.fieldsContainer}>
+        <label htmlFor="categories-container">Categories: </label>
+        {fields.categories.map((category, index) => {
+          return (
+            <div id="categories-container" key={index}>
+              <TextField
+                id={`category-input-${index}`}
+                placeholder="New Category"
+                value={fields.categories[index]}
+                onChange={(event) => {
+                  handleCategoryChange(index, event);
+                }}
+              />
+              <IconButton
+                aria-label="remove a category"
+                id={`remove-catogery-button-${index}`}
+                size="small"
+                color="error"
+                onClick={(event) => {
+                  handleCategoryChange(index);
+                }}
+              >
+                <RemoveCircleOutlineIcon fontSize="small" />
+              </IconButton>
+            </div>
+          );
+        })}
+        <IconButton
+          aria-label="add a new category"
+          size="small"
+          color="success"
+          onClick={(event) => {
+            addEmptyCategory();
+          }}
+        >
+          <AddCircleOutlineIcon fontSize="small" />
+        </IconButton>
+      </div>
+      <div className={animeFormStyles.fieldsContainer}>
+        <TextField
+          required
+          id="description-input"
+          label="Description"
+          name="description"
+          fullWidth
+          multiline
+          rows={7}
+          value={fields.description}
+          onChange={handleChange}
+        />
+      </div>
+      <div className={animeFormStyles.fieldsContainer}>
+        <Button type="submit" variant="outlined" size="large">
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 }

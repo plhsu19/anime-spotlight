@@ -1,0 +1,22 @@
+.form {
+  width: 100%; 
+  @media screen and (min-width: 600px) {
+    width: 90%;
+  }
+}
+
+.fieldsContainer {
+  padding: 0.7rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.textInput {
+  width: 100%; 
+  @media screen and (min-width: 600px) {
+    width: 48%;
+  }
+}
