@@ -116,16 +116,17 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
     <form className={animeFormStyles.form} onSubmit={handleSubmit}>
       <div className={animeFormStyles.fieldsContainer}>
         <TextField
-          className={animeFormStyles.textInput}
+          className={animeFormStyles.titleInput}
           required
           id="title-input"
           label="Title"
           name="title"
           value={fields.title}
           onChange={handleChange}
+          // helperText="Incorrect entry."
         />
         <TextField
-          className={animeFormStyles.textInput}
+          className={animeFormStyles.titleInput}
           id="en-title-input"
           label="English Title"
           name="enTitle"
@@ -134,14 +135,16 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
         />
       </div>
       <div className={animeFormStyles.fieldsContainer}>
+        <span className={animeFormStyles.inputLabel}>Rating: </span>
+        <span className={animeFormStyles.ratingNumber}>{fields.rating}</span>
         <Rating
           name="rating"
           value={fields.rating}
           onChange={handleChange}
+          size="large"
           max={10}
           precision={0.5}
         />
-        <span>{fields.rating}</span>
       </div>
       <div className={animeFormStyles.fieldsContainer}>
         <DatePicker
@@ -171,9 +174,8 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
         />
       </div>
       <div className={animeFormStyles.fieldsContainer}>
-        {/* TODO: convert m(margin) and minWidth to the class in CSS */}
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel id="subtype-label">Subtype *</InputLabel>
+        <FormControl className={animeFormStyles.selectContainer}>
+          <InputLabel id="subtype-label">Type *</InputLabel>
           <Select
             required
             labelId="subtype-label"
@@ -192,7 +194,7 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
             ))}
           </Select>
         </FormControl>
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <FormControl className={animeFormStyles.selectContainer}>
           <InputLabel id="status-label">Status *</InputLabel>
           <Select
             required
@@ -217,6 +219,7 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
           label="Episode Count"
           name="episodeCount"
           type="number"
+          className={animeFormStyles.episodeCountInput}
           value={fields.episodeCount ?? ''}
           onChange={handleChange}
         />
@@ -224,7 +227,7 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
       <div className={animeFormStyles.fieldsContainer}>
         <TextField
           required
-          className={animeFormStyles.textInput}
+          className={animeFormStyles.urlInput}
           id="poster-image-url-input"
           label="Poster Image URL"
           name="posterImage"
@@ -233,7 +236,7 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
           onChange={handleChange}
         />
         <TextField
-          className={animeFormStyles.textInput}
+          className={animeFormStyles.urlInput}
           id="cover-image-url-input"
           label="Cover Image URL"
           name="coverImage"
@@ -242,42 +245,54 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
           onChange={handleChange}
         />
       </div>
-      <div className={animeFormStyles.fieldsContainer}>
-        <label htmlFor="categories-container">Categories: </label>
-        {fields.categories.map((category, index) => {
-          return (
-            <div id="categories-container" key={index}>
-              <TextField
-                id={`category-input-${index}`}
-                placeholder="New Category"
-                value={fields.categories[index]}
-                onChange={(event) => {
-                  handleCategoryChange(index, event);
-                }}
-              />
-              <IconButton
-                aria-label="remove a category"
-                id={`remove-catogery-button-${index}`}
-                size="small"
-                color="error"
-                onClick={(event) => {
-                  handleCategoryChange(index);
-                }}
-              >
-                <RemoveCircleOutlineIcon fontSize="small" />
-              </IconButton>
-            </div>
-          );
-        })}
+      <div className={animeFormStyles.categoriesContainer}>
+        <label
+          htmlFor="categories-container"
+          className={animeFormStyles.inputLabel}
+        >
+          Categories:{' '}
+        </label>
+        {fields.categories.length > 0 && (
+          <div className={animeFormStyles.categories}>
+            {fields.categories.map((category, index) => {
+              return (
+                <div
+                  id="category-container"
+                  key={index}
+                  className={animeFormStyles.category}
+                >
+                  <TextField
+                    id={`category-input-${index}`}
+                    placeholder="New Category"
+                    value={fields.categories[index]}
+                    onChange={(event) => {
+                      handleCategoryChange(index, event);
+                    }}
+                  />
+                  <IconButton
+                    aria-label="remove a category"
+                    id={`remove-catogery-button-${index}`}
+                    size="small"
+                    color="error"
+                    onClick={(event) => {
+                      handleCategoryChange(index);
+                    }}
+                  >
+                    <RemoveCircleOutlineIcon fontSize="small" />
+                  </IconButton>
+                </div>
+              );
+            })}
+          </div>
+        )}
         <IconButton
           aria-label="add a new category"
-          size="small"
           color="success"
           onClick={(event) => {
             addEmptyCategory();
           }}
         >
-          <AddCircleOutlineIcon fontSize="small" />
+          <AddCircleOutlineIcon fontSize="medium" />
         </IconButton>
       </div>
       <div className={animeFormStyles.fieldsContainer}>

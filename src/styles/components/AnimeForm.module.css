@@ -2,21 +2,70 @@
   width: 100%; 
   @media screen and (min-width: 600px) {
     width: 90%;
+    max-width: 910px;
   }
 }
 
 .fieldsContainer {
-  padding: 0.7rem 1rem;
+  padding: 0.9rem 1rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 1rem;
   flex-wrap: wrap;
 }
 
-.textInput {
+.categoriesContainer {
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.categories {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.category {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.titleInput {
+  width: 90%; 
+  @media screen and (min-width: 600px) {
+    width: 48%;
+  }
+}
+.urlInput {
   width: 100%; 
   @media screen and (min-width: 600px) {
     width: 48%;
   }
+}
+
+.inputLabel {
+  color: #FFFFFFB3;
+}
+
+.ratingNumber {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.selectContainer {
+  width: 120px;
+}
+
+.episodeCountInput {
+  width: 170px;
 }
