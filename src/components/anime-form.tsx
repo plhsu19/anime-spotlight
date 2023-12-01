@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import Joi from 'joi';
 import {
   Button,
   TextField,
@@ -26,21 +27,22 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
   //   submitForm: (fields: AnimeFields) => void;
   //   anime?: Anime;
   // }
-  const [fields, setFields] = useState({
+  const [fields, setFields] = useState<AnimeFields>({
     title: '',
     enTitle: '',
     description: '',
     rating: 10,
-    startDate: null,
+    startDate: dayjs().format(dateFormat),
     endDate: null,
-    subtype: '',
-    status: '',
+    subtype: Subtype.TV,
+    status: Status.CURRENT,
     posterImage: '',
     coverImage: '',
     episodeCount: null,
     categories: ['']
   });
   const [preStartDate, setPreStartDate] = useState(fields.startDate);
+  const [errors, setErrors] = useState({});
 
   if (
     fields.startDate !== 'Invalid Date' &&
@@ -49,6 +51,29 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
     setFields({ ...fields, endDate: fields.startDate });
     setPreStartDate(fields.startDate);
   }
+
+  const schema = Joi.object({
+    title: Joi.string().max(256).required(),
+    enTitle: Joi.string().max(256),
+    description: Joi.string().max(2000).required(),
+    rating: Joi.number().min(0).max(100).required().prefs({ convert: false }),
+    startDate: Joi.date().iso().min('1-1-1900').required(),
+    endDate: Joi.date().iso().min('1-1-1900'),
+    subtype: Joi.string().required(),
+    status: Joi.string().required(),
+    posterImage: Joi.string().uri().required(),
+    coverImage: Joi.string().uri(),
+    episodeCount: Joi.number()
+      .integer()
+      .min(1)
+      .required()
+      .prefs({ convert: false }),
+    categories: Joi.array().unique().items(Joi.string())
+  });
+
+  const isDisabled = (): boolean => {
+    return false;
+  };
 
   const handleChange = (
     event:
@@ -288,6 +313,7 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
         <IconButton
           aria-label="add a new category"
           color="success"
+          size="small"
           onClick={(event) => {
             addEmptyCategory();
           }}
@@ -308,8 +334,13 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
           onChange={handleChange}
         />
       </div>
-      <div className={animeFormStyles.fieldsContainer}>
-        <Button type="submit" variant="outlined" size="large">
+      <div className={animeFormStyles.submitBtnContainer}>
+        <Button
+          type="submit"
+          disabled={isDisabled()}
+          variant="outlined"
+          size="large"
+        >
           Submit
         </Button>
       </div>
