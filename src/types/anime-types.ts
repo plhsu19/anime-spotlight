@@ -27,4 +27,5 @@ export enum Subtype {
 export enum Status {
   CURRENT = 'current',
   FINISHED = 'finished',
+  UPCOMING = 'upcoming',
 }

@@ -52,13 +52,13 @@ export const AnimeProvider = ({
     setPreFetchedAnimes(fetchedAnimes);
   }
 
-  const addAnime = async (animeFields: AnimeFields): Promise<void> => {
+  const addAnime = async (fields: AnimeFields): Promise<void> => {
     dispatch({ type: 'START_LOADING' });
     let message = null;
     let error = null;
 
     try {
-      const response = await animeApiService.createAnime(animeFields);
+      const response = await animeApiService.createAnime(fields);
       message = ADD_ANIME_SUCCESSFUL_MESSAGE.replace(
         '%s',
         response.data.anime.title
@@ -74,7 +74,7 @@ export const AnimeProvider = ({
       } else {
         error = ADD_ANIME_UNEXPECTED_ERROR_MESSAGE.replace(
           '%s',
-          animeFields.title
+          fields.title
         );
       }
     }

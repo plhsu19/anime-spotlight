@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import dayjs from 'dayjs';
 import Joi from 'joi';
 import {
@@ -16,17 +16,17 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Anime, AnimeFields, Subtype, Status } from '@/types/anime-types';
+import { ErrorsState } from '@/types/components/anime-form-types';
 import utilStyles from '@/styles/utils.module.css';
 import animeFormStyles from '@/styles/components/AnimeForm.module.css';
 
-export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
-  //   {
-  //   submitForm,
-  //   anime
-  // }: {
-  //   submitForm: (fields: AnimeFields) => void;
-  //   anime?: Anime;
-  // }
+export default function AnimeForm({
+  submitForm,
+  dateFormat = 'YYYY-MM-DD'
+}: {
+  submitForm: (fields: AnimeFields) => Promise<void>;
+  dateFormat?: string;
+}) {
   const [fields, setFields] = useState<AnimeFields>({
     title: '',
     enTitle: '',
@@ -42,7 +42,7 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
     categories: ['']
   });
   const [preStartDate, setPreStartDate] = useState(fields.startDate);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<ErrorsState>({});
 
   if (
     fields.startDate !== 'Invalid Date' &&
@@ -104,6 +104,18 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
     });
   };
 
+  const clearDate = (name: string): void => {
+    setFields({
+      ...fields,
+      [name]: null
+    });
+  };
+
+  const endDateValue = (): dayjs.Dayjs | null => {
+    if (fields.status !== Status.FINISHED) return null;
+    return fields.endDate ? dayjs(fields.endDate, dateFormat) : null;
+  };
+
   const handleCategoryChange = (
     idx: number,
     event?: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -129,13 +141,21 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
   };
 
   // TODO: handleSubmit
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('form submitted');
-    console.log(fields);
+    submitForm({
+      ...fields,
+      title: fields.title.trim(),
+      enTitle: !fields.enTitle ? fields.enTitle : fields.enTitle.trim(),
+      posterImage: fields.posterImage.trim(),
+      coverImage: !fields.coverImage
+        ? fields.coverImage
+        : fields.coverImage.trim(),
+      description: fields.description.trim()
+    });
   };
 
-  // TODO: validate
+  // TODO: validate function
 
   return (
     <form className={animeFormStyles.form} onSubmit={handleSubmit}>
@@ -143,20 +163,23 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
         <TextField
           className={animeFormStyles.titleInput}
           required
+          error={!!errors.title}
           id="title-input"
           label="Title"
           name="title"
           value={fields.title}
           onChange={handleChange}
-          // helperText="Incorrect entry."
+          helperText={errors.title}
         />
         <TextField
           className={animeFormStyles.titleInput}
+          error={!!errors.enTitle}
           id="en-title-input"
           label="English Title"
           name="enTitle"
           value={fields.enTitle}
           onChange={handleChange}
+          helperText={errors.enTitle}
         />
       </div>
       <div className={animeFormStyles.fieldsContainer}>
@@ -186,12 +209,19 @@ export default function AnimeForm({ dateFormat = 'YYYY-MM-DD' }) {
         />
         <DatePicker
           label="End Date"
+          value={endDateValue()}
           minDate={dayjs(fields.startDate, dateFormat)}
-          value={fields.endDate ? dayjs(fields.endDate, dateFormat) : null}
+          disabled={fields.status !== Status.FINISHED}
           onChange={(value, context) => {
             handleDateChange('endDate', value);
           }}
           slotProps={{
+            field: {
+              clearable: true,
+              onClear: () => {
+                clearDate('endDate');
+              }
+            },
             textField: {
               helperText: 'MM/DD/YYYY'
             }

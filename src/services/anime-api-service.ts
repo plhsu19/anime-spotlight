@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { AnimeResponse, AnimesResponse, DeleteAnimeRespone } from '@/types/anime-api-service-types';
+import { AnimeResponse, AnimesResponse, DeleteAnimeRespone } from '@/types/services/anime-api-service-types';
 import { AnimeFields } from '@/types/anime-types';
 
 class AnimeApiService {

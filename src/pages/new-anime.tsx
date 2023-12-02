@@ -81,7 +81,7 @@ export default function NewAnime() {
             {state.error}
           </Alert>
         </Snackbar>
-        <AnimeForm />
+        <AnimeForm submitForm={addAnime} />
       </div>
     </Layout>
   );
