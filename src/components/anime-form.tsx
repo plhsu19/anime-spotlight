@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useMemo } from 'react';
 import dayjs from 'dayjs';
 import Joi from 'joi';
 import {
@@ -35,7 +35,7 @@ export default function AnimeForm({
     startDate: dayjs().format(dateFormat),
     endDate: null,
     subtype: Subtype.TV,
-    status: Status.CURRENT,
+    status: Status.FINISHED,
     posterImage: '',
     coverImage: '',
     episodeCount: null,
@@ -43,6 +43,7 @@ export default function AnimeForm({
   });
   const [preStartDate, setPreStartDate] = useState(fields.startDate);
   const [errors, setErrors] = useState<ErrorsState>({});
+  const [joiSchema, setJoiSchema] = useState();
 
   if (
     fields.startDate !== 'Invalid Date' &&
@@ -52,24 +53,46 @@ export default function AnimeForm({
     setPreStartDate(fields.startDate);
   }
 
-  const schema = Joi.object({
-    title: Joi.string().max(256).required(),
-    enTitle: Joi.string().max(256),
-    description: Joi.string().max(2000).required(),
-    rating: Joi.number().min(0).max(100).required().prefs({ convert: false }),
-    startDate: Joi.date().iso().min('1-1-1900').required(),
-    endDate: Joi.date().iso().min('1-1-1900'),
-    subtype: Joi.string().required(),
-    status: Joi.string().required(),
-    posterImage: Joi.string().uri().required(),
-    coverImage: Joi.string().uri(),
-    episodeCount: Joi.number()
-      .integer()
-      .min(1)
-      .required()
-      .prefs({ convert: false }),
-    categories: Joi.array().unique().items(Joi.string())
-  });
+  const schema = useMemo(() => {
+    return Joi.object({
+      title: Joi.string().trim().max(256).required(), //done
+      enTitle: Joi.string().trim().max(256).allow(null).required(), //done
+      description: Joi.string().trim().max(2000).required(), // done
+      rating: Joi.number().min(0).max(10).required().prefs({ convert: false }), //done
+      startDate: //done
+        fields.status === Status.UPCOMING
+          ? Joi.date().iso().min('now').required()
+          : Joi.date().iso().min('1-1-1900').max('now').required(),
+      // startDate: (finished) min('1-1-1900') max(now)
+      //            (current)  min('1-1-1900') max(now)
+      //            (upcoming) min(now)
+      endDate: Joi.date().iso().min('1-1-1900').required(),
+      // endDate: (finished) min(starDate) max(now)
+      //          (current) null
+      //          (upcoming) null
+      subtype: Joi.string()
+        .required()
+        .valid(...Object.values(Subtype))
+        .required(),
+      status: Joi.string()
+        .required()
+        .valid(...Object.values(Status))
+        .required(),
+      posterImage: Joi.string().uri().required(),
+      coverImage: Joi.string().uri().allow(null).required(),
+      episodeCount: Joi.number()
+        .integer()
+        .min(1)
+        .allow(null)
+        .required()
+        .prefs({ convert: false }), // done
+      categories: Joi.array()
+        .unique()
+        .items(Joi.string().trim())
+        .min(1)
+        .required() // done
+    });
+  }, [fields.status]);
 
   const isDisabled = (): boolean => {
     return false;
@@ -95,6 +118,16 @@ export default function AnimeForm({
         [event.target.name]: value !== undefined ? value : event.target.value
       });
     }
+  };
+
+  const handleTextFieldBlur = (
+    event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    const { name, value } = event.target;
+    setFields({
+      ...fields,
+      [name]: value.trim()
+    });
   };
 
   const handleDateChange = (name: string, value: dayjs.Dayjs | null): void => {
@@ -169,6 +202,7 @@ export default function AnimeForm({
           name="title"
           value={fields.title}
           onChange={handleChange}
+          onBlur={handleTextFieldBlur}
           helperText={errors.title}
         />
         <TextField
@@ -179,6 +213,7 @@ export default function AnimeForm({
           name="enTitle"
           value={fields.enTitle}
           onChange={handleChange}
+          onBlur={handleTextFieldBlur}
           helperText={errors.enTitle}
         />
       </div>
@@ -277,6 +312,7 @@ export default function AnimeForm({
           className={animeFormStyles.episodeCountInput}
           value={fields.episodeCount ?? ''}
           onChange={handleChange}
+          onBlur={handleTextFieldBlur}
         />
       </div>
       <div className={animeFormStyles.fieldsContainer}>
@@ -289,6 +325,7 @@ export default function AnimeForm({
           type="url"
           value={fields.posterImage}
           onChange={handleChange}
+          onBlur={handleTextFieldBlur}
         />
         <TextField
           className={animeFormStyles.urlInput}
@@ -323,6 +360,7 @@ export default function AnimeForm({
                     onChange={(event) => {
                       handleCategoryChange(index, event);
                     }}
+                    onBlur={handleTextFieldBlur}
                   />
                   <IconButton
                     aria-label="remove a category"
@@ -362,6 +400,7 @@ export default function AnimeForm({
           rows={7}
           value={fields.description}
           onChange={handleChange}
+          onBlur={handleTextFieldBlur}
         />
       </div>
       <div className={animeFormStyles.submitBtnContainer}>
