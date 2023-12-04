@@ -53,46 +53,41 @@ export default function AnimeForm({
     setPreStartDate(fields.startDate);
   }
 
-  const schema = useMemo(() => {
-    return Joi.object({
-      title: Joi.string().trim().max(256).required(), //done
-      enTitle: Joi.string().trim().max(256).allow(null).required(), //done
-      description: Joi.string().trim().max(2000).required(), // done
-      rating: Joi.number().min(0).max(10).required().prefs({ convert: false }), //done
-      startDate: //done
-        fields.status === Status.UPCOMING
-          ? Joi.date().iso().min('now').required()
-          : Joi.date().iso().min('1-1-1900').max('now').required(),
-      // startDate: (finished) min('1-1-1900') max(now)
-      //            (current)  min('1-1-1900') max(now)
-      //            (upcoming) min(now)
-      endDate: Joi.date().iso().min('1-1-1900').required(),
-      // endDate: (finished) min(starDate) max(now)
-      //          (current) null
-      //          (upcoming) null
-      subtype: Joi.string()
-        .required()
-        .valid(...Object.values(Subtype))
-        .required(),
-      status: Joi.string()
-        .required()
-        .valid(...Object.values(Status))
-        .required(),
-      posterImage: Joi.string().uri().required(),
-      coverImage: Joi.string().uri().allow(null).required(),
-      episodeCount: Joi.number()
-        .integer()
-        .min(1)
-        .allow(null)
-        .required()
-        .prefs({ convert: false }), // done
-      categories: Joi.array()
-        .unique()
-        .items(Joi.string().trim())
-        .min(1)
-        .required() // done
-    });
-  }, [fields.status]);
+  const schema = Joi.object({
+    title: Joi.string().trim().max(256).required(),
+    enTitle: Joi.string().trim().max(256).allow(null).allow('').required(),
+    description: Joi.string().trim().max(2000).required(),
+    rating: Joi.number().min(0).max(10).required().prefs({ convert: false }),
+    startDate: Joi.when('status', {
+      is: Status.UPCOMING,
+      then: Joi.date().iso().greater('now').required(),
+      otherwise: Joi.date().iso().min('1900-1-1').max('now').required()
+    }),
+    endDate: Joi.when('status', {
+      is: Status.FINISHED,
+      then: Joi.date().iso().min(Joi.ref('startDate')).max('now').required(),
+      otherwise: Joi.valid(null).required()
+    }),
+    subtype: Joi.string()
+      .valid(...Object.values(Subtype))
+      .required(),
+    status: Joi.string()
+      .valid(...Object.values(Status))
+      .required(),
+    posterImage: Joi.string().uri().required(),
+    coverImage: Joi.string().uri().allow(null).allow('').required(),
+    episodeCount: Joi.number()
+      .integer()
+      .min(1)
+      .allow(null)
+      .required()
+      .prefs({ convert: false }),
+    categories: Joi.array()
+      .unique()
+      .items(Joi.string().trim().min(1).max(256).required())
+      .min(1)
+      .required()
+  });
 
   const isDisabled = (): boolean => {
     return false;
@@ -128,6 +123,23 @@ export default function AnimeForm({
       ...fields,
       [name]: value.trim()
     });
+    validateField(name);
+  };
+
+  const validateField = (name: string): void => {
+    const fieldSchema = Joi.object({ [name]: schema.extract(name) });
+    const { error } = fieldSchema.validate({ [name]: fields[name] });
+    if (error) {
+      console.log(error.details[0]);
+      setErrors({
+        ...errors,
+        [name]: error.details[0].message
+      });
+    } else {
+      const copiedErrors = { ...errors };
+      delete copiedErrors[name];
+      setErrors(copiedErrors);
+    }
   };
 
   const handleDateChange = (name: string, value: dayjs.Dayjs | null): void => {
@@ -211,7 +223,7 @@ export default function AnimeForm({
           id="en-title-input"
           label="English Title"
           name="enTitle"
-          value={fields.enTitle}
+          value={fields.enTitle ?? ''}
           onChange={handleChange}
           onBlur={handleTextFieldBlur}
           helperText={errors.enTitle}
@@ -326,6 +338,8 @@ export default function AnimeForm({
           value={fields.posterImage}
           onChange={handleChange}
           onBlur={handleTextFieldBlur}
+          error={!!errors.posterImage}
+          helperText={errors.posterImage}
         />
         <TextField
           className={animeFormStyles.urlInput}
@@ -333,7 +347,7 @@ export default function AnimeForm({
           label="Cover Image URL"
           name="coverImage"
           type="url"
-          value={fields.coverImage}
+          value={fields.coverImage ?? ''}
           onChange={handleChange}
         />
       </div>

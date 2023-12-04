@@ -1,4 +1,5 @@
 export interface ErrorsState {
+  [key: string]: string | undefined;
   title?: string;
   enTitle?: string;
   description?: string;
