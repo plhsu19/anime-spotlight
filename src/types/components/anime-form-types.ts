@@ -1,5 +1,5 @@
 export interface ErrorsState {
-  [key: string]: string | undefined;
+  [key: string]: string | { [key: string]: string } | undefined;
   title?: string;
   enTitle?: string;
   description?: string;
@@ -11,5 +11,5 @@ export interface ErrorsState {
   posterImage?: string;
   coverImage?: string;
   episodeCount?: string;
-  categories?: string;
+  categories?: { [key: string]: string };
 }

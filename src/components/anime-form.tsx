@@ -29,7 +29,7 @@ export default function AnimeForm({
 }) {
   const [fields, setFields] = useState<AnimeFields>({
     title: '',
-    enTitle: '',
+    enTitle: null,
     description: '',
     rating: 10,
     startDate: dayjs().format(dateFormat),
@@ -43,7 +43,6 @@ export default function AnimeForm({
   });
   const [preStartDate, setPreStartDate] = useState(fields.startDate);
   const [errors, setErrors] = useState<ErrorsState>({});
-  const [joiSchema, setJoiSchema] = useState();
 
   if (
     fields.startDate !== 'Invalid Date' &&
@@ -116,30 +115,25 @@ export default function AnimeForm({
   };
 
   const handleTextFieldBlur = (
-    event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+    index?: number
   ): void => {
     const { name, value } = event.target;
-    setFields({
-      ...fields,
-      [name]: value.trim()
-    });
-    validateField(name);
-  };
-
-  const validateField = (name: string): void => {
-    const fieldSchema = Joi.object({ [name]: schema.extract(name) });
-    const { error } = fieldSchema.validate({ [name]: fields[name] });
-    if (error) {
-      console.log(error.details[0]);
-      setErrors({
-        ...errors,
-        [name]: error.details[0].message
+    if (name === 'categories' && index != null) {
+      const updatedCategories = [...fields.categories];
+      updatedCategories[index] = value.trim();
+      setFields({
+        ...fields,
+        [name]: updatedCategories
       });
-    } else {
-      const copiedErrors = { ...errors };
-      delete copiedErrors[name];
-      setErrors(copiedErrors);
+    } else if (name !== 'episodeCount') {
+      setFields({
+        ...fields,
+        [name]: value.trim()
+      });
     }
+    console.log(fields);
+    validateField(name);
   };
 
   const handleDateChange = (name: string, value: dayjs.Dayjs | null): void => {
@@ -185,6 +179,29 @@ export default function AnimeForm({
     });
   };
 
+  const validateField = (name: string): void => {
+    const fieldSchema = Joi.object({ [name]: schema.extract(name) });
+    const { error } = fieldSchema.validate({ [name]: fields[name] });
+    console.log(error?.details);
+    if (error) {
+      if (name === 'categories') {
+        setErrors({
+          ...errors,
+          [name]: { [error.details[0].path[1]]: error.details[0].message }
+        });
+      } else {
+        setErrors({
+          ...errors,
+          [name]: error.details[0].message
+        });
+      }
+    } else {
+      const updatedErrors = { ...errors };
+      delete updatedErrors[name];
+      setErrors(updatedErrors);
+    }
+  };
+
   // TODO: handleSubmit
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -199,8 +216,6 @@ export default function AnimeForm({
       description: fields.description.trim()
     });
   };
-
-  // TODO: validate function
 
   return (
     <form className={animeFormStyles.form} onSubmit={handleSubmit}>
@@ -322,9 +337,11 @@ export default function AnimeForm({
           name="episodeCount"
           type="number"
           className={animeFormStyles.episodeCountInput}
-          value={fields.episodeCount ?? ''}
+          error={!!errors.episodeCount}
+          value={fields.episodeCount ?? 'NaN'}
           onChange={handleChange}
           onBlur={handleTextFieldBlur}
+          helperText={errors.episodeCount}
         />
       </div>
       <div className={animeFormStyles.fieldsContainer}>
@@ -347,6 +364,8 @@ export default function AnimeForm({
           label="Cover Image URL"
           name="coverImage"
           type="url"
+          error={!!errors.coverImage}
+          helperText={errors.coverImage}
           value={fields.coverImage ?? ''}
           onChange={handleChange}
         />
@@ -356,7 +375,7 @@ export default function AnimeForm({
           htmlFor="categories-container"
           className={animeFormStyles.inputLabel}
         >
-          Categories:{' '}
+          Categories:
         </label>
         {fields.categories.length > 0 && (
           <div className={animeFormStyles.categories}>
@@ -369,12 +388,17 @@ export default function AnimeForm({
                 >
                   <TextField
                     id={`category-input-${index}`}
+                    name="categories"
                     placeholder="New Category"
-                    value={fields.categories[index]}
+                    value={category}
+                    error={!!errors.categories && !!errors.categories[index]}
+                    helperText = {!!errors.categories && errors.categories[index]}
                     onChange={(event) => {
                       handleCategoryChange(index, event);
                     }}
-                    onBlur={handleTextFieldBlur}
+                    onBlur={(event) => {
+                      handleTextFieldBlur(event, index);
+                    }}
                   />
                   <IconButton
                     aria-label="remove a category"
@@ -409,12 +433,14 @@ export default function AnimeForm({
           id="description-input"
           label="Description"
           name="description"
+          error={!!errors.description}
           fullWidth
           multiline
           rows={7}
           value={fields.description}
           onChange={handleChange}
           onBlur={handleTextFieldBlur}
+          helperText={errors.description}
         />
       </div>
       <div className={animeFormStyles.submitBtnContainer}>
