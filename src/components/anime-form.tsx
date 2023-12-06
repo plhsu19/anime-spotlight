@@ -29,7 +29,7 @@ export default function AnimeForm({
 }) {
   const [fields, setFields] = useState<AnimeFields>({
     title: '',
-    enTitle: null,
+    enTitle: '',
     description: '',
     rating: 10,
     startDate: dayjs().format(dateFormat),
@@ -83,8 +83,7 @@ export default function AnimeForm({
       .prefs({ convert: false }),
     categories: Joi.array()
       .unique()
-      .items(Joi.string().trim().min(1).max(256).required())
-      .min(1)
+      .items(Joi.string().trim().min(1).max(256))
       .required()
   });
 
@@ -114,26 +113,28 @@ export default function AnimeForm({
     }
   };
 
+  // for text fields onBlur: trim the value and validate
   const handleTextFieldBlur = (
     event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     index?: number
   ): void => {
     const { name, value } = event.target;
+    let updatedValue;
     if (name === 'categories' && index != null) {
-      const updatedCategories = [...fields.categories];
-      updatedCategories[index] = value.trim();
+      updatedValue = [...fields.categories];
+      updatedValue[index] = value.trim();
       setFields({
         ...fields,
-        [name]: updatedCategories
+        [name]: updatedValue
       });
-    } else if (name !== 'episodeCount') {
+    } else {
+      updatedValue = !!value.trim() ? value.trim() : null;
       setFields({
         ...fields,
-        [name]: value.trim()
+        [name]: updatedValue,
       });
     }
-    console.log(fields);
-    validateField(name);
+    validateField(name, updatedValue);
   };
 
   const handleDateChange = (name: string, value: dayjs.Dayjs | null): void => {
@@ -157,18 +158,27 @@ export default function AnimeForm({
 
   const handleCategoryChange = (
     idx: number,
-    event?: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     const updatedCategories = [...fields.categories];
-    if (event === undefined) {
-      updatedCategories.splice(idx, 1);
-    } else {
-      updatedCategories[idx] = event.target.value;
-    }
+    updatedCategories[idx] = event.target.value;
+
     setFields({
       ...fields,
       categories: updatedCategories
     });
+  };
+
+  const removeCategory = (idx: number): void => {
+    const updatedCategories = [...fields.categories];
+    updatedCategories.splice(idx, 1);
+
+    setFields({
+      ...fields,
+      categories: updatedCategories
+    });
+
+    validateField('categories', updatedCategories);
   };
 
   const addEmptyCategory = (): void => {
@@ -179,15 +189,25 @@ export default function AnimeForm({
     });
   };
 
-  const validateField = (name: string): void => {
+  const validateField = (name: string, value: any): void => {
     const fieldSchema = Joi.object({ [name]: schema.extract(name) });
-    const { error } = fieldSchema.validate({ [name]: fields[name] });
-    console.log(error?.details);
+    const { error } = fieldSchema.validate(
+      { [name]: value },
+      { abortEarly: false }
+    );
     if (error) {
       if (name === 'categories') {
+        const initialAcc: { [key: string | number]: string } = {};
+
+        const categoriesError = error.details.reduce((acc, cur) => {
+          if (cur.path[1] != null) {
+            acc[cur.path[1]] = cur.message;
+          }
+          return acc;
+        }, initialAcc);
         setErrors({
           ...errors,
-          [name]: { [error.details[0].path[1]]: error.details[0].message }
+          [name]: categoriesError
         });
       } else {
         setErrors({
@@ -227,7 +247,7 @@ export default function AnimeForm({
           id="title-input"
           label="Title"
           name="title"
-          value={fields.title}
+          value={fields.title ?? ''}
           onChange={handleChange}
           onBlur={handleTextFieldBlur}
           helperText={errors.title}
@@ -340,7 +360,6 @@ export default function AnimeForm({
           error={!!errors.episodeCount}
           value={fields.episodeCount ?? 'NaN'}
           onChange={handleChange}
-          onBlur={handleTextFieldBlur}
           helperText={errors.episodeCount}
         />
       </div>
@@ -352,7 +371,7 @@ export default function AnimeForm({
           label="Poster Image URL"
           name="posterImage"
           type="url"
-          value={fields.posterImage}
+          value={fields.posterImage ?? ''}
           onChange={handleChange}
           onBlur={handleTextFieldBlur}
           error={!!errors.posterImage}
@@ -368,6 +387,7 @@ export default function AnimeForm({
           helperText={errors.coverImage}
           value={fields.coverImage ?? ''}
           onChange={handleChange}
+          onBlur={handleTextFieldBlur}
         />
       </div>
       <div className={animeFormStyles.categoriesContainer}>
@@ -392,7 +412,7 @@ export default function AnimeForm({
                     placeholder="New Category"
                     value={category}
                     error={!!errors.categories && !!errors.categories[index]}
-                    helperText = {!!errors.categories && errors.categories[index]}
+                    helperText={!!errors.categories && errors.categories[index]}
                     onChange={(event) => {
                       handleCategoryChange(index, event);
                     }}
@@ -406,7 +426,7 @@ export default function AnimeForm({
                     size="small"
                     color="error"
                     onClick={(event) => {
-                      handleCategoryChange(index);
+                      removeCategory(index);
                     }}
                   >
                     <RemoveCircleOutlineIcon fontSize="small" />
@@ -437,7 +457,7 @@ export default function AnimeForm({
           fullWidth
           multiline
           rows={7}
-          value={fields.description}
+          value={fields.description ?? ''}
           onChange={handleChange}
           onBlur={handleTextFieldBlur}
           helperText={errors.description}
