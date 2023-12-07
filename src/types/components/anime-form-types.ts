@@ -1,3 +1,4 @@
+// import { Subtype, Status } from "@/types/anime-types";
 export interface ErrorsState {
   [key: string]: string | { [key: string]: string } | undefined;
   title?: string;
@@ -13,3 +14,19 @@ export interface ErrorsState {
   episodeCount?: string;
   categories?: { [key: string]: string };
 }
+
+// export interface FieldsState {
+//   [key: string]: string | number | null | string[] | Subtype | Status;
+//   title: string | null;
+//   enTitle: string | null;
+//   description: string | null;
+//   rating: number;
+//   startDate: string;
+//   endDate: string | null;
+//   subtype: Subtype;
+//   status: Status;
+//   posterImage: string | null;
+//   coverImage: string | null;
+//   episodeCount: number | null;
+//   categories: string[];
+// }

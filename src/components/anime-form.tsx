@@ -32,9 +32,9 @@ export default function AnimeForm({
     enTitle: '',
     description: '',
     rating: 10,
-    startDate: dayjs().format(dateFormat),
-    endDate: null,
+    startDate: null,
     subtype: Subtype.TV,
+    endDate: null,
     status: Status.FINISHED,
     posterImage: '',
     coverImage: '',
@@ -45,8 +45,9 @@ export default function AnimeForm({
   const [errors, setErrors] = useState<ErrorsState>({});
 
   if (
-    fields.startDate !== 'Invalid Date' &&
-    preStartDate !== fields.startDate
+    preStartDate !== fields.startDate &&
+    fields.startDate !== null &&
+    fields.status === Status.FINISHED
   ) {
     setFields({ ...fields, endDate: fields.startDate });
     setPreStartDate(fields.startDate);
@@ -92,11 +93,7 @@ export default function AnimeForm({
   };
 
   const handleChange = (
-    event:
-      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | React.SyntheticEvent
-      | SelectChangeEvent<string>,
-    value?: number | null
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     if (event.target.name === 'episodeCount') {
       setFields({
@@ -108,12 +105,41 @@ export default function AnimeForm({
     } else {
       setFields({
         ...fields,
-        [event.target.name]: value !== undefined ? value : event.target.value
+        [event.target.name]: event.target.value
       });
     }
   };
 
-  // for text fields onBlur: trim the value and validate
+  const handleSelectChange = (event: SelectChangeEvent<string>): void => {
+    if (
+      event.target.value === Status.UPCOMING ||
+      event.target.value === Status.CURRENT
+    ) {
+      setFields({
+        ...fields,
+        [event.target.name]: event.target.value,
+        endDate: null
+      });
+    } else {
+      setFields({
+        ...fields,
+        [event.target.name]: event.target.value
+      });
+    }
+  };
+
+  const handleRatingChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: number | null
+  ) => {
+    setFields({
+      ...fields,
+      [event.target.name]: value
+    });
+    validateField(event.target.name, value);
+  };
+
+  // for all TextFields onBlur: trim the value and validate
   const handleTextFieldBlur = (
     event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     index?: number
@@ -127,11 +153,13 @@ export default function AnimeForm({
         ...fields,
         [name]: updatedValue
       });
+    } else if (name === 'episodeCount') {
+      updatedValue = fields.episodeCount;
     } else {
       updatedValue = !!value.trim() ? value.trim() : null;
       setFields({
         ...fields,
-        [name]: updatedValue,
+        [name]: updatedValue
       });
     }
     validateField(name, updatedValue);
@@ -149,11 +177,6 @@ export default function AnimeForm({
       ...fields,
       [name]: null
     });
-  };
-
-  const endDateValue = (): dayjs.Dayjs | null => {
-    if (fields.status !== Status.FINISHED) return null;
-    return fields.endDate ? dayjs(fields.endDate, dateFormat) : null;
   };
 
   const handleCategoryChange = (
@@ -195,12 +218,13 @@ export default function AnimeForm({
       { [name]: value },
       { abortEarly: false }
     );
+    console.log(error);
     if (error) {
       if (name === 'categories') {
         const initialAcc: { [key: string | number]: string } = {};
 
         const categoriesError = error.details.reduce((acc, cur) => {
-          if (cur.path[1] != null) {
+          if (cur.path[1] != null && acc[cur.path[1]] == null) {
             acc[cur.path[1]] = cur.message;
           }
           return acc;
@@ -266,33 +290,55 @@ export default function AnimeForm({
       </div>
       <div className={animeFormStyles.fieldsContainer}>
         <span className={animeFormStyles.inputLabel}>Rating: </span>
-        <span className={animeFormStyles.ratingNumber}>{fields.rating}</span>
         <Rating
           name="rating"
           value={fields.rating}
-          onChange={handleChange}
+          onChange={handleRatingChange}
           size="large"
           max={10}
           precision={0.5}
         />
+        {fields.rating && (
+          <span className={animeFormStyles.ratingNumber}>{fields.rating}</span>
+        )}
+        {errors.rating && (
+          <span className={animeFormStyles.alert}>{errors.rating}</span>
+        )}
       </div>
       <div className={animeFormStyles.fieldsContainer}>
         <DatePicker
           label="Start Date *"
           value={fields.startDate ? dayjs(fields.startDate, dateFormat) : null}
+          minDate={
+            fields.status === Status.UPCOMING
+              ? dayjs().add(1, 'day')
+              : undefined
+          }
+          maxDate={fields.status !== Status.UPCOMING ? dayjs() : undefined}
           onChange={(value, context) => {
             handleDateChange('startDate', value);
           }}
           slotProps={{
+            field: {
+              clearable: true,
+              onClear: () => {
+                clearDate('startDate');
+              }
+            },
             textField: {
-              helperText: 'MM/DD/YYYY'
+              helperText: errors.startDate
             }
           }}
         />
         <DatePicker
           label="End Date"
-          value={endDateValue()}
-          minDate={dayjs(fields.startDate, dateFormat)}
+          value={fields.endDate ? dayjs(fields.endDate, dateFormat) : null}
+          minDate={
+            fields.status === Status.FINISHED
+              ? dayjs(fields.startDate, dateFormat)
+              : undefined
+          }
+          maxDate={fields.status === Status.FINISHED ? dayjs() : undefined}
           disabled={fields.status !== Status.FINISHED}
           onChange={(value, context) => {
             handleDateChange('endDate', value);
@@ -305,7 +351,7 @@ export default function AnimeForm({
               }
             },
             textField: {
-              helperText: 'MM/DD/YYYY'
+              helperText: errors.endDate
             }
           }}
         />
@@ -321,7 +367,7 @@ export default function AnimeForm({
             value={fields.subtype}
             label="Subtype *"
             onChange={(event) => {
-              handleChange(event);
+              handleSelectChange(event);
             }}
           >
             {Object.values(Subtype).map((subtype, index) => (
@@ -341,7 +387,7 @@ export default function AnimeForm({
             value={fields.status}
             label="Status *"
             onChange={(event) => {
-              handleChange(event);
+              handleSelectChange(event);
             }}
           >
             {Object.values(Status).map((status, index) => (
@@ -360,6 +406,7 @@ export default function AnimeForm({
           error={!!errors.episodeCount}
           value={fields.episodeCount ?? 'NaN'}
           onChange={handleChange}
+          onBlur={handleTextFieldBlur}
           helperText={errors.episodeCount}
         />
       </div>

@@ -75,3 +75,8 @@
   display: flex;
   justify-content: center;
 }
+
+.alert {
+  color: #F44336;
+  font-size: 0.75rem;
+}
