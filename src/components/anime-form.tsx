@@ -16,9 +16,10 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Anime, AnimeFields, Subtype, Status } from '@/types/anime-types';
-import { ErrorsState } from '@/types/components/anime-form-types';
+import { Errors, AnimeEditFields } from '@/types/components/anime-form-types';
 import utilStyles from '@/styles/utils.module.css';
 import animeFormStyles from '@/styles/components/AnimeForm.module.css';
+import { StarRate } from '@mui/icons-material';
 
 export default function AnimeForm({
   submitForm,
@@ -27,14 +28,14 @@ export default function AnimeForm({
   submitForm: (fields: AnimeFields) => Promise<void>;
   dateFormat?: string;
 }) {
-  const [fields, setFields] = useState<AnimeFields>({
+  const [fields, setFields] = useState<AnimeEditFields>({
     title: '',
     enTitle: '',
     description: '',
     rating: 10,
     startDate: null,
-    subtype: Subtype.TV,
     endDate: null,
+    subtype: Subtype.TV,
     status: Status.FINISHED,
     posterImage: '',
     coverImage: '',
@@ -42,7 +43,7 @@ export default function AnimeForm({
     categories: ['']
   });
   const [preStartDate, setPreStartDate] = useState(fields.startDate);
-  const [errors, setErrors] = useState<ErrorsState>({});
+  const [errors, setErrors] = useState<Errors>({});
 
   if (
     preStartDate !== fields.startDate &&
@@ -156,7 +157,7 @@ export default function AnimeForm({
     } else if (name === 'episodeCount') {
       updatedValue = fields.episodeCount;
     } else {
-      updatedValue = !!value.trim() ? value.trim() : null;
+      updatedValue = value.trim();
       setFields({
         ...fields,
         [name]: updatedValue
@@ -166,10 +167,20 @@ export default function AnimeForm({
   };
 
   const handleDateChange = (name: string, value: dayjs.Dayjs | null): void => {
+    const updatedDate = !!value ? value.format(dateFormat) : null;
     setFields({
       ...fields,
-      [name]: !!value ? value.format(dateFormat) : null
+      [name]: updatedDate
     });
+
+    // const DateSetForValidation = {
+    //   status: fields.status,
+    //   startDate: fields.startDate,
+    //   endDate: fields.endDate,
+    //   [name]: updatedDate
+    // };
+
+    // validateDates(DateSetForValidation);
   };
 
   const clearDate = (name: string): void => {
@@ -212,13 +223,31 @@ export default function AnimeForm({
     });
   };
 
+  // const validateDates = (values: {
+  //   status: Status;
+  //   startDate: string | null;
+  //   endDate: string | null;
+  // }) => {
+  //   const fieldsSchema = Joi.object(
+  //     Object.keys(values).reduce((acc, cur) => {
+  //       acc[cur] = schema.extract(cur);
+  //       return acc;
+  //     }, {})
+  //   );
+
+  //   const {error} = fieldsSchema.validate(values);
+  //   if (error) {
+
+  //   }
+  // };
+
   const validateField = (name: string, value: any): void => {
     const fieldSchema = Joi.object({ [name]: schema.extract(name) });
     const { error } = fieldSchema.validate(
       { [name]: value },
       { abortEarly: false }
     );
-    console.log(error);
+    console.log(error?.details);
     if (error) {
       if (name === 'categories') {
         const initialAcc: { [key: string | number]: string } = {};
@@ -249,16 +278,16 @@ export default function AnimeForm({
   // TODO: handleSubmit
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    submitForm({
-      ...fields,
-      title: fields.title.trim(),
-      enTitle: !fields.enTitle ? fields.enTitle : fields.enTitle.trim(),
-      posterImage: fields.posterImage.trim(),
-      coverImage: !fields.coverImage
-        ? fields.coverImage
-        : fields.coverImage.trim(),
-      description: fields.description.trim()
-    });
+    // submitForm({
+    //   ...fields,
+    //   title: fields.title.trim(),
+    //   enTitle: !fields.enTitle ? fields.enTitle : fields.enTitle.trim(),
+    //   posterImage: fields.posterImage.trim(),
+    //   coverImage: !fields.coverImage
+    //     ? fields.coverImage
+    //     : fields.coverImage.trim(),
+    //   description: fields.description.trim()
+    // });
   };
 
   return (
@@ -304,57 +333,6 @@ export default function AnimeForm({
         {errors.rating && (
           <span className={animeFormStyles.alert}>{errors.rating}</span>
         )}
-      </div>
-      <div className={animeFormStyles.fieldsContainer}>
-        <DatePicker
-          label="Start Date *"
-          value={fields.startDate ? dayjs(fields.startDate, dateFormat) : null}
-          minDate={
-            fields.status === Status.UPCOMING
-              ? dayjs().add(1, 'day')
-              : undefined
-          }
-          maxDate={fields.status !== Status.UPCOMING ? dayjs() : undefined}
-          onChange={(value, context) => {
-            handleDateChange('startDate', value);
-          }}
-          slotProps={{
-            field: {
-              clearable: true,
-              onClear: () => {
-                clearDate('startDate');
-              }
-            },
-            textField: {
-              helperText: errors.startDate
-            }
-          }}
-        />
-        <DatePicker
-          label="End Date"
-          value={fields.endDate ? dayjs(fields.endDate, dateFormat) : null}
-          minDate={
-            fields.status === Status.FINISHED
-              ? dayjs(fields.startDate, dateFormat)
-              : undefined
-          }
-          maxDate={fields.status === Status.FINISHED ? dayjs() : undefined}
-          disabled={fields.status !== Status.FINISHED}
-          onChange={(value, context) => {
-            handleDateChange('endDate', value);
-          }}
-          slotProps={{
-            field: {
-              clearable: true,
-              onClear: () => {
-                clearDate('endDate');
-              }
-            },
-            textField: {
-              helperText: errors.endDate
-            }
-          }}
-        />
       </div>
       <div className={animeFormStyles.fieldsContainer}>
         <FormControl className={animeFormStyles.selectContainer}>
@@ -408,6 +386,57 @@ export default function AnimeForm({
           onChange={handleChange}
           onBlur={handleTextFieldBlur}
           helperText={errors.episodeCount}
+        />
+      </div>
+      <div className={animeFormStyles.fieldsContainer}>
+        <DatePicker
+          label="Start Date *"
+          value={fields.startDate ? dayjs(fields.startDate, dateFormat) : null}
+          minDate={
+            fields.status === Status.UPCOMING
+              ? dayjs().add(1, 'day')
+              : undefined
+          }
+          maxDate={fields.status !== Status.UPCOMING ? dayjs() : undefined}
+          onChange={(value, context) => {
+            handleDateChange('startDate', value);
+          }}
+          slotProps={{
+            field: {
+              clearable: true,
+              onClear: () => {
+                clearDate('startDate');
+              }
+            },
+            textField: {
+              helperText: errors.startDate
+            }
+          }}
+        />
+        <DatePicker
+          label="End Date"
+          value={fields.endDate ? dayjs(fields.endDate, dateFormat) : null}
+          minDate={
+            fields.status === Status.FINISHED
+              ? dayjs(fields.startDate, dateFormat)
+              : undefined
+          }
+          maxDate={fields.status === Status.FINISHED ? dayjs() : undefined}
+          disabled={fields.status !== Status.FINISHED}
+          onChange={(value, context) => {
+            handleDateChange('endDate', value);
+          }}
+          slotProps={{
+            field: {
+              clearable: true,
+              onClear: () => {
+                clearDate('endDate');
+              }
+            },
+            textField: {
+              helperText: errors.endDate
+            }
+          }}
         />
       </div>
       <div className={animeFormStyles.fieldsContainer}>
