@@ -10,7 +10,8 @@ import {
   InputLabel,
   Select,
   SelectChangeEvent,
-  IconButton
+  IconButton,
+  FormHelperText
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -44,6 +45,7 @@ export default function AnimeForm({
   });
   const [preStartDate, setPreStartDate] = useState(fields.startDate);
   const [errors, setErrors] = useState<Errors>({});
+  const isDisabled = Object.keys(errors).length > 0;
 
   if (
     preStartDate !== fields.startDate &&
@@ -89,10 +91,6 @@ export default function AnimeForm({
       .required()
   });
 
-  const isDisabled = (): boolean => {
-    return false;
-  };
-
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
@@ -137,7 +135,6 @@ export default function AnimeForm({
       ...fields,
       [event.target.name]: value
     });
-    validateField(event.target.name, value);
   };
 
   // for all TextFields onBlur: trim the value and validate
@@ -240,6 +237,31 @@ export default function AnimeForm({
 
   //   }
   // };
+  const isValid = (): boolean => {
+    const { error } = schema.validate(fields, { abortEarly: false });
+    const updatedErrors: Errors = {};
+    if (error) {
+      error.details.forEach((detail, index) => {
+        // check if the path has the path[1] index, if yes, add message to the errors[path[0]][path[1]]
+        if (detail.path[1] == null) {
+          // normal fields, not an array and no path[1] index, directly setup field by path[0] field name (no override)
+          updatedErrors[detail.path[0]] =
+            updatedErrors[detail.path[0]] ?? detail.message;
+        } else if (detail.path[0] === 'categories') {
+          updatedErrors[detail.path[0]] =
+            updatedErrors[detail.path[0]] == null
+              ? { [detail.path[1]]: detail.message }
+              : {
+                  [detail.path[1]]: detail.message,
+                  ...updatedErrors[detail.path[0]]
+                };
+        }
+      });
+    }
+    console.log(updatedErrors);
+    setErrors(updatedErrors);
+    return error == null;
+  };
 
   const validateField = (name: string, value: any): void => {
     const fieldSchema = Joi.object({ [name]: schema.extract(name) });
@@ -247,7 +269,7 @@ export default function AnimeForm({
       { [name]: value },
       { abortEarly: false }
     );
-    console.log(error?.details);
+    // console.log(error?.details);
     if (error) {
       if (name === 'categories') {
         const initialAcc: { [key: string | number]: string } = {};
@@ -278,6 +300,9 @@ export default function AnimeForm({
   // TODO: handleSubmit
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isValid()) {
+      console.log('form-submitted');
+    }
     // submitForm({
     //   ...fields,
     //   title: fields.title.trim(),
@@ -291,7 +316,7 @@ export default function AnimeForm({
   };
 
   return (
-    <form className={animeFormStyles.form} onSubmit={handleSubmit}>
+    <form className={animeFormStyles.form} onSubmit={handleSubmit} noValidate>
       <div className={animeFormStyles.fieldsContainer}>
         <TextField
           className={animeFormStyles.titleInput}
@@ -335,7 +360,10 @@ export default function AnimeForm({
         )}
       </div>
       <div className={animeFormStyles.fieldsContainer}>
-        <FormControl className={animeFormStyles.selectContainer}>
+        <FormControl
+          className={animeFormStyles.selectContainer}
+          error={!!errors.subtype}
+        >
           <InputLabel id="subtype-label">Type *</InputLabel>
           <Select
             required
@@ -354,8 +382,14 @@ export default function AnimeForm({
               </MenuItem>
             ))}
           </Select>
+          {!!errors.subtype && (
+            <FormHelperText>{errors.subtype}</FormHelperText>
+          )}
         </FormControl>
-        <FormControl className={animeFormStyles.selectContainer}>
+        <FormControl
+          className={animeFormStyles.selectContainer}
+          error={!!errors.status}
+        >
           <InputLabel id="status-label">Status *</InputLabel>
           <Select
             required
@@ -374,6 +408,7 @@ export default function AnimeForm({
               </MenuItem>
             ))}
           </Select>
+          {!!errors.status && <FormHelperText>{errors.status}</FormHelperText>}
         </FormControl>
         <TextField
           id="episode-count-input"
@@ -542,7 +577,7 @@ export default function AnimeForm({
       <div className={animeFormStyles.submitBtnContainer}>
         <Button
           type="submit"
-          disabled={isDisabled()}
+          // disabled={isDisabled}
           variant="outlined"
           size="large"
         >
