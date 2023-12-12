@@ -87,6 +87,7 @@ export default function AnimeForm({
       .prefs({ convert: false }),
     categories: Joi.array()
       .unique()
+      .min(1)
       .items(Joi.string().trim().min(1).max(256))
       .required()
   });
@@ -135,6 +136,7 @@ export default function AnimeForm({
       ...fields,
       [event.target.name]: value
     });
+    validate(event.target.name, value);
   };
 
   // for all TextFields onBlur: trim the value and validate
@@ -160,7 +162,7 @@ export default function AnimeForm({
         [name]: updatedValue
       });
     }
-    validateField(name, updatedValue);
+    validate(name, updatedValue);
   };
 
   const handleDateChange = (name: string, value: dayjs.Dayjs | null): void => {
@@ -209,7 +211,7 @@ export default function AnimeForm({
       categories: updatedCategories
     });
 
-    validateField('categories', updatedCategories);
+    validate('categories', updatedCategories);
   };
 
   const addEmptyCategory = (): void => {
@@ -218,6 +220,8 @@ export default function AnimeForm({
       ...fields,
       categories: updatedCategories
     });
+    if (updatedCategories.length === 1)
+      validate('categories', updatedCategories);
   };
 
   // const validateDates = (values: {
@@ -237,16 +241,29 @@ export default function AnimeForm({
 
   //   }
   // };
-  const isValid = (): boolean => {
-    const { error } = schema.validate(fields, { abortEarly: false });
+  const validate = (name?: string, value?: any): boolean => {
+    const targetFields =
+      name != null && value != null ? { ...fields, [name]: value } : fields;
+    const { error } = schema.validate(targetFields, { abortEarly: false });
     const updatedErrors: Errors = {};
+    console.log('entire validation errors', error?.details);
     if (error) {
       error.details.forEach((detail, index) => {
         // check if the path has the path[1] index, if yes, add message to the errors[path[0]][path[1]]
         if (detail.path[1] == null) {
           // normal fields, not an array and no path[1] index, directly setup field by path[0] field name (no override)
-          updatedErrors[detail.path[0]] =
-            updatedErrors[detail.path[0]] ?? detail.message;
+          if (detail.path[0] !== 'categories') {
+            updatedErrors[detail.path[0]] =
+              updatedErrors[detail.path[0]] ?? detail.message;
+          } else {
+            updatedErrors[detail.path[0]] =
+              updatedErrors[detail.path[0]] == null
+                ? { general: detail.message }
+                : {
+                    general: detail.message,
+                    ...updatedErrors[detail.path[0]]
+                  };
+          }
         } else if (detail.path[0] === 'categories') {
           updatedErrors[detail.path[0]] =
             updatedErrors[detail.path[0]] == null
@@ -259,7 +276,9 @@ export default function AnimeForm({
       });
     }
     console.log(updatedErrors);
-    setErrors(updatedErrors);
+    setErrors(
+      !!name ? { ...errors, [name]: updatedErrors[name] } : updatedErrors
+    );
     return error == null;
   };
 
@@ -269,27 +288,39 @@ export default function AnimeForm({
       { [name]: value },
       { abortEarly: false }
     );
-    // console.log(error?.details);
+    console.log('validate single field:', error?.details);
     if (error) {
-      if (name === 'categories') {
-        const initialAcc: { [key: string | number]: string } = {};
-
-        const categoriesError = error.details.reduce((acc, cur) => {
-          if (cur.path[1] != null && acc[cur.path[1]] == null) {
-            acc[cur.path[1]] = cur.message;
+      const updatedErrors: Errors = {};
+      error.details.forEach((detail, index) => {
+        // check if the path has the path[1] index, if yes, add message to the errors[path[0]][path[1]]
+        // if no (normal fields) => not an array and no path[1] index, directly setup field by path[0] field name (no override)
+        if (detail.path[1] == null) {
+          if (detail.path[0] !== 'categories') {
+            updatedErrors[detail.path[0]] =
+              updatedErrors[detail.path[0]] ?? detail.message;
+          } else {
+            updatedErrors[detail.path[0]] =
+              updatedErrors[detail.path[0]] == null
+                ? { general: detail.message }
+                : {
+                    general: detail.message,
+                    ...updatedErrors[detail.path[0]]
+                  };
           }
-          return acc;
-        }, initialAcc);
-        setErrors({
-          ...errors,
-          [name]: categoriesError
-        });
-      } else {
-        setErrors({
-          ...errors,
-          [name]: error.details[0].message
-        });
-      }
+        } else if (detail.path[0] === 'categories') {
+          updatedErrors[detail.path[0]] =
+            updatedErrors[detail.path[0]] == null
+              ? { [detail.path[1]]: detail.message }
+              : {
+                  [detail.path[1]]: detail.message,
+                  ...updatedErrors[detail.path[0]]
+                };
+        }
+      });
+      setErrors({
+        ...errors,
+        ...updatedErrors
+      });
     } else {
       const updatedErrors = { ...errors };
       delete updatedErrors[name];
@@ -300,7 +331,7 @@ export default function AnimeForm({
   // TODO: handleSubmit
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isValid()) {
+    if (validate()) {
       console.log('form-submitted');
     }
     // submitForm({
@@ -343,7 +374,15 @@ export default function AnimeForm({
         />
       </div>
       <div className={animeFormStyles.fieldsContainer}>
-        <span className={animeFormStyles.inputLabel}>Rating: </span>
+        <span
+          className={
+            !!errors.rating
+              ? animeFormStyles.alertColor
+              : animeFormStyles.inputColor
+          }
+        >
+          Rating*:{' '}
+        </span>
         <Rating
           name="rating"
           value={fields.rating}
@@ -356,7 +395,7 @@ export default function AnimeForm({
           <span className={animeFormStyles.ratingNumber}>{fields.rating}</span>
         )}
         {errors.rating && (
-          <span className={animeFormStyles.alert}>{errors.rating}</span>
+          <span className={animeFormStyles.alertMessage}>{errors.rating}</span>
         )}
       </div>
       <div className={animeFormStyles.fieldsContainer}>
@@ -504,10 +543,19 @@ export default function AnimeForm({
       <div className={animeFormStyles.categoriesContainer}>
         <label
           htmlFor="categories-container"
-          className={animeFormStyles.inputLabel}
+          className={
+            !!errors.categories
+              ? animeFormStyles.alertColor
+              : animeFormStyles.inputColor
+          }
         >
-          Categories:
+          Categories*:
         </label>
+        {!!errors.categories?.general && (
+          <span className={animeFormStyles.alertMessage}>
+            {errors.categories.general}
+          </span>
+        )}
         {fields.categories.length > 0 && (
           <div className={animeFormStyles.categories}>
             {fields.categories.map((category, index) => {
@@ -522,8 +570,16 @@ export default function AnimeForm({
                     name="categories"
                     placeholder="New Category"
                     value={category}
-                    error={!!errors.categories && !!errors.categories[index]}
-                    helperText={!!errors.categories && errors.categories[index]}
+                    error={
+                      !!errors.categories &&
+                      typeof errors.categories === 'object' &&
+                      !!errors.categories[index]
+                    }
+                    helperText={
+                      !!errors.categories &&
+                      typeof errors.categories === 'object' &&
+                      errors.categories[index]
+                    }
                     onChange={(event) => {
                       handleCategoryChange(index, event);
                     }}
@@ -577,7 +633,7 @@ export default function AnimeForm({
       <div className={animeFormStyles.submitBtnContainer}>
         <Button
           type="submit"
-          // disabled={isDisabled}
+          disabled={isDisabled}
           variant="outlined"
           size="large"
         >

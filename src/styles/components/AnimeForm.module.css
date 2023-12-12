@@ -53,8 +53,12 @@
   }
 }
 
-.inputLabel {
+.inputColor {
   color: #FFFFFFB3;
+}
+
+.alertColor {
+  color: #F44336;
 }
 
 .ratingNumber {
@@ -76,7 +80,7 @@
   justify-content: center;
 }
 
-.alert {
+.alertMessage {
   color: #F44336;
   font-size: 0.75rem;
 }
