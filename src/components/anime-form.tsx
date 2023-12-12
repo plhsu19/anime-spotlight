@@ -241,7 +241,11 @@ export default function AnimeForm({
 
   //   }
   // };
-  const validate = (name?: string, value?: any): boolean => {
+
+  // validate the entire fields
+  // with optional name and value to validate using the real-time field value
+  // with optional errorFields to validate the specific fields 
+  const validate = (name?: string, value?: any, updateFeilds?: string[]): boolean => {
     const targetFields =
       name != null && value != null ? { ...fields, [name]: value } : fields;
     const { error } = schema.validate(targetFields, { abortEarly: false });
@@ -276,9 +280,15 @@ export default function AnimeForm({
       });
     }
     console.log(updatedErrors);
+    // TODO: 
+    // 1. check if updateFields is not null, only update the fields specified in the updateFields
+    // if name and values are not null, also update the field specified by name
+    // 2. if updatedFields conc name is empty, update the entire errors with updatedErrors directly 
+    const updatedErrorFields = {...errors}
     setErrors(
       !!name ? { ...errors, [name]: updatedErrors[name] } : updatedErrors
     );
+
     return error == null;
   };
 
