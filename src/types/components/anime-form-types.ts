@@ -16,5 +16,6 @@ export interface Errors {
 }
 
 export interface AnimeEditFields extends Omit<AnimeFields, 'startDate'> {
+  [key: string]: string | number | null | string[] | Subtype | Status;
   startDate: string | null;
 }

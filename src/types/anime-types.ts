@@ -3,7 +3,7 @@ export interface AnimeFields {
   title: string;
   enTitle: string | null;
   description: string;
-  rating: number;
+  rating: number | null;
   startDate: string;
   endDate: string | null;
   subtype: Subtype;
