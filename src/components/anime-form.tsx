@@ -47,6 +47,7 @@ export default function AnimeForm({
   });
   const [preStartDate, setPreStartDate] = useState(fields.startDate);
   const [errors, setErrors] = useState<Errors>({});
+  const [submitError, setSubmitError] = useState('');
   const isDisabled = Object.keys(errors).length > 0;
 
   const schema = Joi.object({
@@ -190,9 +191,6 @@ export default function AnimeForm({
         ...fields,
         [name]: updatedValue
       });
-      validate({ [name]: updatedValue }, [name]);
-    } else if (name === 'episodeCount') {
-      updatedValue = fields.episodeCount;
       validate({ [name]: updatedValue }, [name]);
     } else {
       updatedValue = value.trim();
@@ -401,11 +399,13 @@ export default function AnimeForm({
 
   // TODO: handleSubmit
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    setSubmitError('');
     event.preventDefault();
     if (validate()) {
       console.log('form-submitted: ', fields);
     } else {
       console.log('some validation errors needs to be resolved');
+      setSubmitError('some validation errors needs to be resolved');
     }
     // submitForm({
     //   ...fields,
@@ -506,7 +506,6 @@ export default function AnimeForm({
           error={!!errors.episodeCount}
           value={fields.episodeCount ?? 'NaN'}
           onChange={handleChange}
-          onBlur={handleTextFieldBlur}
           helperText={errors.episodeCount}
         />
       </div>
@@ -711,6 +710,7 @@ export default function AnimeForm({
         >
           Submit
         </Button>
+        <p>{submitError}</p>
       </div>
     </form>
   );
