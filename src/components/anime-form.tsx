@@ -18,18 +18,20 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Anime, AnimeFields, Subtype, Status } from '@/types/anime-types';
 import { Errors, AnimeEditFields } from '@/types/components/anime-form-types';
-import utilStyles from '@/styles/utils.module.css';
 import animeFormStyles from '@/styles/components/AnimeForm.module.css';
-import { StarRate } from '@mui/icons-material';
 
 const END_DATE = 'endDate';
-const FORM_VALIDATION_ERROR_MESSAGE =
+const VALIDATION_ERROR_MESSAGE =
   'Please correct the highlighted errors before submitting the form.';
+const UNKOWN_VALIDATION_ERROR_MESSAGE =
+  'Some fields have invalid inputs. Please review your entries carefully, then submit again or contact us for assistance.';
 
 export default function AnimeForm({
+  anime,
   submitForm,
   dateFormat = 'YYYY-MM-DD'
 }: {
+  anime?: Anime;
   submitForm: (fields: AnimeFields) => Promise<void>;
   dateFormat?: string;
 }) {
@@ -49,7 +51,11 @@ export default function AnimeForm({
   });
   const [preStartDate, setPreStartDate] = useState(fields.startDate);
   const [errors, setErrors] = useState<Errors>({});
-  const isDisabled = Object.keys(errors).length > 0;
+  const [isUnkownErrorExist, setIsUnkownErrorExist] = useState<boolean>(false);
+
+  const isErrorsExisted: boolean = useMemo(() => {
+    return Object.keys(errors).length > 0;
+  }, [errors]);
 
   const schema = Joi.object({
     title: Joi.string().trim().max(256).required(),
@@ -85,8 +91,8 @@ export default function AnimeForm({
     status: Joi.string()
       .valid(...Object.values(Status))
       .required(),
-    posterImage: Joi.string().uri().required(),
-    coverImage: Joi.string().uri().allow(null).allow('').required(),
+    posterImage: Joi.string().trim().uri().required(),
+    coverImage: Joi.string().trim().uri().allow(null).allow('').required(),
     episodeCount: Joi.when('status', {
       is: Status.FINISHED,
       then: Joi.number().integer().min(1).required().prefs({ convert: false }),
@@ -97,11 +103,10 @@ export default function AnimeForm({
         .required()
         .prefs({ convert: false })
     }),
-
     categories: Joi.array()
       .unique()
       .min(1)
-      .items(Joi.string().trim().min(1).max(256))
+      .items(Joi.string().trim().max(256))
       .required()
   });
 
@@ -184,7 +189,6 @@ export default function AnimeForm({
     validate({ [event.target.name]: value }, [event.target.name]);
   };
 
-  // for all TextFields onBlur: trim the value and validate
   const handleTextFieldBlur = (
     event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     index?: number
@@ -279,7 +283,6 @@ export default function AnimeForm({
     error.details.forEach((detail) => {
       // check if the path has the path[1] index, if yes, add message to the errors[path[0]][path[1]]
       if (detail.path[1] == null) {
-        // normal fields, not an array and no path[1] index, directly setup field by path[0] field name (no override)
         if (detail.path[0] !== 'categories') {
           validationErrors[detail.path[0]] =
             validationErrors[detail.path[0]] ?? detail.message;
@@ -306,8 +309,6 @@ export default function AnimeForm({
   };
 
   // validate the entire fields
-  // with optional key and value object to validate using the real-time field value
-  // with optional errorFields to validate the specific fields
   const validate = (
     newFields?: { [key: string]: any },
     errorFields?: string[]
@@ -325,45 +326,14 @@ export default function AnimeForm({
       });
     }
 
-    const { error } = schema.validate(targetFields, { abortEarly: false });
-    console.log('entire validation errors', error?.details);
+    const { value, error } = schema.validate(targetFields, {
+      abortEarly: false
+    });
 
     let validationErrors: Errors = {};
     if (error) {
-      // error.details.forEach((detail, index) => {
-      //   // check if the path has the path[1] index, if yes, add message to the errors[path[0]][path[1]]
-      //   if (detail.path[1] == null) {
-      //     // normal fields, not an array and no path[1] index, directly setup field by path[0] field name (no override)
-      //     if (detail.path[0] !== 'categories') {
-      //       validationErrors[detail.path[0]] =
-      //         validationErrors[detail.path[0]] ?? detail.message;
-      //     } else {
-      //       validationErrors[detail.path[0]] =
-      //         validationErrors[detail.path[0]] == null
-      //           ? { general: detail.message }
-      //           : {
-      //               general: detail.message,
-      //               ...validationErrors[detail.path[0]]
-      //             };
-      //     }
-      //   } else if (detail.path[0] === 'categories') {
-      //     validationErrors[detail.path[0]] =
-      //       validationErrors[detail.path[0]] == null
-      //         ? { [detail.path[1]]: detail.message }
-      //         : {
-      //             [detail.path[1]]: detail.message,
-      //             ...validationErrors[detail.path[0]]
-      //           };
-      //   }
-      // });
       validationErrors = mapJoiErrorToErrors(error);
     }
-
-    console.log(validationErrors);
-    // TODO:
-    // 1. check if updateFields is not null, only update the fields specified in the updateFields
-    // if name and values are not null, also update the field specified by name
-    // 2. if updatedFields conc name is empty, update the entire errors with validationErrors directly
 
     if (errorFields == null) {
       setErrors(validationErrors);
@@ -394,7 +364,6 @@ export default function AnimeForm({
   }
 
   const validateSingleField = (name: string, value: any): void => {
-    // check if name exists in the fields' keys, and value is not undefined
     if (!Object.keys(fields).includes(name)) return;
 
     const fieldSchema = Joi.object({ [name]: schema.extract(name) });
@@ -402,71 +371,27 @@ export default function AnimeForm({
       { [name]: value },
       { abortEarly: false }
     );
-    console.log('validate single field:', error?.details);
     const updatedErrors: Errors = { ...errors };
 
     if (error) {
       const validationErrors = mapJoiErrorToErrors(error);
       updatedErrors[name] = validationErrors[name];
       setErrors(updatedErrors);
-      // const updatedErrors: Errors = {};
-      // error.details.forEach((detail, index) => {
-      //   // check if the path has the path[1] index, if yes, add message to the errors[path[0]][path[1]]
-      //   // if no (normal fields) => not an array and no path[1] index, directly setup field by path[0] field name (no override)
-      //   if (detail.path[1] == null) {
-      //     if (detail.path[0] !== 'categories') {
-      //       updatedErrors[detail.path[0]] =
-      //         updatedErrors[detail.path[0]] ?? detail.message;
-      //     } else {
-      //       updatedErrors[detail.path[0]] =
-      //         updatedErrors[detail.path[0]] == null
-      //           ? { general: detail.message }
-      //           : {
-      //               general: detail.message,
-      //               ...updatedErrors[detail.path[0]]
-      //             };
-      //     }
-      //   } else if (detail.path[0] === 'categories') {
-      //     updatedErrors[detail.path[0]] =
-      //       updatedErrors[detail.path[0]] == null
-      //         ? { [detail.path[1]]: detail.message }
-      //         : {
-      //             [detail.path[1]]: detail.message,
-      //             ...updatedErrors[detail.path[0]]
-      //           };
-      //   }
-      // });
-
-      // // const validationError = mapJoiErrorToErrors(error);
-
-      // setErrors({
-      //   ...errors,
-      //   ...updatedErrors
-      // });
     } else {
       delete updatedErrors[name];
       setErrors(updatedErrors);
     }
   };
 
-  // TODO: handleSubmit
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (validate()) {
-      console.log('form-submitted: ', fields);
-    } else {
-      console.log('some validation errors needs to be resolved');
+      setIsUnkownErrorExist(false);
+      submitForm(fields as AnimeFields);
+    } else if (!isErrorsExisted) {
+      setIsUnkownErrorExist(true);
     }
-    // submitForm({
-    //   ...fields,
-    //   title: fields.title.trim(),
-    //   enTitle: !fields.enTitle ? fields.enTitle : fields.enTitle.trim(),
-    //   posterImage: fields.posterImage.trim(),
-    //   coverImage: !fields.coverImage
-    //     ? fields.coverImage
-    //     : fields.coverImage.trim(),
-    //   description: fields.description.trim()
-    // });
   };
 
   return (
@@ -756,9 +681,11 @@ export default function AnimeForm({
         <Button type="submit" variant="outlined" size="large">
           Submit
         </Button>
-        {!!Object.keys(errors).length && (
+        {(isErrorsExisted || isUnkownErrorExist) && (
           <span className={animeFormStyles.alertMessage}>
-            {FORM_VALIDATION_ERROR_MESSAGE}
+            {isErrorsExisted
+              ? VALIDATION_ERROR_MESSAGE
+              : UNKOWN_VALIDATION_ERROR_MESSAGE}
           </span>
         )}
       </div>

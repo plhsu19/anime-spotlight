@@ -36,7 +36,7 @@ export default function AnimeCard({
   subtype: string;
   episodeCount: number | null;
   startDate: string;
-  rating: number;
+  rating: number | null;
   posterImage: string;
   deleteAnime: (id: number, title: string) => Promise<void>;
 }) {
@@ -52,6 +52,10 @@ export default function AnimeCard({
     () => (subtype === 'TV' ? 'TV Series' : subtype),
     [subtype]
   );
+  const computedRating: string = useMemo(() => {
+    if (rating == null) return '-';
+    return rating % 1 !== 0 ? rating.toString() : rating + '.0';
+  }, [rating]);
 
   const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -153,9 +157,9 @@ export default function AnimeCard({
           >
             <StarIcon color="warning" fontSize="large" />
             <span>
-              <span className={utilStyles.largeContextFontSize}>{`${
-                rating % 1 !== 0 ? rating : rating + '.0'
-              }`}</span>
+              <span className={utilStyles.largeContextFontSize}>
+                {computedRating}
+              </span>
               {' /10'}
             </span>
           </div>

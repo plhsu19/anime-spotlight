@@ -8,14 +8,19 @@ const animeReducer = (state: AnimeState, action: AnimeAction) => {
         ...state,
         loading: true,
         message: null,
-        error: null,
+        error: null
       };
     case 'END_LOADING':
       return {
         ...state,
         loading: false,
         message: action.payload.message,
-        error: action.payload.error,
+        error: action.payload.error
+      };
+    case 'SET_ANIMES':
+      return {
+        ...state,
+        animes: action.payload
       };
     case 'SET_LOADING':
       return {
@@ -26,13 +31,6 @@ const animeReducer = (state: AnimeState, action: AnimeAction) => {
       return {
         ...state,
         error: action.payload
-      };
-  }
-  switch (action.type) {
-    case 'SET_ANIMES':
-      return {
-        ...state,
-        animes: action.payload
       };
   }
 };

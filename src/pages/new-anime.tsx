@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Layout from '@/components/layout';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
-import { Alert, Snackbar, Button } from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
 import utilStyles from '@/styles/utils.module.css';
 import NewAnimeStyles from '@/styles/NewAnime.module.css';
 import AnimeForm from '@/components/anime-form';
