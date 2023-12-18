@@ -47,7 +47,6 @@ export const AnimeProvider = ({
   const router = useRouter();
 
   if (preFetchedAnimes !== fetchedAnimes && !!fetchedAnimes) {
-    console.log('different non-null animes fetched from server')
     dispatch({ type: 'SET_ANIMES', payload: fetchedAnimes });
     setPreFetchedAnimes(fetchedAnimes);
   }
@@ -72,14 +71,17 @@ export const AnimeProvider = ({
           e.response?.data?.message ?? 'unknown'
         );
       } else {
-        error = ADD_ANIME_UNEXPECTED_ERROR_MESSAGE.replace(
-          '%s',
-          fields.title
-        );
+        error = ADD_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', fields.title);
       }
     }
     dispatch({ type: 'END_LOADING', payload: { message, error } });
   };
+
+  // TODO: update the anime
+  const updateAnime = async (
+    id: number,
+    fields: AnimeFields
+  ): Promise<void> => {};
 
   const deleteAnime = async (id: number, title: string): Promise<void> => {
     dispatch({ type: 'START_LOADING' });
@@ -120,7 +122,7 @@ export const AnimeProvider = ({
   //TODO: reset message and error state when navigating to another page
 
   return (
-    <AnimeContext.Provider value={{ state, dispatch, deleteAnime, addAnime }}>
+    <AnimeContext.Provider value={{ state, dispatch, deleteAnime, addAnime, updateAnime }}>
       {children}
     </AnimeContext.Provider>
   );

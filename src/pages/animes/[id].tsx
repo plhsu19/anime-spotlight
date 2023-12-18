@@ -18,7 +18,7 @@ export const getServerSideProps = async ({ params }) => {
 
 export default function Anime(props) {
   const router = useRouter();
-  const { state, dispatch, deleteAnime } = useGetAnimeContextValue();
+  const { state, dispatch, deleteAnime, updateAnime } = useGetAnimeContextValue();
   const alertIsExist = !!state.message || !!state.error;
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
   const [alertOpen, setAlertOpen] = useState(alertIsExist);

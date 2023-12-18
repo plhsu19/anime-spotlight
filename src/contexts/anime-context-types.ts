@@ -23,6 +23,7 @@ export interface AnimeContextValueType {
   dispatch: Dispatch<AnimeAction>;
   deleteAnime: (id: number, title: string) => Promise<void>;
   addAnime: (animeFields: AnimeFields) => Promise<void>;
+  updateAnime: (id: number, animeFields: AnimeFields) => Promise<void>;
 }
 
 export interface AnimeProviderProps {
