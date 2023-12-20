@@ -13,13 +13,20 @@ import { animesPath } from '@/constants/paths';
 const DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE =
   'Unable to delete the anime %s due to an unexpected error. Please try again later or contact us.';
 const DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE =
-  'Unable to delete the anime %s as it was not found. Please refresh the page and try again.';
+  'The anime %s you are trying to delete was not found. Please refresh the page and try again.';
 const DELETE_ANIME_SUCCESSFUL_MESSAGE = 'Successfully deleted the anime %s.';
 const ADD_ANIME_SUCCESSFUL_MESSAGE = 'Successfully added the anime %s.';
 const ADD_ANIME_UNEXPECTED_ERROR_MESSAGE =
   'Unable to add the anime %s due to an unexpected error. Please try again later or contact us.';
 const ADD_ANIME_BAD_REQUEST_MESSAGE =
   'Unable to add the anime due to invalid input: %s. Please check your input and try again.';
+const UPDATE_ANIME_SUCCESSFUL_MESSAGE = 'Successfully updated the anime %s.';
+const UPDATE_ANIME_UNEXPECTED_ERROR_MESSAGE =
+  'Unable to update the anime %s due to an unexpected error. Please try again later or contact us.';
+const UPDATE_ANIME_BAD_REQUEST_MESSAGE =
+  'Unable to update the anime due to invalid input: %s. Please check your input and try again.';
+const UPDATE_ANIME_NOT_FOUND_ERROR_MESSAGE =
+  'The anime %s you are trying to update was not found. Please visit the home page and refresh the anime list.';
 
 const AnimeContext = createContext<AnimeContextValueType | null>(null);
 
@@ -81,7 +88,36 @@ export const AnimeProvider = ({
   const updateAnime = async (
     id: number,
     fields: AnimeFields
-  ): Promise<void> => {};
+  ): Promise<void> => {
+    dispatch({ type: 'START_LOADING' });
+    let message = null;
+    let error = null;
+    try {
+      const response = await animeApiService.updateAnime(id, fields);
+      message = UPDATE_ANIME_SUCCESSFUL_MESSAGE.replace(
+        '%s',
+        response.data.anime.title
+      );
+      dispatch({ type: 'END_LOADING', payload: { message, error } });
+      // TODO: update the anime state (either in store or local state) with the anime response
+      // TODO: set the editingMode to false (either in store or local state)
+    } catch (e) {
+      if (e.response?.status === 404) {
+        error = UPDATE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace('%s', fields.title);
+      } else if (e.response?.status === 400) {
+        error = UPDATE_ANIME_BAD_REQUEST_MESSAGE.replace(
+          '%s',
+          e.response?.data?.message ?? 'unknown'
+        );
+      } else {
+        error = UPDATE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace(
+          '%s',
+          fields.title
+        );
+      }
+    }
+    dispatch({ type: 'END_LOADING', payload: { message, error } });
+  };
 
   const deleteAnime = async (id: number, title: string): Promise<void> => {
     dispatch({ type: 'START_LOADING' });
@@ -122,7 +158,9 @@ export const AnimeProvider = ({
   //TODO: reset message and error state when navigating to another page
 
   return (
-    <AnimeContext.Provider value={{ state, dispatch, deleteAnime, addAnime, updateAnime }}>
+    <AnimeContext.Provider
+      value={{ state, dispatch, deleteAnime, addAnime, updateAnime }}
+    >
       {children}
     </AnimeContext.Provider>
   );

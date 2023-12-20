@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, Snackbar, Button } from '@mui/material';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import Layout from '@/components/layout';
+import { animesPath } from '@/constants/paths';
 
 // TODO: server-side return 404 if no anime found, currently 500 (404 from anime-api)
 export const getServerSideProps = async ({ params }) => {
@@ -17,11 +18,13 @@ export const getServerSideProps = async ({ params }) => {
 };
 
 export default function Anime(props) {
-  const router = useRouter();
-  const { state, dispatch, deleteAnime, updateAnime } = useGetAnimeContextValue();
+  const [editMode, setEditMode] = useState(false);
+  const { state, dispatch, deleteAnime, updateAnime } =
+  useGetAnimeContextValue();
   const alertIsExist = !!state.message || !!state.error;
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
   const [alertOpen, setAlertOpen] = useState(alertIsExist);
+  const router = useRouter();
 
   if (alertIsExist !== preAlertIsExist) {
     setAlertOpen(alertIsExist);
@@ -42,7 +45,9 @@ export default function Anime(props) {
     <Layout page="anime">
       <h1>anime page</h1>
       <p>{router.query.id}</p>
-      <p>{'query parameter edit: ' + router.query.edit}</p>
+      {router.query.edit === 'true' && (
+        <p>{'query parameter edit: ' + router.query.edit}</p>
+      )}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={alertOpen}
@@ -58,6 +63,20 @@ export default function Anime(props) {
         </Alert>
       </Snackbar>
       <h3>{props.anime.title}</h3>
+      <Button
+        onClick={(event) => {
+          router.push(`${animesPath}/${router.query.id}`);
+        }}
+      >
+        redirect
+      </Button>
+      <Button
+        onClick={(event) => {
+          router.push(`${animesPath}/${router.query.id}?edit=true`);
+        }}
+      >
+        redirect to Edit
+      </Button>
     </Layout>
   );
 }
