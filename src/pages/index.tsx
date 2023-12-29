@@ -3,7 +3,7 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
-import Card from '@/components/card';
+import Card from '@/components/home/card';
 import Layout from '@/components/layout';
 import animeApiService from '@/services/anime-api-service';
 import { IconButton, Alert, Snackbar } from '@mui/material';

@@ -40,8 +40,8 @@ export default function Layout({
           <Link href="/">
             <Image
               priority
-              height={78.25}
-              width={96}
+              height={104}
+              width={128}
               src="/images/logo.png"
               alt="Anime Spotlight logo"
             />

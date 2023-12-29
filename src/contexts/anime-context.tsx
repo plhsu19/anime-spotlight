@@ -2,7 +2,7 @@ import { createContext, useReducer, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import animeReducer from './anime-reducer';
 import animeApiService from '@/services/anime-api-service';
-import { AnimeFields } from '@/types/anime-types';
+import { Anime, AnimeFields } from '@/types/anime-types';
 import {
   AnimeState,
   AnimeContextValueType,
@@ -84,14 +84,15 @@ export const AnimeProvider = ({
     dispatch({ type: 'END_LOADING', payload: { message, error } });
   };
 
-  // TODO: update the anime
-  const updateAnime = async (
+  // TODO: update the anime & return the updated anime (or throw error)
+   const updateAnime = async (
     id: number,
     fields: AnimeFields
-  ): Promise<void> => {
+  ): Promise<Anime> => {
     dispatch({ type: 'START_LOADING' });
     let message = null;
     let error = null;
+
     try {
       const response = await animeApiService.updateAnime(id, fields);
       message = UPDATE_ANIME_SUCCESSFUL_MESSAGE.replace(
@@ -99,8 +100,7 @@ export const AnimeProvider = ({
         response.data.anime.title
       );
       dispatch({ type: 'END_LOADING', payload: { message, error } });
-      // TODO: update the anime state (either in store or local state) with the anime response
-      // TODO: set the editingMode to false (either in store or local state)
+      return response.data.anime;
     } catch (e) {
       if (e.response?.status === 404) {
         error = UPDATE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace('%s', fields.title);
@@ -115,8 +115,9 @@ export const AnimeProvider = ({
           fields.title
         );
       }
+      dispatch({ type: 'END_LOADING', payload: { message, error } });
+      throw new Error(error);
     }
-    dispatch({ type: 'END_LOADING', payload: { message, error } });
   };
 
   const deleteAnime = async (id: number, title: string): Promise<void> => {
@@ -155,7 +156,7 @@ export const AnimeProvider = ({
     dispatch({ type: 'END_LOADING', payload: { message, error } });
   };
 
-  //TODO: reset message and error state when navigating to another page
+  //TODO: reset message and error state when navigating from home/new page to anime page
 
   return (
     <AnimeContext.Provider

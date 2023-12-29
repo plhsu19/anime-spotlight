@@ -1,13 +1,18 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, MouseEvent } from 'react';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { Alert, Snackbar, Button } from '@mui/material';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import Layout from '@/components/layout';
-import { animesPath } from '@/constants/paths';
+import AnimeForm from '@/components/new-anime/anime-form';
+import { AnimeFields } from '@/types/anime-types';
+// import { AnimeEditFields } from '@/types/components/anime-form-types';
+import { Anime } from '@/types/anime-types';
 
-// TODO: server-side return 404 if no anime found, currently 500 (404 from anime-api)
+const UPDATING_ANIME_MESSAGE = 'Updating anime...';
+
+// TODO: uncaught server-side error of 404 if no anime found
 export const getServerSideProps = async ({ params }) => {
   const res = await animeApiService.getAnimeById(params.id);
   return {
@@ -17,14 +22,18 @@ export const getServerSideProps = async ({ params }) => {
   };
 };
 
-export default function Anime(props) {
+export default function Anime(props: { anime: Anime }) {
   const [editMode, setEditMode] = useState(false);
-  const { state, dispatch, deleteAnime, updateAnime } =
-  useGetAnimeContextValue();
+  const [anime, setAnime] = useState<Anime>({ ...props.anime });
+  const { state, dispatch, deleteAnime, addAnime, updateAnime } =
+    useGetAnimeContextValue();
   const alertIsExist = !!state.message || !!state.error;
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
   const [alertOpen, setAlertOpen] = useState(alertIsExist);
+
   const router = useRouter();
+  // const initialAnimeFields: AnimeEditFields = {...anime};
+  // delete initialAnimeFields.id;
 
   if (alertIsExist !== preAlertIsExist) {
     setAlertOpen(alertIsExist);
@@ -41,13 +50,50 @@ export default function Anime(props) {
     setAlertOpen(false);
   };
 
+  const handleEditButtonClick = (): void => {
+    dispatch({ type: 'RESET_NOTIFICATIONS' });
+    setEditMode(true);
+  };
+
+  const onCancelEditing = () => {
+    dispatch({ type: 'RESET_NOTIFICATIONS' });
+    setEditMode(false);
+  };
+
+  const onUpdate = async (updatedAnimeFields: AnimeFields): Promise<void> => {
+    try {
+      const updatedAnime = await updateAnime(anime.id, updatedAnimeFields);
+      setAnime(updatedAnime);
+      setEditMode(false);
+    } catch (e) {}
+  };
+
   return (
     <Layout page="anime">
       <h1>anime page</h1>
-      <p>{router.query.id}</p>
-      {router.query.edit === 'true' && (
-        <p>{'query parameter edit: ' + router.query.edit}</p>
+      {!editMode ? (
+        <div>
+          <h3>{anime.title}</h3>
+          <h3>{anime.enTitle}</h3>
+          <p>{router.query.id}</p>
+          <Button disabled={state.loading} onClick={handleEditButtonClick}>Edit</Button>
+        </div>
+      ) : (
+        <AnimeForm
+          initialAnime={anime}
+          submitForm={onUpdate}
+          cancel={onCancelEditing}
+          isDisabled={state.loading}
+        />
       )}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={state.loading}
+      >
+        <Alert severity="warning" variant="filled">
+          {UPDATING_ANIME_MESSAGE}
+        </Alert>
+      </Snackbar>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={alertOpen}
@@ -62,21 +108,6 @@ export default function Anime(props) {
           {state.error ?? state.message}
         </Alert>
       </Snackbar>
-      <h3>{props.anime.title}</h3>
-      <Button
-        onClick={(event) => {
-          router.push(`${animesPath}/${router.query.id}`);
-        }}
-      >
-        redirect
-      </Button>
-      <Button
-        onClick={(event) => {
-          router.push(`${animesPath}/${router.query.id}?edit=true`);
-        }}
-      >
-        redirect to Edit
-      </Button>
     </Layout>
   );
 }

@@ -1,6 +1,5 @@
 import { AnimeState, AnimeAction } from './anime-context-types';
 
-// TODO: setup reducer prop types
 const animeReducer = (state: AnimeState, action: AnimeAction) => {
   switch (action.type) {
     case 'START_LOADING':
@@ -27,10 +26,11 @@ const animeReducer = (state: AnimeState, action: AnimeAction) => {
         ...state,
         loading: action.payload
       };
-    case 'SET_ERROR':
+    case 'RESET_NOTIFICATIONS':
       return {
         ...state,
-        error: action.payload
+        error: null,
+        message: null,
       };
   }
 };

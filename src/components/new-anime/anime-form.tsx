@@ -1,6 +1,7 @@
-import React, { useState, FormEvent, useMemo } from 'react';
+import React, { useState, FormEvent, MouseEvent, useMemo } from 'react';
+import Image from 'next/image';
 import dayjs from 'dayjs';
-import Joi, { valid } from 'joi';
+import Joi from 'joi';
 import {
   Button,
   TextField,
@@ -27,31 +28,47 @@ const UNKOWN_VALIDATION_ERROR_MESSAGE =
   'Some fields have invalid inputs. Please review your entries carefully, then submit again or contact us for assistance.';
 
 export default function AnimeForm({
-  anime,
   submitForm,
+  initialAnime,
+  cancel,
+  isDisabled = false,
   dateFormat = 'YYYY-MM-DD'
 }: {
-  anime?: Anime;
   submitForm: (fields: AnimeFields) => Promise<void>;
+  initialAnime?: Anime;
+  cancel?: () => void;
+  isDisabled?: boolean;
   dateFormat?: string;
 }) {
-  const [fields, setFields] = useState<AnimeEditFields>({
-    title: '',
-    enTitle: '',
-    description: '',
-    rating: 10,
-    startDate: null,
-    endDate: null,
-    subtype: Subtype.TV,
-    status: Status.FINISHED,
-    posterImage: '',
-    coverImage: '',
-    episodeCount: null,
-    categories: ['']
-  });
+  const defaultFields = useMemo(() => {
+    if (initialAnime != null) {
+      // might move logic of removing id to the anime page
+      const initialAnimeFields: AnimeEditFields = { ...initialAnime };
+      delete initialAnimeFields.id;
+      return initialAnimeFields;
+    } else {
+      return {
+        title: '',
+        enTitle: '',
+        description: '',
+        rating: 10,
+        startDate: null,
+        endDate: null,
+        subtype: Subtype.TV,
+        status: Status.FINISHED,
+        posterImage: '',
+        coverImage: '',
+        episodeCount: null,
+        categories: ['']
+      };
+    }
+  }, [initialAnime]);
+
+  const [fields, setFields] = useState<AnimeEditFields>(defaultFields);
   const [preStartDate, setPreStartDate] = useState(fields.startDate);
   const [errors, setErrors] = useState<Errors>({});
   const [isUnkownErrorExist, setIsUnkownErrorExist] = useState<boolean>(false);
+  const isEditing: boolean = !!initialAnime;
 
   const isErrorsExisted: boolean = useMemo(() => {
     return Object.keys(errors).length > 0;
@@ -400,6 +417,7 @@ export default function AnimeForm({
         <TextField
           className={animeFormStyles.titleInput}
           required
+          disabled={isEditing}
           error={!!errors.title}
           id="title-input"
           label="Title"
@@ -574,6 +592,12 @@ export default function AnimeForm({
           error={!!errors.posterImage}
           helperText={errors.posterImage}
         />
+        {/* <Image
+          src={fields.posterImage}
+          alt="preview poster image"
+          height={158.4}
+          width={111.6}
+        /> */}
         <TextField
           className={animeFormStyles.urlInput}
           id="cover-image-url-input"
@@ -677,10 +701,28 @@ export default function AnimeForm({
           helperText={errors.description}
         />
       </div>
-      <div className={animeFormStyles.submitBtnContainer}>
-        <Button type="submit" variant="outlined" size="large">
-          Submit
-        </Button>
+      <div className={animeFormStyles.editingSection}>
+        <div className={animeFormStyles.editingBtnContainer}>
+          <Button
+            type="submit"
+            disabled={isDisabled}
+            variant="outlined"
+            size="large"
+          >
+            {isEditing ? 'Save' : 'Submit'}
+          </Button>
+          {isEditing && (
+            <Button
+              disabled={isDisabled}
+              variant="outlined"
+              size="large"
+              color="warning"
+              onClick={cancel}
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
         {(isErrorsExisted || isUnkownErrorExist) && (
           <span className={animeFormStyles.alertMessage}>
             {isErrorsExisted

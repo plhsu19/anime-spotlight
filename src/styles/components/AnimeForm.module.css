@@ -74,13 +74,18 @@
   width: 170px;
 }
 
-.submitBtnContainer {
+.editingSection {
   padding: 0.8rem 1rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   gap: 0.8rem;
+}
+
+.editingBtnContainer {
+  display: flex;
+  gap: 1.5rem;
 }
 
 .alertMessage {
