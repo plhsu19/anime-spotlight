@@ -1,2 +1,2 @@
-export const animesPath = '/animes';
+export const animePath = '/animes/[id]';
 export const newAnimePath = '/new-anime';

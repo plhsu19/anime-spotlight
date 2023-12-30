@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { useState, MouseEvent } from 'react';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { Alert, Snackbar, Button } from '@mui/material';
@@ -7,8 +8,8 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import Layout from '@/components/layout';
 import AnimeForm from '@/components/new-anime/anime-form';
 import { AnimeFields } from '@/types/anime-types';
-// import { AnimeEditFields } from '@/types/components/anime-form-types';
 import { Anime } from '@/types/anime-types';
+import utilStyles from '@/styles/utils.module.css';
 
 const UPDATING_ANIME_MESSAGE = 'Updating anime...';
 
@@ -23,17 +24,14 @@ export const getServerSideProps = async ({ params }) => {
 };
 
 export default function Anime(props: { anime: Anime }) {
-  const [editMode, setEditMode] = useState(false);
+  const router = useRouter();
+  const [editMode, setEditMode] = useState(router.query.edit === 'true');
   const [anime, setAnime] = useState<Anime>({ ...props.anime });
   const { state, dispatch, deleteAnime, addAnime, updateAnime } =
     useGetAnimeContextValue();
   const alertIsExist = !!state.message || !!state.error;
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
   const [alertOpen, setAlertOpen] = useState(alertIsExist);
-
-  const router = useRouter();
-  // const initialAnimeFields: AnimeEditFields = {...anime};
-  // delete initialAnimeFields.id;
 
   if (alertIsExist !== preAlertIsExist) {
     setAlertOpen(alertIsExist);
@@ -53,11 +51,13 @@ export default function Anime(props: { anime: Anime }) {
   const handleEditButtonClick = (): void => {
     dispatch({ type: 'RESET_NOTIFICATIONS' });
     setEditMode(true);
+    updateEditQueryParams(true);
   };
 
   const onCancelEditing = () => {
     dispatch({ type: 'RESET_NOTIFICATIONS' });
     setEditMode(false);
+    updateEditQueryParams(false);
   };
 
   const onUpdate = async (updatedAnimeFields: AnimeFields): Promise<void> => {
@@ -65,49 +65,73 @@ export default function Anime(props: { anime: Anime }) {
       const updatedAnime = await updateAnime(anime.id, updatedAnimeFields);
       setAnime(updatedAnime);
       setEditMode(false);
+      updateEditQueryParams(false);
     } catch (e) {}
+  };
+
+  const updateEditQueryParams = (edit: boolean) => {
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: edit ? { id: anime.id, edit: 'true' } : { id: anime.id }
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   return (
     <Layout page="anime">
-      <h1>anime page</h1>
-      {!editMode ? (
-        <div>
-          <h3>{anime.title}</h3>
-          <h3>{anime.enTitle}</h3>
-          <p>{router.query.id}</p>
-          <Button disabled={state.loading} onClick={handleEditButtonClick}>Edit</Button>
-        </div>
-      ) : (
-        <AnimeForm
-          initialAnime={anime}
-          submitForm={onUpdate}
-          cancel={onCancelEditing}
-          isDisabled={state.loading}
-        />
-      )}
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={state.loading}
+      <Head>
+        <title>anime.title</title>
+      </Head>
+      <div
+        className={[
+          utilStyles.verticalAlignItems,
+          utilStyles.horizontalAlignment
+        ].join(' ')}
       >
-        <Alert severity="warning" variant="filled">
-          {UPDATING_ANIME_MESSAGE}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={alertOpen}
-        autoHideDuration={6000}
-        onClose={handleAlertClose}
-      >
-        <Alert
-          severity={!!state.error ? 'error' : 'success'}
-          variant="filled"
+        <h1>Anime Page</h1>
+        {!editMode ? (
+          <div>
+            <h3>{anime.title}</h3>
+            <h3>{anime.enTitle}</h3>
+            <p>{router.query.id}</p>
+            <Button disabled={state.loading} onClick={handleEditButtonClick}>
+              Edit
+            </Button>
+          </div>
+        ) : (
+          <AnimeForm
+            initialAnime={anime}
+            submitForm={onUpdate}
+            cancel={onCancelEditing}
+            isDisabled={state.loading}
+          />
+        )}
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={state.loading}
+        >
+          <Alert severity="warning" variant="filled">
+            {UPDATING_ANIME_MESSAGE}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={alertOpen}
+          autoHideDuration={6000}
           onClose={handleAlertClose}
         >
-          {state.error ?? state.message}
-        </Alert>
-      </Snackbar>
+          <Alert
+            severity={!!state.error ? 'error' : 'success'}
+            variant="filled"
+            onClose={handleAlertClose}
+          >
+            {state.error ?? state.message}
+          </Alert>
+        </Snackbar>
+      </div>
     </Layout>
   );
 }

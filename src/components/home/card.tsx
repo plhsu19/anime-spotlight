@@ -15,7 +15,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import StarIcon from '@mui/icons-material/Star';
-import { animesPath } from '@/constants/paths';
+import { useGetAnimeContextValue } from '@/contexts/anime-context';
+import { animePath } from '@/constants/paths';
 
 //TODO:
 // 1. understand props of IconButton
@@ -42,6 +43,7 @@ export default function AnimeCard({
 }) {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { state, dispatch } = useGetAnimeContextValue();
   const open = Boolean(anchorEl);
   const startYear = useMemo(
     () => startDate.split('-')[0] ?? 'unkown',
@@ -68,8 +70,13 @@ export default function AnimeCard({
     setAnchorEl(null);
   };
   const handleDirectToAnimePage = (edit: boolean) => {
-    // TODO: reset the state (loading, error, message) when direct to the [id] anime page
-    router.push(`${animesPath}/${id}${edit ? '?edit=true' : ''}`);
+    if (!state.loading) {
+      dispatch({ type: 'RESET_NOTIFICATIONS' });
+      router.push({
+        pathname: animePath,
+        query: edit ? { id, edit: 'true' } : { id }
+      });
+    }
   };
 
   return (
@@ -118,6 +125,7 @@ export default function AnimeCard({
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
             size="medium"
+            disabled={state.loading}
             onClick={handleMenuButtonClick}
             className={cardStyles.menuButton}
           >

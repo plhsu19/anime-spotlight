@@ -4,7 +4,7 @@
   align-items: center;
   gap: 1%;
   flex-wrap: wrap;
-  @media screen and (min-width: 330px) {
+  @media screen and (min-width: 370px) {
     flex-wrap: nowrap;
     justify-content: space-between;
   }

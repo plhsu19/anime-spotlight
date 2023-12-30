@@ -4,9 +4,7 @@ import Layout from '@/components/layout';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { Alert, Snackbar } from '@mui/material';
 import utilStyles from '@/styles/utils.module.css';
-import NewAnimeStyles from '@/styles/NewAnime.module.css';
 import AnimeForm from '@/components/new-anime/anime-form';
-import { Subtype, Status } from '@/types/anime-types';
 
 const ADDING_ANIME_MESSAGE = 'Adding anime...';
 

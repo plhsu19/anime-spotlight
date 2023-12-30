@@ -42,7 +42,6 @@ export default function AnimeForm({
 }) {
   const defaultFields = useMemo(() => {
     if (initialAnime != null) {
-      // might move logic of removing id to the anime page
       const initialAnimeFields: AnimeEditFields = { ...initialAnime };
       delete initialAnimeFields.id;
       return initialAnimeFields;

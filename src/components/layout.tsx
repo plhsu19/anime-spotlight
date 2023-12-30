@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 import { Button } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
+import { useGetAnimeContextValue } from '@/contexts/anime-context';
 
 export const siteTitle = 'Anime Spotlight';
 
@@ -17,6 +18,8 @@ export default function Layout({
   children: ReactNode;
   page: string;
 }) {
+  const { state } = useGetAnimeContextValue();
+
   return (
     <div>
       <Head>

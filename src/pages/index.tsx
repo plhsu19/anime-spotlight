@@ -13,6 +13,8 @@ import styles from '@/styles/Home.module.css';
 import utilStyles from '@/styles/utils.module.css';
 import { newAnimePath } from '@/constants/paths';
 
+const PROCESSING_REQUEST_MESSAGE = 'Processing your request...';
+
 export const getServerSideProps: GetServerSideProps<{
   animes: Anime[];
 }> = async () => {
@@ -40,6 +42,7 @@ export default function Home(
   }
 
   const handleDirectToNewAnimePage = () => {
+    dispatch({ type: 'RESET_NOTIFICATIONS' });
     router.push(newAnimePath);
   };
 
@@ -59,9 +62,10 @@ export default function Home(
         <title>Anime Spotlight</title>
       </Head>
       <div
-        className={[utilStyles.verticalAlignItems, utilStyles.horizontalAlignment].join(
-          ' '
-        )}
+        className={[
+          utilStyles.verticalAlignItems,
+          utilStyles.horizontalAlignment
+        ].join(' ')}
       >
         <h1>Anime Spotlight 🔦</h1>
         <p>
@@ -73,11 +77,20 @@ export default function Home(
           aria-label="addAnime"
           size="small"
           color="primary"
+          disabled={state.loading}
           className={styles.btnAdd}
           onClick={handleDirectToNewAnimePage}
         >
           <AddCircleIcon fontSize="large" />
         </IconButton>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={state.loading}
+        >
+          <Alert severity="warning" variant="filled">
+            {PROCESSING_REQUEST_MESSAGE}
+          </Alert>
+        </Snackbar>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           open={alertOpen}

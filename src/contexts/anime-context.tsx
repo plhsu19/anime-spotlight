@@ -8,7 +8,7 @@ import {
   AnimeContextValueType,
   AnimeProviderProps
 } from './anime-context-types';
-import { animesPath } from '@/constants/paths';
+import { animePath } from '@/constants/paths';
 
 const DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE =
   'Unable to delete the anime %s due to an unexpected error. Please try again later or contact us.';
@@ -70,7 +70,10 @@ export const AnimeProvider = ({
         response.data.anime.title
       );
       dispatch({ type: 'END_LOADING', payload: { message, error } });
-      router.push(`${animesPath}/${response.data.anime.id}`);
+      router.push({
+        pathname: animePath,
+        query: { id: response.data.anime.id }
+      });
     } catch (e) {
       if (e.response?.status === 400) {
         error = ADD_ANIME_BAD_REQUEST_MESSAGE.replace(
@@ -85,7 +88,7 @@ export const AnimeProvider = ({
   };
 
   // TODO: update the anime & return the updated anime (or throw error)
-   const updateAnime = async (
+  const updateAnime = async (
     id: number,
     fields: AnimeFields
   ): Promise<Anime> => {
@@ -103,7 +106,10 @@ export const AnimeProvider = ({
       return response.data.anime;
     } catch (e) {
       if (e.response?.status === 404) {
-        error = UPDATE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace('%s', fields.title);
+        error = UPDATE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace(
+          '%s',
+          fields.title
+        );
       } else if (e.response?.status === 400) {
         error = UPDATE_ANIME_BAD_REQUEST_MESSAGE.replace(
           '%s',
