@@ -1,19 +1,23 @@
 .headerContainer {
   display: flex;
-  justify-content: center;
+  flex-wrap: nowrap;
+  justify-content: space-between;
   align-items: center;
-  gap: 1%;
-  flex-wrap: wrap;
-  @media screen and (min-width: 370px) {
-    flex-wrap: nowrap;
-    justify-content: space-between;
-  }
-}
 
-.headerItemContainer {
-  display: flex;
-  justify-content: center;
-  gap: 0.4rem;
+  .headerItemContainer {
+    display: none;
+  }
+
+  @media screen and (min-width: 380px) {
+    .headerMenu {
+      display: none;
+    }
+    .headerItemContainer {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+  }
 }
 
 .headerBtn {

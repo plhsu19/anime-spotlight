@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useState, MouseEvent } from 'react';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { Alert, Snackbar, Button } from '@mui/material';
@@ -94,6 +95,14 @@ export default function Anime(props: { anime: Anime }) {
         <h1>Anime Page</h1>
         {!editMode ? (
           <div>
+            {!!anime.coverImage ? (
+              <Image
+                src={anime.coverImage}
+                alt={anime.title}
+                width={1141}
+                height={271}
+              />
+            ) : null}
             <h3>{anime.title}</h3>
             <h3>{anime.enTitle}</h3>
             <p>{router.query.id}</p>

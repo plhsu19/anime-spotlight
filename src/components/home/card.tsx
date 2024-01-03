@@ -54,6 +54,7 @@ export default function AnimeCard({
     () => (subtype === 'TV' ? 'TV Series' : subtype),
     [subtype]
   );
+  
   const computedRating: string = useMemo(() => {
     if (rating == null) return '-';
     return rating % 1 !== 0 ? rating.toString() : rating + '.0';
