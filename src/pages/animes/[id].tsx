@@ -6,7 +6,7 @@ import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { Alert, Snackbar, Button } from '@mui/material';
 import animeApiService from '@/services/anime-api-service';
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
-import Layout from '@/components/layout';
+import Layout, { Page } from '@/components/layout';
 import AnimeForm from '@/components/new-anime/anime-form';
 import { AnimeFields } from '@/types/anime-types';
 import { Anime } from '@/types/anime-types';
@@ -82,7 +82,7 @@ export default function Anime(props: { anime: Anime }) {
   };
 
   return (
-    <Layout page="anime">
+    <Layout page={Page.ANIME}>
       <Head>
         <title>anime.title</title>
       </Head>
@@ -99,8 +99,8 @@ export default function Anime(props: { anime: Anime }) {
               <Image
                 src={anime.coverImage}
                 alt={anime.title}
-                width={1141}
-                height={271}
+                width={1141/2}
+                height={271/2}
               />
             ) : null}
             <h3>{anime.title}</h3>

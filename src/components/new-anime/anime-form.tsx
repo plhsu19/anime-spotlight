@@ -20,6 +20,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Anime, AnimeFields, Subtype, Status } from '@/types/anime-types';
 import { Errors, AnimeEditFields } from '@/types/components/anime-form-types';
 import animeFormStyles from '@/styles/components/AnimeForm.module.css';
+import utilStyles from '@/styles/utils.module.css';
 
 const END_DATE = 'endDate';
 const VALIDATION_ERROR_MESSAGE =
@@ -507,7 +508,7 @@ export default function AnimeForm({
           className={
             !!errors.rating
               ? animeFormStyles.alertColor
-              : animeFormStyles.inputColor
+              : utilStyles.secondaryColor
           }
         >
           Rating*:{' '}
@@ -616,7 +617,7 @@ export default function AnimeForm({
           className={
             !!errors.categories
               ? animeFormStyles.alertColor
-              : animeFormStyles.inputColor
+              : utilStyles.secondaryColor
           }
         >
           Categories*:

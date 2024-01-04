@@ -25,6 +25,7 @@ import { animePath } from '@/constants/paths';
 export default function AnimeCard({
   id,
   title,
+  enTitle,
   subtype,
   episodeCount,
   startDate,
@@ -34,6 +35,7 @@ export default function AnimeCard({
 }: {
   id: number;
   title: string;
+  enTitle: string | null;
   subtype: string;
   episodeCount: number | null;
   startDate: string;
@@ -54,7 +56,6 @@ export default function AnimeCard({
     () => (subtype === 'TV' ? 'TV Series' : subtype),
     [subtype]
   );
-  
   const computedRating: string = useMemo(() => {
     if (rating == null) return '-';
     return rating % 1 !== 0 ? rating.toString() : rating + '.0';
@@ -102,9 +103,20 @@ export default function AnimeCard({
             handleDirectToAnimePage(false);
           }}
         >
-          <h3 className={cardStyles.title}>{title}</h3>
+          <div className={cardStyles.titleContainer}>
+            <h3 className={cardStyles.title}>{title}</h3>
+            {enTitle ? (
+              <p
+                className={[
+                  cardStyles.subTitle,
+                  utilStyles.secondaryColor
+                ].join(' ')}
+              >
+                {enTitle}
+              </p>
+            ) : null}
+          </div>
           <div className={cardStyles.details}>
-            <span className={cardStyles.year}>{startYear}</span>
             <Chip
               label={type}
               color="success"
@@ -122,7 +134,7 @@ export default function AnimeCard({
         <div className={cardStyles.cardEditContainer}>
           <IconButton
             id="edit-button"
-            aria-controls={open ? 'basic-menu' : undefined}
+            aria-controls={open ? 'edit-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
             size="medium"
@@ -133,12 +145,12 @@ export default function AnimeCard({
             <MoreVertIcon fontSize="large" />
           </IconButton>
           <Menu
-            id="basic-menu"
+            id="edit-menu"
             anchorEl={anchorEl}
             open={open}
             onClose={handleClose}
             MenuListProps={{
-              'aria-labelledby': 'basic-button'
+              'aria-labelledby': 'edit-button'
             }}
           >
             <MenuItem
@@ -165,11 +177,8 @@ export default function AnimeCard({
             }}
           >
             <StarIcon color="warning" fontSize="large" />
-            <span>
-              <span className={utilStyles.largeContextFontSize}>
-                {computedRating}
-              </span>
-              {' /10'}
+            <span className={utilStyles.largeContextFontSize}>
+              {computedRating}
             </span>
           </div>
         </div>

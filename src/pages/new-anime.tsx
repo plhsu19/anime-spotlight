@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import Layout from '@/components/layout';
+import Layout, { Page } from '@/components/layout';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { Alert, Snackbar } from '@mui/material';
 import utilStyles from '@/styles/utils.module.css';
@@ -30,7 +30,7 @@ export default function NewAnime() {
   };
 
   return (
-    <Layout page="new-anime">
+    <Layout page={Page.NEW_ANIME}>
       <Head>
         <title>Add New Anime</title>
       </Head>

@@ -27,6 +27,10 @@
   margin-right: auto;
 }
 
+.secondaryColor {
+  color: #FFFFFFB3;
+}
+
 /* .alignSelfFlexStart {
   align-self: flex-start
 } */

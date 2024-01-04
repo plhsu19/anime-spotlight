@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,17 +18,27 @@ import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
+import { homePath, newAnimePath } from '@/constants/paths';
 
 export const siteTitle = 'Anime Spotlight';
+export enum Page {
+  HOME = 'home',
+  ANIME = 'anime',
+  NEW_ANIME = 'new-anime'
+}
+
+const HOME_ITEM = 'Home';
+const NEW_ANIME_ITEM = 'Add';
 
 export default function Layout({
   children,
   page
 }: {
   children: ReactNode;
-  page: string;
+  page: Page;
 }) {
-  const { state } = useGetAnimeContextValue();
+  const router = useRouter();
+  const { state, dispatch } = useGetAnimeContextValue();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -37,6 +48,15 @@ export default function Layout({
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleDirectToPage = (toPage: Page) => {
+    if (!state.loading && toPage !== page) {
+      dispatch({ type: 'RESET_NOTIFICATIONS' });
+      router.push({
+        pathname: toPage === Page.NEW_ANIME ? newAnimePath : homePath
+      });
+    }
   };
 
   return (
@@ -69,68 +89,67 @@ export default function Layout({
             />
           </Link>
           <div className={layoutStyles.headerItemContainer}>
-            <Link href="/">
-              <Button
-                size="large"
-                className={[
-                  layoutStyles.headerBtn,
-                  page === 'home' ? utilStyles.seletcedBtn : ''
-                ].join(' ')}
-                startIcon={<HomeIcon />}
-              >
-                Home
-              </Button>
-            </Link>
-            <Link href="/new-anime">
-              <Button
-                size="large"
-                className={[
-                  layoutStyles.headerBtn,
-                  page === 'new-anime' ? utilStyles.seletcedBtn : ''
-                ].join(' ')}
-                startIcon={<AddIcon />}
-              >
-                Add
-              </Button>
-            </Link>
+            <Button
+              size="large"
+              className={[
+                layoutStyles.headerBtn,
+                page === Page.HOME ? utilStyles.seletcedBtn : ''
+              ].join(' ')}
+              startIcon={<HomeIcon />}
+              onClick={() => handleDirectToPage(Page.HOME)}
+            >
+              {HOME_ITEM}
+            </Button>
+            <Button
+              size="large"
+              className={[
+                layoutStyles.headerBtn,
+                page === Page.NEW_ANIME ? utilStyles.seletcedBtn : ''
+              ].join(' ')}
+              startIcon={<AddIcon />}
+              onClick={() => handleDirectToPage(Page.NEW_ANIME)}
+            >
+              {NEW_ANIME_ITEM}
+            </Button>
           </div>
           <div className={layoutStyles.headerMenu}>
             <IconButton
-              id="edit-button"
-              aria-controls={open ? 'basic-menu' : undefined}
+              id="menu-button"
+              aria-controls={open ? 'header-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               size="medium"
               disabled={state.loading}
               onClick={handleMenuButtonClick}
-              // className={cardStyles.menuButton}
             >
               <MenuIcon fontSize="large" />
             </IconButton>
             <Menu
-              id="basic-menu"
+              id="header-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button'
+                'aria-labelledby': 'menu-button'
               }}
             >
               <MenuItem
-                // onClick={() => {
-                //   handleDirectToAnimePage(true);
-                // }}
+                selected={page === Page.HOME}
+                onClick={() => handleDirectToPage(Page.HOME)}
               >
                 <ListItemIcon>
-                  <AddIcon fontSize="small" />
+                  <HomeIcon fontSize="medium" />
                 </ListItemIcon>
-                <ListItemText>Edit</ListItemText>
+                <ListItemText>{HOME_ITEM}</ListItemText>
               </MenuItem>
-              <MenuItem>
+              <MenuItem
+                selected={page === Page.NEW_ANIME}
+                onClick={() => handleDirectToPage(Page.NEW_ANIME)}
+              >
                 <ListItemIcon>
-                  <HomeIcon fontSize="small" />
+                  <AddIcon fontSize="medium" />
                 </ListItemIcon>
-                <ListItemText>Delete</ListItemText>
+                <ListItemText>{NEW_ANIME_ITEM}</ListItemText>
               </MenuItem>
             </Menu>
           </div>

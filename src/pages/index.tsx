@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import Card from '@/components/home/card';
-import Layout from '@/components/layout';
+import Layout, { Page } from '@/components/layout';
 import animeApiService from '@/services/anime-api-service';
 import { IconButton, Alert, Snackbar } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -57,7 +57,7 @@ export default function Home(
   };
 
   return (
-    <Layout page="home">
+    <Layout page={Page.HOME}>
       <Head>
         <title>Anime Spotlight</title>
       </Head>
@@ -111,6 +111,7 @@ export default function Home(
               key={anime.id}
               id={anime.id}
               title={anime.title}
+              enTitle={anime.enTitle}
               subtype={anime.subtype}
               rating={anime.rating}
               episodeCount={anime.episodeCount}
