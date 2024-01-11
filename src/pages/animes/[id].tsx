@@ -1,28 +1,47 @@
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Image from 'next/image';
-import { useState, MouseEvent } from 'react';
+import { useState } from 'react';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
-import { Alert, Snackbar, Button } from '@mui/material';
+import {
+  DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE,
+  DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE,
+  DELETE_ANIME_SUCCESSFUL_MESSAGE
+} from '@/constants/texts';
+import { Alert, Snackbar } from '@mui/material';
 import animeApiService from '@/services/anime-api-service';
-import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
+import type { GetServerSideProps } from 'next';
 import Layout, { Page } from '@/components/layout';
 import AnimeForm from '@/components/new-anime/anime-form';
+import AnimeView from '@/components/animes/anime-view';
 import { AnimeFields } from '@/types/anime-types';
 import { Anime } from '@/types/anime-types';
 import utilStyles from '@/styles/utils.module.css';
+import animesStyles from '@/styles/Animes.module.css';
+import { homePath } from '@/constants/paths';
+import { PROCESSING_REQUEST_MESSAGE } from '@/constants/texts';
 
-const UPDATING_ANIME_MESSAGE = 'Updating anime...';
+const BACKGROUND_IMAGE_OPACITY_LAYER = 'rgb(0, 0, 0, 0.84)';
 
 // TODO: uncaught server-side error of 404 if no anime found
-export const getServerSideProps = async ({ params }) => {
-  const res = await animeApiService.getAnimeById(params.id);
-  return {
-    props: {
-      anime: res.data.anime
+export const getServerSideProps = (async ({ params }) => {
+  try {
+    if (params?.id == null || typeof params?.id !== 'string') {
+      throw new Error('Invalid anime id in url.');
+    } else if (Number.isNaN(parseInt(params.id))) {
+      throw new Error('Invalid anime id in url: not a number.');
+    } else {
+      const res = await animeApiService.getAnimeById(params.id);
+      return {
+        props: {
+          anime: res.data.anime
+        }
+      };
     }
-  };
-};
+  } catch (e) {
+    console.log(`fetching anime id ${params?.id} failed with error: `, e);
+    throw e;
+  }
+}) satisfies GetServerSideProps;
 
 export default function Anime(props: { anime: Anime }) {
   const router = useRouter();
@@ -49,10 +68,33 @@ export default function Anime(props: { anime: Anime }) {
     setAlertOpen(false);
   };
 
-  const handleEditButtonClick = (): void => {
+  const handleEdit = (): void => {
     dispatch({ type: 'RESET_NOTIFICATIONS' });
     setEditMode(true);
     updateEditQueryParams(true);
+  };
+
+  const handleDelete = async (): Promise<void> => {
+    dispatch({ type: 'START_LOADING' });
+    let message = null;
+    let error = null;
+
+    try {
+      await animeApiService.deleteAnimeById(anime.id);
+      message = DELETE_ANIME_SUCCESSFUL_MESSAGE.replace('%s', anime.title);
+      dispatch({ type: 'END_LOADING', payload: { message, error } });
+      router.push({ pathname: homePath });
+    } catch (e) {
+      if (e.response?.status === 404) {
+        error = DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace('%s', anime.title);
+      } else {
+        error = DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace(
+          '%s',
+          anime.title
+        );
+      }
+    }
+    dispatch({ type: 'END_LOADING', payload: { message, error } });
   };
 
   const onCancelEditing = () => {
@@ -84,63 +126,69 @@ export default function Anime(props: { anime: Anime }) {
   return (
     <Layout page={Page.ANIME}>
       <Head>
-        <title>anime.title</title>
+        <title>{anime.title}</title>
       </Head>
-      <div
-        className={[
-          utilStyles.verticalAlignItems,
-          utilStyles.horizontalAlignment
-        ].join(' ')}
+      <main
+        style={
+          !!anime.coverImage && !editMode
+            ? {
+                backgroundImage: `linear-gradient(${BACKGROUND_IMAGE_OPACITY_LAYER}, ${BACKGROUND_IMAGE_OPACITY_LAYER}), url(${anime.coverImage})`
+              }
+            : undefined
+        }
+        className={animesStyles.background}
       >
-        <h1>Anime Page</h1>
-        {!editMode ? (
-          <div>
-            {!!anime.coverImage ? (
-              <Image
-                src={anime.coverImage}
-                alt={anime.title}
-                width={1141/2}
-                height={271/2}
-              />
-            ) : null}
-            <h3>{anime.title}</h3>
-            <h3>{anime.enTitle}</h3>
-            <p>{router.query.id}</p>
-            <Button disabled={state.loading} onClick={handleEditButtonClick}>
-              Edit
-            </Button>
+        <div className={utilStyles.horizontalAlignment}>
+          <div className={animesStyles.titleContainer}>
+            <h3 className={animesStyles.title}>{anime.title}</h3>
+            {!editMode && anime.enTitle && (
+              <span
+                className={[
+                  animesStyles.subTitle,
+                  utilStyles.secondaryColor
+                ].join(' ')}
+              >{`English title: ${anime.enTitle}`}</span>
+            )}
           </div>
-        ) : (
-          <AnimeForm
-            initialAnime={anime}
-            submitForm={onUpdate}
-            cancel={onCancelEditing}
-            isDisabled={state.loading}
-          />
-        )}
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={state.loading}
-        >
-          <Alert severity="warning" variant="filled">
-            {UPDATING_ANIME_MESSAGE}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={alertOpen}
-          autoHideDuration={6000}
-          onClose={handleAlertClose}
-        >
-          <Alert
-            severity={!!state.error ? 'error' : 'success'}
-            variant="filled"
+          {!editMode ? (
+            <AnimeView
+              anime={anime}
+              isLoading={state.loading}
+              handleEditButtonClick={handleEdit}
+              handleDeleteButtonClick={handleDelete}
+            />
+          ) : (
+            <AnimeForm
+              initialAnime={anime}
+              submitForm={onUpdate}
+              cancel={onCancelEditing}
+              isDisabled={state.loading}
+            />
+          )}
+          <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={state.loading}
+          >
+            <Alert severity="warning" variant="filled">
+              {PROCESSING_REQUEST_MESSAGE}
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={alertOpen}
+            autoHideDuration={6000}
             onClose={handleAlertClose}
           >
-            {state.error ?? state.message}
-          </Alert>
-        </Snackbar>
-      </div>
+            <Alert
+              severity={!!state.error ? 'error' : 'success'}
+              variant="filled"
+              onClose={handleAlertClose}
+            >
+              {state.error ?? state.message}
+            </Alert>
+          </Snackbar>
+        </div>
+      </main>
     </Layout>
   );
 }

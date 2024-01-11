@@ -7,8 +7,7 @@
   .headerItemContainer {
     display: none;
   }
-
-  @media screen and (min-width: 400px) {
+  @media screen and (min-width: 600px) {
     .headerMenu {
       display: none;
     }
@@ -18,6 +17,10 @@
       gap: 0.4rem;
     }
   }
+}
+
+.logo:hover {
+  cursor: pointer;
 }
 
 .headerBtn {

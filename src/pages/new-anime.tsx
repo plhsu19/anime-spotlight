@@ -34,37 +34,39 @@ export default function NewAnime() {
       <Head>
         <title>Add New Anime</title>
       </Head>
-      <div
-        className={[
-          utilStyles.verticalAlignItems,
-          utilStyles.horizontalAlignment
-        ].join(' ')}
-      >
-        <h1>Add New Anime</h1>
-        <p>
-          Add your new favorite series to the list by filling out a simple form,
-          and introduce new worlds to fellow anime enthusiasts!
-        </p>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={state.loading}
+      <main>
+        <div
+          className={[
+            utilStyles.verticalAlignItems,
+            utilStyles.horizontalAlignment
+          ].join(' ')}
         >
-          <Alert severity="warning" variant="filled">
-            {ADDING_ANIME_MESSAGE}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={alertOpen}
-          autoHideDuration={6000}
-          onClose={handleAlertClose}
-        >
-          <Alert severity="error" variant="filled" onClose={handleAlertClose}>
-            {state.error}
-          </Alert>
-        </Snackbar>
-        <AnimeForm submitForm={addAnime} />
-      </div>
+          <h1>Add New Anime</h1>
+          <p>
+            Add your new favorite series to the list by filling out a simple
+            form, and introduce new worlds to fellow anime enthusiasts!
+          </p>
+          <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={state.loading}
+          >
+            <Alert severity="warning" variant="filled">
+              {ADDING_ANIME_MESSAGE}
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={alertOpen}
+            autoHideDuration={6000}
+            onClose={handleAlertClose}
+          >
+            <Alert severity="error" variant="filled" onClose={handleAlertClose}>
+              {state.error}
+            </Alert>
+          </Snackbar>
+          <AnimeForm submitForm={addAnime} />
+        </div>
+      </main>
     </Layout>
   );
 }

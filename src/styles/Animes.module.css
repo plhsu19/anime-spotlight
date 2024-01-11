@@ -1,0 +1,19 @@
+.background {
+  background-size: auto 400px;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+.titleContainer {
+  margin: 0.5rem 0 1.5rem 0;
+}
+
+.title {
+  font-weight: normal;
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+.subTitle {
+  margin-top: 0.5rem;
+}

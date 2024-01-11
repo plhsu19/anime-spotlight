@@ -12,8 +12,8 @@ import { Anime } from '@/types/anime-types';
 import styles from '@/styles/Home.module.css';
 import utilStyles from '@/styles/utils.module.css';
 import { newAnimePath } from '@/constants/paths';
+import {PROCESSING_REQUEST_MESSAGE} from '@/constants/texts';
 
-const PROCESSING_REQUEST_MESSAGE = 'Processing your request...';
 
 export const getServerSideProps: GetServerSideProps<{
   animes: Anime[];
@@ -34,7 +34,7 @@ export default function Home(
   const { state, dispatch, deleteAnime } = useGetAnimeContextValue();
   const alertIsExist = !!state.message || !!state.error;
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
-  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(alertIsExist);
 
   if (alertIsExist !== preAlertIsExist) {
     setAlertOpen(alertIsExist);
@@ -61,67 +61,69 @@ export default function Home(
       <Head>
         <title>Anime Spotlight</title>
       </Head>
-      <div
-        className={[
-          utilStyles.verticalAlignItems,
-          utilStyles.horizontalAlignment
-        ].join(' ')}
-      >
-        <h1>Anime Spotlight 🔦</h1>
-        <p>
-          Discover top anime series. Tap cards for detailed insights. Use the
-          three dots to edit or remove the animes, and the top-right '+' to add
-          new favorites to the list. Enhance your anime journey!
-        </p>
-        <IconButton
-          aria-label="addAnime"
-          size="small"
-          color="primary"
-          disabled={state.loading}
-          className={styles.btnAdd}
-          onClick={handleDirectToNewAnimePage}
+      <main>
+        <div
+          className={[
+            utilStyles.verticalAlignItems,
+            utilStyles.horizontalAlignment
+          ].join(' ')}
         >
-          <AddCircleIcon fontSize="large" />
-        </IconButton>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={state.loading}
-        >
-          <Alert severity="warning" variant="filled">
-            {PROCESSING_REQUEST_MESSAGE}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={alertOpen}
-          autoHideDuration={6000}
-          onClose={handleAlertClose}
-        >
-          <Alert
-            severity={!!state.error ? 'error' : 'success'}
-            variant="filled"
+          <h1>Anime Spotlight 🔦</h1>
+          <p>
+            Discover top anime series. Tap cards for detailed insights. Use the
+            three dots to edit or remove the animes, and the top-right '+' to
+            add new favorites to the list. Enhance your anime journey!
+          </p>
+          <IconButton
+            aria-label="addAnime"
+            size="small"
+            color="primary"
+            disabled={state.loading}
+            className={styles.btnAdd}
+            onClick={handleDirectToNewAnimePage}
+          >
+            <AddCircleIcon fontSize="large" />
+          </IconButton>
+          <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={state.loading}
+          >
+            <Alert severity="warning" variant="filled">
+              {PROCESSING_REQUEST_MESSAGE}
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={alertOpen}
+            autoHideDuration={6000}
             onClose={handleAlertClose}
           >
-            {state.error ?? state.message}
-          </Alert>
-        </Snackbar>
-        <div className={styles.cardList}>
-          {state.animes?.map((anime) => (
-            <Card
-              key={anime.id}
-              id={anime.id}
-              title={anime.title}
-              enTitle={anime.enTitle}
-              subtype={anime.subtype}
-              rating={anime.rating}
-              episodeCount={anime.episodeCount}
-              startDate={anime.startDate}
-              posterImage={anime.posterImage}
-              deleteAnime={deleteAnime}
-            />
-          ))}
+            <Alert
+              severity={!!state.error ? 'error' : 'success'}
+              variant="filled"
+              onClose={handleAlertClose}
+            >
+              {state.error ?? state.message}
+            </Alert>
+          </Snackbar>
+          <div className={styles.cardList}>
+            {state.animes?.map((anime) => (
+              <Card
+                key={anime.id}
+                id={anime.id}
+                title={anime.title}
+                enTitle={anime.enTitle}
+                subtype={anime.subtype}
+                rating={anime.rating}
+                episodeCount={anime.episodeCount}
+                startDate={anime.startDate}
+                posterImage={anime.posterImage}
+                deleteAnime={deleteAnime}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      </main>
     </Layout>
   );
 }

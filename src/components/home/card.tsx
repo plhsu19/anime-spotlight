@@ -16,6 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import StarIcon from '@mui/icons-material/Star';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
+import { animeTypeFormatter, animeRatingFormatter } from '@/utils/anime-utils';
 import { animePath } from '@/constants/paths';
 
 //TODO:
@@ -56,11 +57,6 @@ export default function AnimeCard({
     () => (subtype === 'TV' ? 'TV Series' : subtype),
     [subtype]
   );
-  const computedRating: string = useMemo(() => {
-    if (rating == null) return '-';
-    return rating % 1 !== 0 ? rating.toString() : rating + '.0';
-  }, [rating]);
-
   const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -71,6 +67,7 @@ export default function AnimeCard({
     deleteAnime(id, title);
     setAnchorEl(null);
   };
+  
   const handleDirectToAnimePage = (edit: boolean) => {
     if (!state.loading) {
       dispatch({ type: 'RESET_NOTIFICATIONS' });
@@ -89,8 +86,8 @@ export default function AnimeCard({
             priority
             src={posterImage}
             className={cardStyles.image}
-            height={158.4}
-            width={111.6}
+            height={78 * 2}
+            width={55 * 2}
             alt=""
             onClick={() => {
               handleDirectToAnimePage(false);
@@ -123,12 +120,14 @@ export default function AnimeCard({
               variant="outlined"
               size="small"
             />
-            <Chip
-              label={`${episodeCount ?? 'unkown'} ep(s)`}
-              color="warning"
-              variant="outlined"
-              size="small"
-            />
+            {episodeCount && (
+              <Chip
+                label={`${episodeCount} ep(s)`}
+                color="warning"
+                variant="outlined"
+                size="small"
+              />
+            )}
           </div>
         </div>
         <div className={cardStyles.cardEditContainer}>
@@ -178,7 +177,7 @@ export default function AnimeCard({
           >
             <StarIcon color="warning" fontSize="large" />
             <span className={utilStyles.largeContextFontSize}>
-              {computedRating}
+              {animeRatingFormatter(rating)}
             </span>
           </div>
         </div>

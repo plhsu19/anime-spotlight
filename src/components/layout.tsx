@@ -16,19 +16,22 @@ import {
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
+import InfoIcon from '@mui/icons-material/Info';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
-import { homePath, newAnimePath } from '@/constants/paths';
+import { paths } from '@/constants/paths';
 
 export const siteTitle = 'Anime Spotlight';
 export enum Page {
   HOME = 'home',
   ANIME = 'anime',
-  NEW_ANIME = 'new-anime'
+  NEW_ANIME = 'newAnime',
+  ABOUT = 'about'
 }
 
 const HOME_ITEM = 'Home';
 const NEW_ANIME_ITEM = 'Add';
+const ABOUT_ITEM = 'About';
 
 export default function Layout({
   children,
@@ -54,7 +57,7 @@ export default function Layout({
     if (!state.loading && toPage !== page) {
       dispatch({ type: 'RESET_NOTIFICATIONS' });
       router.push({
-        pathname: toPage === Page.NEW_ANIME ? newAnimePath : homePath
+        pathname: paths[toPage]
       });
     }
   };
@@ -79,18 +82,19 @@ export default function Layout({
             utilStyles.horizontalAlignment
           ].join(' ')}
         >
-          <Link href="/">
-            <Image
-              priority
-              height={104}
-              width={128}
-              src="/images/logo.png"
-              alt="Anime Spotlight logo"
-            />
-          </Link>
+          <Image
+            priority
+            height={104}
+            width={128}
+            src="/images/logo.png"
+            alt="Anime Spotlight logo"
+            className={layoutStyles.logo}
+            onClick={() => handleDirectToPage(Page.HOME)}
+          />
           <div className={layoutStyles.headerItemContainer}>
             <Button
               size="large"
+              disabled={state.loading}
               className={[
                 layoutStyles.headerBtn,
                 page === Page.HOME ? utilStyles.seletcedBtn : ''
@@ -102,6 +106,7 @@ export default function Layout({
             </Button>
             <Button
               size="large"
+              disabled={state.loading}
               className={[
                 layoutStyles.headerBtn,
                 page === Page.NEW_ANIME ? utilStyles.seletcedBtn : ''
@@ -110,6 +115,18 @@ export default function Layout({
               onClick={() => handleDirectToPage(Page.NEW_ANIME)}
             >
               {NEW_ANIME_ITEM}
+            </Button>
+            <Button
+              size="large"
+              disabled={state.loading}
+              className={[
+                layoutStyles.headerBtn,
+                page === Page.ABOUT ? utilStyles.seletcedBtn : ''
+              ].join(' ')}
+              startIcon={<InfoIcon />}
+              onClick={() => handleDirectToPage(Page.ABOUT)}
+            >
+              {ABOUT_ITEM}
             </Button>
           </div>
           <div className={layoutStyles.headerMenu}>
@@ -135,6 +152,7 @@ export default function Layout({
             >
               <MenuItem
                 selected={page === Page.HOME}
+                disabled={state.loading}
                 onClick={() => handleDirectToPage(Page.HOME)}
               >
                 <ListItemIcon>
@@ -144,6 +162,7 @@ export default function Layout({
               </MenuItem>
               <MenuItem
                 selected={page === Page.NEW_ANIME}
+                disabled={state.loading}
                 onClick={() => handleDirectToPage(Page.NEW_ANIME)}
               >
                 <ListItemIcon>
@@ -151,11 +170,21 @@ export default function Layout({
                 </ListItemIcon>
                 <ListItemText>{NEW_ANIME_ITEM}</ListItemText>
               </MenuItem>
+              <MenuItem
+                selected={page === Page.ABOUT}
+                disabled={state.loading}
+                onClick={() => handleDirectToPage(Page.ABOUT)}
+              >
+                <ListItemIcon>
+                  <InfoIcon fontSize="medium" />
+                </ListItemIcon>
+                <ListItemText>{ABOUT_ITEM}</ListItemText>
+              </MenuItem>
             </Menu>
           </div>
         </div>
       </header>
-      <main>{children}</main>
+      {children}
       <footer>
         <div
           className={[
@@ -163,15 +192,14 @@ export default function Layout({
             utilStyles.horizontalAlignment
           ].join(' ')}
         >
-          <Link href="/">
-            <Image
-              priority
-              height={104}
-              width={128}
-              src="/images/logo.png"
-              alt="Anime Spotlight logo"
-            />
-          </Link>
+          <Image
+            priority
+            height={104}
+            width={128}
+            src="/images/logo.png"
+            alt="Anime Spotlight logo"
+            onClick={() => handleDirectToPage(Page.HOME)}
+          />
           <span className={layoutStyles.textAlignCenter}>
             © 2023 Anime Spotlight. All Rights Reserved.
           </span>

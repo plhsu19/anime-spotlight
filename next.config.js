@@ -5,9 +5,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'media.kitsu.io',
-        port: '',
-        pathname: '/anime/**',
+        hostname: '**',
+        // hostname: 'media.kitsu.io',
+        // port: '',
+        // pathname: '/anime/**',
       },
     ],
   },

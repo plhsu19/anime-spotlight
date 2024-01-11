@@ -6,7 +6,7 @@ class AnimeApiService {
   private restClient: AxiosInstance;
   private static TIMEOUT: number = 30000;
   
-  // TODO: move host URLs to .env for prod/dev
+  // TODO: move host URLs to .env(?) for prod/dev
   private static DEVELOPMENT_BASE_URL: string = 'http://localhost:8080';
   private static PRODUCTION_BASE_URL: string = 'http://production-host';
   private static URL: string = '/animes';
@@ -28,7 +28,7 @@ class AnimeApiService {
   }
 
   // get anime by id
-  public async getAnimeById(id: number): Promise<AnimeResponse> {
+  public async getAnimeById(id: string): Promise<AnimeResponse> {
     const response = await this.restClient.get(`${AnimeApiService.URL}/${id}`);
     return response.data;
   }

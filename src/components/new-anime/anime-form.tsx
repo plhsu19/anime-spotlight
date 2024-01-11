@@ -583,7 +583,7 @@ export default function AnimeForm({
           required
           className={animeFormStyles.urlInput}
           id="poster-image-url-input"
-          label="Poster Image URL"
+          label="Poster Image URL (aspect ratio: 55:78)"
           name="posterImage"
           type="url"
           value={fields.posterImage ?? ''}
@@ -706,7 +706,7 @@ export default function AnimeForm({
           <Button
             type="submit"
             disabled={isDisabled}
-            variant="outlined"
+            variant="contained"
             size="large"
           >
             {isEditing ? 'Save' : 'Submit'}

@@ -1,4 +1,5 @@
 import { createContext, useReducer, useContext, useState } from 'react';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import animeReducer from './anime-reducer';
 import animeApiService from '@/services/anime-api-service';
@@ -9,12 +10,12 @@ import {
   AnimeProviderProps
 } from './anime-context-types';
 import { animePath } from '@/constants/paths';
+import {
+  DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE,
+  DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE,
+  DELETE_ANIME_SUCCESSFUL_MESSAGE
+} from '@/constants/texts';
 
-const DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE =
-  'Unable to delete the anime %s due to an unexpected error. Please try again later or contact us.';
-const DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE =
-  'The anime %s you are trying to delete was not found. Please refresh the page and try again.';
-const DELETE_ANIME_SUCCESSFUL_MESSAGE = 'Successfully deleted the anime %s.';
 const ADD_ANIME_SUCCESSFUL_MESSAGE = 'Successfully added the anime %s.';
 const ADD_ANIME_UNEXPECTED_ERROR_MESSAGE =
   'Unable to add the anime %s due to an unexpected error. Please try again later or contact us.';
