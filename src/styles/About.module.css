@@ -1,0 +1,13 @@
+.content {
+  max-width: 800px;
+  font-size: 1.1rem;
+}
+
+.link {
+  color: #9ca0fa;
+}
+
+.link:hover {
+  background-color: #9ca0fa;
+  color: black;
+}

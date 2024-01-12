@@ -31,6 +31,6 @@
   color: #FFFFFFB3;
 }
 
-/* .alignSelfFlexStart {
-  align-self: flex-start
-} */
+.bold {
+  font-weight: bold;
+}

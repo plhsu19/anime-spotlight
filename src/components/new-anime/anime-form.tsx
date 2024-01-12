@@ -706,7 +706,8 @@ export default function AnimeForm({
           <Button
             type="submit"
             disabled={isDisabled}
-            variant="contained"
+            variant="outlined"
+            color="primary"
             size="large"
           >
             {isEditing ? 'Save' : 'Submit'}

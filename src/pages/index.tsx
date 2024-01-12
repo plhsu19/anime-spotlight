@@ -12,8 +12,7 @@ import { Anime } from '@/types/anime-types';
 import styles from '@/styles/Home.module.css';
 import utilStyles from '@/styles/utils.module.css';
 import { newAnimePath } from '@/constants/paths';
-import {PROCESSING_REQUEST_MESSAGE} from '@/constants/texts';
-
+import { PROCESSING_REQUEST_MESSAGE } from '@/constants/texts';
 
 export const getServerSideProps: GetServerSideProps<{
   animes: Anime[];
@@ -71,8 +70,9 @@ export default function Home(
           <h1>Anime Spotlight 🔦</h1>
           <p>
             Discover top anime series. Tap cards for detailed insights. Use the
-            three dots to edit or remove the animes, and the top-right '+' to
-            add new favorites to the list. Enhance your anime journey!
+            three dots to edit or remove the animes, and the top-right
+            &apos;+&apos; to add new favorites to the list. Enhance your anime
+            journey!
           </p>
           <IconButton
             aria-label="addAnime"
