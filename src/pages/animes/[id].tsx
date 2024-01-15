@@ -17,8 +17,10 @@ import { AnimeFields } from '@/types/anime-types';
 import { Anime } from '@/types/anime-types';
 import utilStyles from '@/styles/utils.module.css';
 import animesStyles from '@/styles/Animes.module.css';
-import { homePath } from '@/constants/paths';
+import { paths } from '@/constants/paths';
 import { PROCESSING_REQUEST_MESSAGE } from '@/constants/texts';
+import { ErrorRespone } from '@/types/services/anime-api-service-types';
+import { AxiosError } from 'axios';
 
 const BACKGROUND_IMAGE_OPACITY_LAYER = 'rgb(0, 0, 0, 0.84)';
 
@@ -83,9 +85,10 @@ export default function Anime(props: { anime: Anime }) {
       await animeApiService.deleteAnimeById(anime.id);
       message = DELETE_ANIME_SUCCESSFUL_MESSAGE.replace('%s', anime.title);
       dispatch({ type: 'END_LOADING', payload: { message, error } });
-      router.push({ pathname: homePath });
+      router.push({ pathname: paths.home });
     } catch (e) {
-      if (e.response?.status === 404) {
+      const axiosError = e as AxiosError<ErrorRespone>;
+      if (axiosError.response?.status === 404) {
         error = DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace('%s', anime.title);
       } else {
         error = DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace(

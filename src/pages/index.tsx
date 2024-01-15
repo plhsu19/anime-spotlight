@@ -11,7 +11,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Anime } from '@/types/anime-types';
 import styles from '@/styles/Home.module.css';
 import utilStyles from '@/styles/utils.module.css';
-import { newAnimePath } from '@/constants/paths';
+import { paths } from '@/constants/paths';
 import { PROCESSING_REQUEST_MESSAGE } from '@/constants/texts';
 
 export const getServerSideProps: GetServerSideProps<{
@@ -42,7 +42,7 @@ export default function Home(
 
   const handleDirectToNewAnimePage = () => {
     dispatch({ type: 'RESET_NOTIFICATIONS' });
-    router.push(newAnimePath);
+    router.push(paths.newAnime);
   };
 
   const handleAlertClose = (

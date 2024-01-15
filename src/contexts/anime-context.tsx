@@ -9,12 +9,13 @@ import {
   AnimeContextValueType,
   AnimeProviderProps
 } from './anime-context-types';
-import { animePath } from '@/constants/paths';
+import { paths } from '@/constants/paths';
 import {
   DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE,
   DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE,
   DELETE_ANIME_SUCCESSFUL_MESSAGE
 } from '@/constants/texts';
+import { ErrorRespone } from '@/types/services/anime-api-service-types';
 
 const ADD_ANIME_SUCCESSFUL_MESSAGE = 'Successfully added the anime %s.';
 const ADD_ANIME_UNEXPECTED_ERROR_MESSAGE =
@@ -72,14 +73,15 @@ export const AnimeProvider = ({
       );
       dispatch({ type: 'END_LOADING', payload: { message, error } });
       router.push({
-        pathname: animePath,
+        pathname: paths.anime,
         query: { id: response.data.anime.id }
       });
     } catch (e) {
-      if (e.response?.status === 400) {
+      const axiosError = e as AxiosError<ErrorRespone>;
+      if (axiosError.response?.status === 400) {
         error = ADD_ANIME_BAD_REQUEST_MESSAGE.replace(
           '%s',
-          e.response?.data?.message ?? 'unknown'
+          axiosError.response?.data?.message ?? 'unknown'
         );
       } else {
         error = ADD_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', fields.title);
@@ -106,15 +108,17 @@ export const AnimeProvider = ({
       dispatch({ type: 'END_LOADING', payload: { message, error } });
       return response.data.anime;
     } catch (e) {
-      if (e.response?.status === 404) {
+
+      const axiosError = e as AxiosError<ErrorRespone>;
+      if (axiosError.response?.status === 404) {
         error = UPDATE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace(
           '%s',
           fields.title
         );
-      } else if (e.response?.status === 400) {
+      } else if (axiosError.response?.status === 400) {
         error = UPDATE_ANIME_BAD_REQUEST_MESSAGE.replace(
           '%s',
-          e.response?.data?.message ?? 'unknown'
+          axiosError.response?.data?.message ?? 'unknown'
         );
       } else {
         error = UPDATE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace(
@@ -154,7 +158,8 @@ export const AnimeProvider = ({
       dispatch({ type: 'SET_ANIMES', payload: updatedAnime });
       message = DELETE_ANIME_SUCCESSFUL_MESSAGE.replace('%s', title);
     } catch (e) {
-      if (e.response?.status === 404) {
+      const axiosError = e as AxiosError<ErrorRespone>;
+      if (axiosError.response?.status === 404) {
         error = DELETE_ANIME_NOT_FOUND_ERROR_MESSAGE.replace('%s', title);
       } else {
         error = DELETE_ANIME_UNEXPECTED_ERROR_MESSAGE.replace('%s', title);

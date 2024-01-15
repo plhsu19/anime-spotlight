@@ -17,3 +17,8 @@ export interface AnimeResponse {
 export interface DeleteAnimeRespone {
   success: boolean;
 }
+
+export interface ErrorRespone {
+  success: boolean;
+  message: string;
+}

@@ -17,7 +17,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import StarIcon from '@mui/icons-material/Star';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { animeTypeFormatter, animeRatingFormatter } from '@/utils/anime-utils';
-import { animePath } from '@/constants/paths';
+import { paths } from '@/constants/paths';
 
 //TODO:
 // 1. understand props of IconButton
@@ -72,7 +72,7 @@ export default function AnimeCard({
     if (!state.loading) {
       dispatch({ type: 'RESET_NOTIFICATIONS' });
       router.push({
-        pathname: animePath,
+        pathname: paths.anime,
         query: edit ? { id, edit: 'true' } : { id }
       });
     }

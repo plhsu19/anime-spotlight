@@ -195,15 +195,16 @@ export default function AnimeForm({
   };
 
   const handleRatingChange = (
-    event: React.SyntheticEvent<Element, Event>,
+    event: React.SyntheticEvent,
     value: number | null
   ) => {
+    let target = event.target as HTMLInputElement;
     setFields({
       ...fields,
-      [event.target.name]: value
+      [target.name]: value
     });
 
-    validate({ [event.target.name]: value }, [event.target.name]);
+    validate({ [target.name]: value }, [target.name]);
   };
 
   const handleTextFieldBlur = (

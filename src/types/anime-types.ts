@@ -1,5 +1,4 @@
 export interface AnimeFields {
-  // [key: string]: string | number | null | string[] | Subtype | Status;
   title: string;
   enTitle: string | null;
   description: string;

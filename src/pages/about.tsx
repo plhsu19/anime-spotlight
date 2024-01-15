@@ -24,7 +24,7 @@ export default function About() {
           <h1>About</h1>
           <div className={aboutStyles.content}>
             <p>
-              Hi, I'm Pei-Lun, a software developer currently based in Berlin.
+              Hi, I&apos;m Pei-Lun, a software developer currently based in Berlin.
               Anime Spotlight is a side project that aims to showcase a fully
               functional app, equipped with{' '}
               <span className={utilStyles.bold}>CRUD RESTful APIs</span> and{' '}
