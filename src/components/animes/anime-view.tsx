@@ -10,7 +10,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Anime, Status } from '@/types/anime-types';
-import animeView from '@/styles/components/animes/AnimeView.module.css';
+import animeViewStyles from '@/styles/components/animes/AnimeView.module.css';
 import {
   animeTypeFormatter,
   animeStatusFormatter,
@@ -52,15 +52,15 @@ export default function AnimeView({
   }, [anime.rating]);
 
   return (
-    <div className={animeView.animeView}>
+    <div className={animeViewStyles.animeView}>
       <Image
         src={anime.posterImage}
         alt={anime.title}
         width={55 * 4.5}
         height={78 * 4.5}
       />
-      <div className={animeView.animeInfos}>
-        <div className={animeView.ratingContainer}>
+      <div className={animeViewStyles.animeInfos}>
+        <div className={animeViewStyles.ratingContainer}>
           <Rating
             name="rating"
             value={displayRating}
@@ -71,15 +71,15 @@ export default function AnimeView({
           />
           <div>
             <span>Rating: </span>
-            <span className={animeView.rating}>
+            <span className={animeViewStyles.rating}>
               {animeRatingFormatter(anime.rating)}
             </span>
             <span className={utilStyles.secondaryColor}> of 10</span>
           </div>
         </div>
-        <div className={animeView.btnContainer}>
+        <div className={animeViewStyles.btnContainer}>
           <Button
-            className={animeView.editBtn}
+            className={animeViewStyles.editBtn}
             disabled={isLoading}
             onClick={handleEditButtonClick}
             color="warning"
@@ -89,7 +89,7 @@ export default function AnimeView({
             {EDIT_BUTTON_LABEL}
           </Button>
           <Button
-            className={animeView.deleteBtn}
+            className={animeViewStyles.deleteBtn}
             disabled={isLoading}
             onClick={handleDeleteButtonClick}
             color="error"
@@ -99,7 +99,7 @@ export default function AnimeView({
             {DELETE_BUTTON_LABEL}
           </Button>
         </div>
-        <div className={animeView.detailContainer}>
+        <div className={animeViewStyles.detailContainer}>
           <span>{animeTypeFormatter(anime.subtype)}</span>
           <span> | </span>
           <span>{`${startDate} - ${endDate}`}</span>
@@ -113,7 +113,7 @@ export default function AnimeView({
           )}
         </div>
         {anime.categories.length > 0 && (
-          <div className={animeView.categories}>
+          <div className={animeViewStyles.categories}>
             {anime.categories.map((category, idx) => (
               <Chip
                 key={idx}
@@ -124,7 +124,7 @@ export default function AnimeView({
             ))}
           </div>
         )}
-        <span className={animeView.description}>{anime.description}</span>
+        <span className={animeViewStyles.description}>{anime.description}</span>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ export default function About() {
         >
           <h1>About</h1>
           <div className={aboutStyles.content}>
-            <p>
+            <span>
               Hi, I&apos;m Pei-Lun, a software developer currently based in
               Berlin. Anime Spotlight is a side project that aims to showcase a
               fully functional app, equipped with
@@ -63,7 +63,7 @@ export default function About() {
                 kitsu.io
               </Link>
               , a public anime catalog site.
-            </p>
+            </span>
           </div>
         </div>
       </main>
