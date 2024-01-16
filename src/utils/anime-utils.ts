@@ -1,4 +1,4 @@
-import { Anime, Subtype, Status } from '@/types/anime-types';
+import { Subtype, Status } from '@/types/anime-types';
 
 export const animeTypeFormatter = (type: Subtype): string => {
   if (type === Subtype.TV) {

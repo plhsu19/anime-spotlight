@@ -1,11 +1,7 @@
-import { useState } from 'react';
 import Head from 'next/head';
 import Layout, { Page } from '@/components/layout';
 import Link from 'next/link';
-import { useGetAnimeContextValue } from '@/contexts/anime-context';
-import { Alert, Snackbar } from '@mui/material';
 import utilStyles from '@/styles/utils.module.css';
-import AnimeForm from '@/components/new-anime/anime-form';
 import aboutStyles from '@/styles/About.module.css';
 
 export default function About() {
@@ -24,9 +20,9 @@ export default function About() {
           <h1>About</h1>
           <div className={aboutStyles.content}>
             <p>
-              Hi, I&apos;m Pei-Lun, a software developer currently based in Berlin.
-              Anime Spotlight is a side project that aims to showcase a fully
-              functional app, equipped with
+              Hi, I&apos;m Pei-Lun, a software developer currently based in
+              Berlin. Anime Spotlight is a side project that aims to showcase a
+              fully functional app, equipped with
               <span className={utilStyles.bold}>CRUD RESTful APIs</span> and
               <span className={utilStyles.bold}>server-side rendering</span>,
               all centered around my passion for anime. <br />
@@ -43,24 +39,29 @@ export default function About() {
                 </li>
                 <li>
                   <span className={utilStyles.bold}>Both:</span> <br />
-                  Joi (data validation), Axios
+                  Joi (data validation), Axios, ESLint, Prettier
                 </li>
               </ul>
               Feel free to connect with me on{' '}
-              <a
+              <Link
                 className={aboutStyles.link}
                 href="https://www.linkedin.com/in/peilun-hsu/"
+                target="_blank"
               >
                 LinkedIn
-              </a>{' '}
+              </Link>
               if you have any questions or feedback. Thank you for stopping by!{' '}
               <br />
               <br />
               P.S. The anime information showcased in the application is sourced
-              from{' '}
-              <a className={aboutStyles.link} href="https://kitsu.io/">
+              from
+              <Link
+                className={aboutStyles.link}
+                href="https://kitsu.io/"
+                target="_blank"
+              >
                 kitsu.io
-              </a>
+              </Link>
               , a public anime catalog site.
             </p>
           </div>
