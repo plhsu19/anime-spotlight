@@ -74,16 +74,17 @@ export default function Home(
             &apos;+&apos; to add new favorites to the list. Enhance your anime
             journey!
           </p>
-          <IconButton
-            aria-label="addAnime"
-            size="small"
-            color="primary"
-            disabled={state.loading}
-            className={styles.btnAdd}
-            onClick={handleDirectToNewAnimePage}
-          >
-            <AddCircleIcon fontSize="large" />
-          </IconButton>
+          <div className={styles.btnAdd}>
+            <IconButton
+              aria-label="addAnime"
+              size="small"
+              color="primary"
+              disabled={state.loading}
+              onClick={handleDirectToNewAnimePage}
+            >
+              <AddCircleIcon fontSize="large" />
+            </IconButton>
+          </div>
           <Snackbar
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             open={state.loading}

@@ -26,8 +26,8 @@ export default function About() {
             <p>
               Hi, I&apos;m Pei-Lun, a software developer currently based in Berlin.
               Anime Spotlight is a side project that aims to showcase a fully
-              functional app, equipped with{' '}
-              <span className={utilStyles.bold}>CRUD RESTful APIs</span> and{' '}
+              functional app, equipped with
+              <span className={utilStyles.bold}>CRUD RESTful APIs</span> and
               <span className={utilStyles.bold}>server-side rendering</span>,
               all centered around my passion for anime. <br />
               <ul>
