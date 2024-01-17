@@ -90,7 +90,11 @@ export default function AnimeForm({
     startDate: Joi.when('status', {
       is: Status.UPCOMING,
       then: Joi.date().iso().greater('now').required(),
-      otherwise: Joi.date().iso().min('1900-1-1').max('now').required()
+      otherwise: Joi.date()
+        .iso()
+        .min(new Date('1900-01-01'))
+        .max('now')
+        .required()
     }),
     endDate: Joi.when('status', {
       is: Status.FINISHED,

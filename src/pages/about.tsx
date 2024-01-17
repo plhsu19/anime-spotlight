@@ -42,7 +42,7 @@ export default function About() {
                   Joi (data validation), Axios, ESLint, Prettier
                 </li>
               </ul>
-              Feel free to connect with me on{' '}
+              Feel free to connect with me on&nbsp;
               <Link
                 className={aboutStyles.link}
                 href="https://www.linkedin.com/in/peilun-hsu/"
@@ -50,11 +50,11 @@ export default function About() {
               >
                 LinkedIn
               </Link>
-              if you have any questions or feedback. Thank you for stopping by!{' '}
+              &nbsp;if you have any questions or feedback. Thank you for stopping by!
               <br />
               <br />
               P.S. The anime information showcased in the application is sourced
-              from
+              from&nbsp;
               <Link
                 className={aboutStyles.link}
                 href="https://kitsu.io/"

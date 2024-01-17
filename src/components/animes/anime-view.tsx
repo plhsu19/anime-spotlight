@@ -1,21 +1,19 @@
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import Image from 'next/image';
-import utilStyles from '@/styles/utils.module.css';
-import {
-  Chip,
-  Rating,
-  Button
-} from '@mui/material';
+import { Chip, Rating, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 import { Anime, Status } from '@/types/anime-types';
-import animeViewStyles from '@/styles/components/animes/AnimeView.module.css';
 import {
   animeTypeFormatter,
   animeStatusFormatter,
   animeRatingFormatter
 } from '@/utils/anime-utils';
+
+import utilStyles from '@/styles/utils.module.css';
+import animeViewStyles from '@/styles/components/animes/AnimeView.module.css';
 
 const EDIT_BUTTON_LABEL = 'Edit';
 const DELETE_BUTTON_LABEL = 'Delete';
