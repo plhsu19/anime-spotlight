@@ -70,9 +70,9 @@ export default function Home(
           <h1>Anime Spotlight 🔦</h1>
           <p>
             Discover top anime series. Tap cards for detailed insights. Use the
-            three dots to edit or remove the animes, and the top-right
-            &apos;+&apos; to add new favorites to the list. Enhance your anime
-            journey!
+            three dots to edit or remove the animes, and the{' '}
+            <span className={utilStyles.largeContextFontSize}>⊕</span> button to
+            add new favorites to the list. Enhance your anime journey!
           </p>
           <div className={styles.btnAdd}>
             <IconButton
