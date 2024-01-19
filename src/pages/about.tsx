@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import Layout, { Page } from '@/components/layout';
 import Link from 'next/link';
-import utilStyles from '@/styles/utils.module.css';
-import aboutStyles from '@/styles/About.module.css';
+import utilStyles from '@/styles/utils.module.scss';
+import aboutStyles from '@/styles/About.module.scss';
 
 export default function About() {
   return (
@@ -23,8 +23,8 @@ export default function About() {
               Hi, I&apos;m Pei-Lun, a software developer currently based in
               Berlin. Anime Spotlight is a side project that aims to showcase a
               fully functional app, equipped with
-              <span className={utilStyles.bold}>CRUD RESTful APIs</span> and
-              <span className={utilStyles.bold}>server-side rendering</span>,
+              <span className={utilStyles.bold}> CRUD RESTful APIs </span> and
+              <span className={utilStyles.bold}> server-side rendering</span>,
               all centered around my passion for anime. <br />
               <ul>
                 <li>

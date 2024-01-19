@@ -12,8 +12,8 @@ import {
   animeRatingFormatter
 } from '@/utils/anime-utils';
 
-import utilStyles from '@/styles/utils.module.css';
-import animeViewStyles from '@/styles/components/animes/AnimeView.module.css';
+import utilStyles from '@/styles/utils.module.scss';
+import animeViewStyles from '@/styles/components/animes/AnimeView.module.scss';
 
 const EDIT_BUTTON_LABEL = 'Edit';
 const DELETE_BUTTON_LABEL = 'Delete';

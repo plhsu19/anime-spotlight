@@ -19,8 +19,8 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Anime, AnimeFields, Subtype, Status } from '@/types/anime-types';
 import { Errors, AnimeEditFields } from '@/types/components/anime-form-types';
-import animeFormStyles from '@/styles/components/AnimeForm.module.css';
-import utilStyles from '@/styles/utils.module.css';
+import animeFormStyles from '@/styles/components/AnimeForm.module.scss';
+import utilStyles from '@/styles/utils.module.scss';
 
 const END_DATE = 'endDate';
 const VALIDATION_ERROR_MESSAGE =

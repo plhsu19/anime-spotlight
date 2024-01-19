@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import layoutStyles from '@/styles/components/Layout.module.css';
-import utilStyles from '@/styles/utils.module.css';
+import layoutStyles from '@/styles/components/Layout.module.scss';
+import utilStyles from '@/styles/utils.module.scss';
 import { ReactNode } from 'react';
 import {
   Button,

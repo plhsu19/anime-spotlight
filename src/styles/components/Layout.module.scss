@@ -3,20 +3,19 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-}
 
-.headerItemContainer {
-  display: none;
-}
-
-@media screen and (min-width: 600px) {
-  .headerMenu {
+  .headerItemContainer {
     display: none;
   }
-  .headerItemContainer {
-    display: flex;
-    justify-content: center;
-    gap: 0.4rem;
+  @media screen and (min-width: 600px) {
+    .headerMenu {
+      display: none;
+    }
+    .headerItemContainer {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+    }
   }
 }
 

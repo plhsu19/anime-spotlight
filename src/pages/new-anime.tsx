@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Layout, { Page } from '@/components/layout';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { Alert, Snackbar } from '@mui/material';
-import utilStyles from '@/styles/utils.module.css';
+import utilStyles from '@/styles/utils.module.scss';
 import AnimeForm from '@/components/new-anime/anime-form';
 
 const ADDING_ANIME_MESSAGE = 'Adding anime...';

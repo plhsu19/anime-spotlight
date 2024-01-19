@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import cardStyles from '@/styles/components/Card.module.css';
-import utilStyles from '@/styles/utils.module.css';
+import cardStyles from '@/styles/components/Card.module.scss';
+import utilStyles from '@/styles/utils.module.scss';
 import {
   IconButton,
   Menu,

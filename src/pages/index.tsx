@@ -9,8 +9,8 @@ import animeApiService from '@/services/anime-api-service';
 import { IconButton, Alert, Snackbar } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Anime } from '@/types/anime-types';
-import styles from '@/styles/Home.module.css';
-import utilStyles from '@/styles/utils.module.css';
+import styles from '@/styles/Home.module.scss';
+import utilStyles from '@/styles/utils.module.scss';
 import { paths } from '@/constants/paths';
 import { PROCESSING_REQUEST_MESSAGE } from '@/constants/texts';
 
