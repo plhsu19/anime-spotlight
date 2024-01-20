@@ -22,7 +22,7 @@ import { PROCESSING_REQUEST_MESSAGE } from '@/constants/texts';
 import { ErrorRespone } from '@/types/services/anime-api-service-types';
 import { AxiosError } from 'axios';
 
-const BACKGROUND_IMAGE_OPACITY_LAYER = 'rgb(0, 0, 0, 0.84)';
+const BACKGROUND_IMAGE_OPACITY_LAYER = 'rgb(0, 0, 0, 0.8)';
 
 // TODO: uncaught server-side error of 404 if no anime found
 export const getServerSideProps = (async ({ params }) => {
@@ -135,7 +135,7 @@ export default function Anime(props: { anime: Anime }) {
         style={
           !!anime.coverImage && !editMode
             ? {
-                backgroundImage: `linear-gradient(${BACKGROUND_IMAGE_OPACITY_LAYER}, ${BACKGROUND_IMAGE_OPACITY_LAYER}), url(${anime.coverImage})`
+                background: `top no-repeat ${BACKGROUND_IMAGE_OPACITY_LAYER} url(${anime.coverImage})`
               }
             : undefined
         }
