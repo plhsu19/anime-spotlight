@@ -1,6 +1,7 @@
 .background {
-  background-size: auto 400px;
-  background-blend-mode: darken;
+  background-size: cover, auto 400px;
+  background-repeat: no-repeat;
+  background-position: center, top;
 }
 
 .titleContainer {

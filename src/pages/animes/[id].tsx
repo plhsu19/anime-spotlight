@@ -135,7 +135,7 @@ export default function Anime(props: { anime: Anime }) {
         style={
           !!anime.coverImage && !editMode
             ? {
-                background: `top no-repeat ${BACKGROUND_IMAGE_OPACITY_LAYER} url(${anime.coverImage})`
+                backgroundImage: `linear-gradient(${BACKGROUND_IMAGE_OPACITY_LAYER}, ${BACKGROUND_IMAGE_OPACITY_LAYER}), url(${anime.coverImage})`
               }
             : undefined
         }
