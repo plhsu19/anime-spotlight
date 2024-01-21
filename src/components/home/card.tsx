@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { MouseEvent, SyntheticEvent, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import cardStyles from '@/styles/components/Card.module.scss';
@@ -57,18 +57,25 @@ export default function AnimeCard({
     () => (subtype === 'TV' ? 'TV Series' : subtype),
     [subtype]
   );
-  const handleMenuButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenuButtonClick = (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose = (event: SyntheticEvent) => {
+    event.stopPropagation();
     setAnchorEl(null);
   };
-  const handleDelete = () => {
+  const handleDelete = (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     deleteAnime(id, title);
     setAnchorEl(null);
   };
-  
-  const handleDirectToAnimePage = (edit: boolean) => {
+
+  const handleDirectToAnimePage = (
+    event: MouseEvent<HTMLElement>,
+    edit: boolean
+  ) => {
+    event.stopPropagation();
     if (!state.loading) {
       dispatch({ type: 'RESET_NOTIFICATIONS' });
       router.push({
@@ -79,109 +86,93 @@ export default function AnimeCard({
   };
 
   return (
-    <>
-      <div className={cardStyles.card}>
-        <div className={cardStyles.cardImageContainer}>
-          <Image
-            priority
-            src={posterImage}
-            className={cardStyles.image}
-            height={78 * 2}
-            width={55 * 2}
-            alt=""
-            onClick={() => {
-              handleDirectToAnimePage(false);
-            }}
-          />
+    <div
+      className={cardStyles.card}
+      onClick={(event: MouseEvent<HTMLElement>) => {
+        handleDirectToAnimePage(event, false);
+      }}
+    >
+      <div className={cardStyles.cardImageContainer}>
+        <Image
+          priority
+          src={posterImage}
+          className={cardStyles.image}
+          height={78 * 2}
+          width={55 * 2}
+          alt=""
+        />
+      </div>
+      <div className={cardStyles.cardInfoContainer}>
+        <div className={cardStyles.titleContainer}>
+          <h3 className={cardStyles.title}>{title}</h3>
+          {enTitle ? (
+            <p
+              className={[cardStyles.subTitle, utilStyles.secondaryColor].join(
+                ' '
+              )}
+            >
+              {enTitle}
+            </p>
+          ) : null}
         </div>
-        <div
-          className={cardStyles.cardInfoContainer}
-          onClick={() => {
-            handleDirectToAnimePage(false);
-          }}
-        >
-          <div className={cardStyles.titleContainer}>
-            <h3 className={cardStyles.title}>{title}</h3>
-            {enTitle ? (
-              <p
-                className={[
-                  cardStyles.subTitle,
-                  utilStyles.secondaryColor
-                ].join(' ')}
-              >
-                {enTitle}
-              </p>
-            ) : null}
-          </div>
-          <div className={cardStyles.details}>
+        <div className={cardStyles.details}>
+          <Chip label={type} color="success" variant="outlined" size="small" />
+          {episodeCount && (
             <Chip
-              label={type}
-              color="success"
+              label={`${episodeCount} ep(s)`}
+              color="warning"
               variant="outlined"
               size="small"
             />
-            {episodeCount && (
-              <Chip
-                label={`${episodeCount} ep(s)`}
-                color="warning"
-                variant="outlined"
-                size="small"
-              />
-            )}
-          </div>
-        </div>
-        <div className={cardStyles.cardEditContainer}>
-          <IconButton
-            id="edit-button"
-            aria-controls={open ? 'edit-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            size="medium"
-            disabled={state.loading}
-            onClick={handleMenuButtonClick}
-            className={cardStyles.menuButton}
-          >
-            <MoreVertIcon fontSize="large" />
-          </IconButton>
-          <Menu
-            id="edit-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'edit-button'
-            }}
-          >
-            <MenuItem
-              onClick={() => {
-                handleDirectToAnimePage(true);
-              }}
-            >
-              <ListItemIcon>
-                <EditIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Edit</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleDelete}>
-              <ListItemIcon>
-                <DeleteForeverIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Delete</ListItemText>
-            </MenuItem>
-          </Menu>
-          <div
-            className={cardStyles.ratingContainer}
-            onClick={() => {
-              handleDirectToAnimePage(false);
-            }}
-          >
-            <StarIcon color="warning" fontSize="large" />
-            <span className={utilStyles.largeContextFontSize}>
-              {animeRatingFormatter(rating)}
-            </span>
-          </div>
+          )}
         </div>
       </div>
-    </>
+      <div className={cardStyles.cardEditContainer}>
+        <IconButton
+          id="edit-button"
+          aria-controls={open ? 'edit-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          size="medium"
+          disabled={state.loading}
+          onClick={handleMenuButtonClick}
+          className={cardStyles.menuButton}
+        >
+          <MoreVertIcon fontSize="large" />
+        </IconButton>
+        <Menu
+          id="edit-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'edit-button'
+          }}
+        >
+          <MenuItem
+            onClick={(event: MouseEvent<HTMLElement>) => {
+              handleDirectToAnimePage(event, true);
+            }}
+          >
+            <ListItemIcon>
+              <EditIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Edit</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteForeverIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Delete</ListItemText>
+          </MenuItem>
+        </Menu>
+        <div className={cardStyles.ratingContainer}>
+          <StarIcon color="warning" fontSize="large" />
+          <span className={utilStyles.largeContextFontSize}>
+            {animeRatingFormatter(rating)}
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }
