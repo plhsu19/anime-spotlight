@@ -1,6 +1,9 @@
 import Head from 'next/head';
+// import Link from 'next/link';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import Link from '@mui/material/Link';
 import Layout, { Page } from '@/components/layout';
-import Link from 'next/link';
+
 import utilStyles from '@/styles/utils.module.scss';
 import aboutStyles from '@/styles/About.module.scss';
 
@@ -28,13 +31,35 @@ export default function About() {
               all centered around my passion for anime. <br />
               <ul>
                 <li>
-                  <span className={utilStyles.bold}>Frontend:</span> <br />
+                  <span className={utilStyles.bold}>
+                    Frontend &nbsp;
+                    <Link
+                      href="https://github.com/plhsu19/anime-list-ui"
+                      target="_blank"
+                    >
+                      <GitHubIcon fontSize="small" />
+                      &nbsp;View Soruce
+                    </Link>
+                    :
+                  </span>
+                  <br />
                   TypeScript, React.js (Functional Components and Hooks; Context
                   and Reducer for state management), Next.js(server-side
                   rendering), Material UI
                 </li>
                 <li>
-                  <span className={utilStyles.bold}>Backend:</span> <br />
+                  <span className={utilStyles.bold}>
+                    Backend &nbsp;
+                    <Link
+                      href="https://github.com/plhsu19/anime-list-api"
+                      target="_blank"
+                    >
+                      <GitHubIcon fontSize="small" />
+                      &nbsp;View Soruce
+                    </Link>
+                    :
+                  </span>
+                  <br />
                   Node.js, Express.js
                 </li>
                 <li>
@@ -50,7 +75,8 @@ export default function About() {
               >
                 LinkedIn
               </Link>
-              &nbsp;if you have any questions or feedback. Thank you for stopping by!
+              &nbsp;if you have any questions or feedback. Thank you for
+              stopping by!
               <br />
               <br />
               P.S. The anime information showcased in the application is sourced

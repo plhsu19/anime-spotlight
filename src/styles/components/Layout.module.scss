@@ -33,9 +33,19 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.5rem;
 }
 
 .textAlignCenter {
   text-align: center;
+}
+
+.link {
+  color: white;
+  text-decoration: underline;
+
+  &:hover {
+    color: #24292f;
+    background-color: white;
+  }
 }

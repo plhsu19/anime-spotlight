@@ -201,7 +201,20 @@ export default function Layout({
             onClick={() => handleDirectToPage(Page.HOME)}
           />
           <span className={layoutStyles.textAlignCenter}>
-            © 2023 Anime Spotlight. All Rights Reserved.
+            Built by &nbsp;
+            <Link className={layoutStyles.link}
+              href="https://www.linkedin.com/in/peilun-hsu/"
+              target="_blank"
+            >
+              Pei-Lun Hsu
+            </Link>
+            | &nbsp;
+            <Link className={layoutStyles.link}
+              href="https://github.com/plhsu19/anime-list-ui"
+              target="_blank"
+            >
+              View on GitHub
+            </Link>
           </span>
         </div>
       </footer>
