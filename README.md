@@ -2,7 +2,7 @@
 
 ## Overview
 
-"Anime Spotlight" is a responsive web application designed for anime fans to explore, manage, and contribute to a curated list of anime series. Developed with React.js and Next.js, it features detailed series information, editing capabilities, and the addition of new entries. Critical pages are enhanced by server-side rendering for optimal performance. It integrates with "Anime Spotlight API" for robust backend data handling.
+"Anime Spotlight" is a web app for anime fans to explore, manage, and add to a curated anime series list. Developed with React.js and Next.js, it features detailed series info, editing capabilities, and new entry addition. Critical pages benefit from server-side rendering for better performance. It integrates with "anime-spotlight-api" for robust data handling.
 
 ## Features
 
