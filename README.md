@@ -116,7 +116,7 @@ Contributions are welcome! If you'd like to contribute, please:
 
 ## License
 
-This project is open source - see the [MIT License](notion://www.notion.so/LICENSE) file for details.
+This project is open source - see the [License](/LICENSE) file for details.
 
 ## Feedback and Support
 
