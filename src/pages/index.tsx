@@ -28,7 +28,6 @@ export const getServerSideProps: GetServerSideProps<{
 export default function Home(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
-  //TODO: sync the animes state when the props.animes changes
   const router = useRouter();
   const { state, dispatch, deleteAnime } = useGetAnimeContextValue();
   const alertIsExist = !!state.message || !!state.error;

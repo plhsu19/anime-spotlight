@@ -1,40 +1,123 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Anime Spotlight UI
 
-## Getting Started
+## Overview
 
-First, run the development server:
+"Anime Spotlight" is a responsive web application designed for anime fans to explore, manage, and contribute to a curated list of anime series. Developed with React.js and Next.js, it features detailed series information, editing capabilities, and the addition of new entries. Critical pages are enhanced by server-side rendering for optimal performance. It integrates with "Anime Spotlight API" for robust backend data handling.
+
+## Features
+
+- **Anime Listing**: Displays a list of anime with essential details like title, episode count, and user ratings.
+- **Detailed Insights**: Offers a dedicated page for each anime series, providing comprehensive information and visual media.
+- **Editing Mode**: Allows users to update anime information through a detailed form with robust field validation.
+- **New Anime Addition**: Users can contribute new anime series to the list, enriching the community's experience.
+- **State Management**: Global state management for the application's UI using React Context and Reducer.
+- **Responsive Design**: Optimized for various screen sizes, ensuring a seamless experience across devices.
+
+## Pages
+
+### Home Page (`index.tsx`)
+
+- Serves as the main entry point, showcasing a collection of anime series.
+- Implements server-side rendering to fetch anime data from `anime-spotlight-api`.
+
+### Anime Page (`[id].tsx`)
+
+- View Mode: Presents all details of an anime series, including poster and cover images.
+- Edit Mode: Provides a pre-filled form for updating anime information.
+- Uses shared component `anime-form.tsx` for editing.
+
+### Add New Anime (`new-anime.tsx`)
+
+- Uses shared `anime-form.tsx` component for users to add new anime series.
+- Includes form validation and error handling for seamless user input.
+
+## Components
+
+### `AnimeForm`
+
+- Shared form component used across the application for creating and editing anime entries.
+- Leverages Joi for comprehensive form validation and error highlighting on the fly.
+- Detailed error messages guide users through the correction process.
+
+### `Layout`
+
+- Acts as the global layout wrapper for the application, providing a consistent look across different pages.
+- Contains the navigation bar and footer, which include links to the main sections of the application.
+- Manages the selected state for navigation links to indicate the current active page.
+
+### `Card`
+
+- A reusable card component that displays anime information succinctly in a visually appealing format.
+- Includes interactive elements like edit and delete options, enabling users to manage anime entries directly from the card.
+
+## **State Management**
+
+The application's state is managed using **`AnimeContext`** combined with an **`animeReducer`**, orchestrating the state flow and interaction with the **`AnimeApiService`** for backend communication.
+
+## **Installation and Setup**
+
+Before you begin, ensure you have [Node.js](https://nodejs.org/) and npm (comes with Node.js) installed on your system.
+
+### **Clone the Repository**
+
+```bash
+git clone https://github.com/plhsu19/anime-spotlight-ui.git
+cd anime-spotlight-ui
+```
+
+### **Install Dependencies**
+
+```bash
+npm install
+```
+
+This will install all the necessary dependencies listed in **`package.json`**, including React, Next.js, and Material-UI libraries.
+
+### **Running the Server**
+
+To get the development server running:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This command will start a local development server at **`http://localhost:3000`**. The app will automatically reload if you make changes to the code.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+For a production build:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```bash
+npm run build
+npm run start
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+After building the project, **`npm run start`** will run the application in production mode.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### **Linting**
 
-## Learn More
+To ensure your code conforms to the project's coding standards, run the linter:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technologies
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- **Next.js**: A React framework for server-side rendering and static site generation.
+- **Material-UI**: A React UI framework for implementing Google's Material Design.
+- **Joi**: A powerful schema description language and validator for JavaScript objects.
 
-## Deploy on Vercel
+## Contributions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Contributions are welcome! If you'd like to contribute, please:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. **Fork** the repository.
+2. **Create a new branch** for your changes.
+3. **Open a pull request** against the main branch when you're ready to submit your changes, and ask for a review.
+
+## License
+
+This project is open source - see the [MIT License](notion://www.notion.so/LICENSE) file for details.
+
+## Feedback and Support
+
+For feedback, issues, or support, please open an issue on the GitHub repository, and I’ll get back to you promptly.

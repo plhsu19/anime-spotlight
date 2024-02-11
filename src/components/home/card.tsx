@@ -18,10 +18,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { useGetAnimeContextValue } from '@/contexts/anime-context';
 import { animeTypeFormatter, animeRatingFormatter } from '@/utils/anime-utils';
 import { paths } from '@/constants/paths';
-
-//TODO:
-// 1. understand props of IconButton
-// 2. understand props of Menu
+import { Subtype } from '@/types/anime-types';
 
 export default function AnimeCard({
   id,
@@ -37,7 +34,7 @@ export default function AnimeCard({
   id: number;
   title: string;
   enTitle: string | null;
-  subtype: string;
+  subtype: Subtype;
   episodeCount: number | null;
   startDate: string;
   rating: number | null;
@@ -53,10 +50,7 @@ export default function AnimeCard({
     [startDate]
   );
 
-  const type = useMemo(
-    () => (subtype === 'TV' ? 'TV Series' : subtype),
-    [subtype]
-  );
+  const type = animeTypeFormatter(subtype);
   const handleMenuButtonClick = (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
