@@ -33,19 +33,19 @@
 
 ## Components
 
-### `AnimeForm`
+### AnimeForm
 
 - Shared form component used across the application for creating and editing anime entries.
 - Leverages Joi for comprehensive form validation and error highlighting on the fly.
 - Detailed error messages guide users through the correction process.
 
-### `Layout`
+### Layout
 
 - Acts as the global layout wrapper for the application, providing a consistent look across different pages.
 - Contains the navigation bar and footer, which include links to the main sections of the application.
 - Manages the selected state for navigation links to indicate the current active page.
 
-### `Card`
+### Card
 
 - A reusable card component that displays anime information succinctly in a visually appealing format.
 - Includes interactive elements like edit and delete options, enabling users to manage anime entries directly from the card.
