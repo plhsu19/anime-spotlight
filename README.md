@@ -2,7 +2,7 @@
 
 ## Overview
 
-"Anime Spotlight" is a web app for anime fans to explore, manage, and add to a curated anime series list. Developed with React.js and Next.js, it features detailed series info, editing capabilities, and new entry addition. Critical pages benefit from server-side rendering for better performance. It integrates with "anime-spotlight-api" for robust data handling.
+"Anime Spotlight" is a web app for anime fans to explore, manage, and add to a curated anime series list. Developed with React.js and Next.js, it features detailed series info, editing capabilities, and new entry addition. Critical pages benefit from server-side rendering for better performance. It integrates with [anime-spotlight-api](https://github.com/plhsu19/anime-spotlight-api) for robust backend data handling.
 
 ## Features
 
@@ -10,15 +10,16 @@
 - **Detailed Insights**: Offers a dedicated page for each anime series, providing comprehensive information and visual media.
 - **Editing Mode**: Allows users to update anime information through a detailed form with robust field validation.
 - **New Anime Addition**: Users can contribute new anime series to the list, enriching the community's experience.
-- **State Management**: Global state management for the application's UI using React Context and Reducer.
 - **Responsive Design**: Optimized for various screen sizes, ensuring a seamless experience across devices.
+- **State Management**: Global state management for the application's UI using React Context and Reducer.
 
 ## Pages
 
 ### Home Page (`index.tsx`)
 
-- Serves as the main entry point, showcasing a collection of anime series.
-- Implements server-side rendering to fetch anime data from `anime-spotlight-api`.
+- Serves as the main entry point, showcasing a collection of anime series in a responsive card layout.
+- Implements server-side rendering to fetch anime data from `anime-spotlight-api` for optimal performance.
+- Features quick edit and delete options for each anime directly from the card for user convenience.
 
 ### Anime Page (`[id].tsx`)
 
