@@ -24,39 +24,38 @@
 
 ### Home Page (`index.tsx`)
 
-- Serves as the main entry point, showcasing a collection of anime series in a responsive card layout.
-- Implements server-side rendering to fetch anime data from `anime-spotlight-api` for optimal performance.
-- Features quick edit and delete options for each anime directly from the card for user convenience.
+- Acts as the primary entry point, showcasing a collection of anime series in a responsive card layout, with immediate edit and delete options for enhanced user convenience.
+- Utilizes server-side rendering for efficient data fetching from **`anime-spotlight-api`** endpoint.
 
 ### Anime Page (`[id].tsx`)
 
-- View Mode: Presents all details of an anime series, including poster and cover images.
-- Edit Mode: Provides a pre-filled form for updating anime information.
-- Uses shared component `anime-form.tsx` for editing.
+- **View Mode**: Displays detailed information and images of an anime series, employing server-side rendering to fetch anime data efficiently.
+- **Edit Mode**: Provides a pre-filled form for updating anime details, using the reusable **`AnimeForm`** component, similar to the Add New Anime page.
+- Delivers interaction feedback via snackbars for user actions, including loading, successful updates or deletions, and explanations for errors.
 
 ### Add New Anime (`new-anime.tsx`)
 
-- Uses shared `anime-form.tsx` component for users to add new anime series.
-- Includes form validation and error handling for seamless user input.
+- Utilizes the reusable **`AnimeForm`** component, allowing users to add new anime series entries.
+- Implements real-time validation that highlights input fields in red and provides error messages for immediate correction, ensuring accurate data entry.
 
 ## Reusable Components
 
-### AnimeForm
+### **AnimeForm (`anime-form.tsx`)**
 
-- Shared form component used across the application for creating and editing anime entries.
-- Leverages Joi for comprehensive form validation and error highlighting on the fly.
-- Detailed error messages guide users through the correction process.
+- A shared form component utilized for creating and editing anime entries throughout the application.
+- Employs Joi for thorough on-the-fly form validation and dynamic error highlighting.
+- Provides detailed error messages to assist users in correcting input mistakes.
 
-### Layout
+### **Layout (`layout.tsx`)**
 
-- Acts as the global layout wrapper for the application, providing a consistent look across different pages.
-- Contains the navigation bar and footer, which include links to the main sections of the application.
-- Manages the selected state for navigation links to indicate the current active page.
+- Serves as the global layout wrapper, ensuring a consistent appearance across various pages.
+- Includes a navigation bar and footer with links to main sections, enhancing user navigation.
+- Manages active state indication for navigation links, reflecting the currently active page.
 
-### Card
+### **Card (`card.tsx`)**
 
-- A reusable card component that displays anime information succinctly in a visually appealing format.
-- Includes interactive elements like edit and delete options, enabling users to manage anime entries directly from the card.
+- A versatile card component that succinctly presents anime information in an engaging visual layout.
+- Features interactive elements such as delete and edit options, allowing direct management of anime entries from the card itself.
 
 ## **State Management**
 
