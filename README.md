@@ -1,17 +1,24 @@
-# Anime Spotlight UI
+# Anime Spotlight
 
 ## Overview
 
-"Anime Spotlight" is a web app for anime fans to explore, manage, and add to a curated anime series list. Developed with React.js and Next.js, it features detailed series info, editing capabilities, and new entry addition. Critical pages benefit from server-side rendering for better performance. It integrates with [anime-spotlight-api](https://github.com/plhsu19/anime-spotlight-api) for robust backend data handling.
+"Anime Spotlight" is a responsive web application designed for anime fans to explore, manage, and contribute to a curated anime series list. Developed with React.js and Next.js, it offers detailed series information, editing capabilities, and new entry addition, enhanced by server-side rendering for better performance. It integrates with [anime-spotlight-api](https://github.com/plhsu19/anime-spotlight-api) for robust backend data handling.
 
 ## Features
+
+### Product
 
 - **Anime Listing**: Displays a list of anime with essential details like title, episode count, and user ratings.
 - **Detailed Insights**: Offers a dedicated page for each anime series, providing comprehensive information and visual media.
 - **Editing Mode**: Allows users to update anime information through a detailed form with robust field validation.
 - **New Anime Addition**: Users can contribute new anime series to the list, enriching the community's experience.
 - **Responsive Design**: Optimized for various screen sizes, ensuring a seamless experience across devices.
-- **State Management**: Global state management for the application's UI using React Context and Reducer.
+- **Server-Side Rendering (SSR):** Enhances performance and SEO by pre-rendering pages on the server, ensuring faster load times and improved visibility on search engines.
+
+### Technical
+
+- **Reusable Components**: Leverages reusable components to streamline development and maintain consistency across the application.
+- **State Management**: Employs React Context and Reducer for global state management, enhancing data consistency and component interaction for a cohesive UI.
 
 ## Pages
 
@@ -32,7 +39,7 @@
 - Uses shared `anime-form.tsx` component for users to add new anime series.
 - Includes form validation and error handling for seamless user input.
 
-## Components
+## Reusable Components
 
 ### AnimeForm
 
@@ -104,7 +111,7 @@ npm run lint
 ## Technologies
 
 - **Next.js**: A React framework for server-side rendering and static site generation.
-- **Material-UI**: A React UI framework for implementing Google's Material Design.
+- **Material-UI**: A React component library for implementing Google's Material Design.
 - **Joi**: A powerful schema description language and validator for JavaScript objects.
 
 ## Contributions
@@ -117,7 +124,7 @@ Contributions are welcome! If you'd like to contribute, please:
 
 ## License
 
-This project is open source - see the [License](/LICENSE) file for details.
+This project is open source - see the [License](notion://www.notion.so/LICENSE) file for details.
 
 ## Feedback and Support
 

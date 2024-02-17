@@ -10,7 +10,6 @@ class AnimeApiService {
   private restClient: AxiosInstance;
   private static TIMEOUT: number = 30000;
 
-  // TODO: move host URLs to .env(?) for prod/dev
   private static URL: string = '/animes';
 
   constructor() {

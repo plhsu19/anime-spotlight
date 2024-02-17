@@ -49,7 +49,7 @@ export default function Anime(props: { anime: Anime }) {
   const router = useRouter();
   const [editMode, setEditMode] = useState(router.query.edit === 'true');
   const [anime, setAnime] = useState<Anime>({ ...props.anime });
-  const { state, dispatch, deleteAnime, addAnime, updateAnime } =
+  const { state, dispatch, deleteAnime, updateAnime } =
     useGetAnimeContextValue();
   const alertIsExist = !!state.message || !!state.error;
   const [preAlertIsExist, setPreAlertIsExist] = useState(alertIsExist);
