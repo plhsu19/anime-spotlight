@@ -4,22 +4,6 @@
 
 [Anime Spotlight](https://anime-spotlight.vercel.app/) is a responsive web application designed for anime fans to explore, manage, and contribute to a curated anime series list. Developed with React.js and Next.js, it offers detailed series information, editing capabilities, and new entry addition, enhanced by server-side rendering for better performance. It integrates with [anime-spotlight-api](https://github.com/plhsu19/anime-spotlight-api) for robust backend data handling.
 
-## Features
-
-### Product
-
-- **Anime Listing**: Displays a list of anime with essential details like title, episode count, and user ratings.
-- **Detailed Insights**: Offers a dedicated page for each anime series, providing comprehensive information and visual media.
-- **Editing Mode**: Allows users to update anime information through a detailed form with robust field validation.
-- **New Anime Addition**: Users can contribute new anime series to the list, enriching the community's experience.
-- **Responsive Design**: Optimized for various screen sizes, ensuring a seamless experience across devices.
-- **Server-Side Rendering (SSR):** Enhances performance and SEO by pre-rendering pages on the server, ensuring faster load times and improved visibility on search engines.
-
-### Technical
-
-- **Reusable Components**: Leverages reusable components to streamline development and maintain consistency across the application.
-- **State Management**: Employs React Context and Reducer for global state management, enhancing data consistency and component interaction for a cohesive UI.
-
 ## Application Preview
 
 ### Home Page
@@ -37,9 +21,25 @@
 ### Mobile Views
 
 <p float="left">
-  <img src="/public/images/anime-details-mobile.png" width="300" />
-  <img src="/public/images/anime-edit-mobile.png" width="300" />
+  <img src="/public/images/anime-details-mobile.png" width="250" />
+  <img src="/public/images/anime-edit-mobile.png" width="250" />
 </p>
+
+## Features
+
+### Product
+
+- **Anime Listing**: Displays a list of anime with essential details like title, episode count, and user ratings.
+- **Detailed Insights**: Offers a dedicated page for each anime series, providing comprehensive information and visual media.
+- **Editing Mode**: Allows users to update anime information through a detailed form with robust field validation.
+- **New Anime Addition**: Users can contribute new anime series to the list, enriching the community's experience.
+- **Responsive Design**: Optimized for various screen sizes, ensuring a seamless experience across devices.
+- **Server-Side Rendering (SSR):** Enhances performance and SEO by pre-rendering pages on the server, ensuring faster load times and improved visibility on search engines.
+
+### Technical
+
+- **Reusable Components**: Leverages reusable components to streamline development and maintain consistency across the application.
+- **State Management**: Employs React Context and Reducer for global state management, enhancing data consistency and component interaction for a cohesive UI.
 
 ## Pages
 
