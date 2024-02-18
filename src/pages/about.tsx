@@ -79,8 +79,10 @@ export default function About() {
               stopping by!
               <br />
               <br />
-              P.S. The anime information showcased in the application is sourced
-              from&nbsp;
+              Disclaimer: &quot;Anime Spotlight&quot; is a demonstration web app
+              for anime fans, designed for easy access and management of anime
+              information. All anime content and images are sourced from the internet,
+              mainly from&nbsp;
               <Link
                 className={aboutStyles.link}
                 href="https://kitsu.io/"
@@ -88,7 +90,8 @@ export default function About() {
               >
                 kitsu.io
               </Link>
-              , a public anime catalog site.
+              —a social platform for anime enthusiasts—and are not intended for
+              commercial use.
             </span>
           </div>
         </div>

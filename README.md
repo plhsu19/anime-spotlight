@@ -2,7 +2,7 @@
 
 ## Overview
 
-"Anime Spotlight" is a responsive web application designed for anime fans to explore, manage, and contribute to a curated anime series list. Developed with React.js and Next.js, it offers detailed series information, editing capabilities, and new entry addition, enhanced by server-side rendering for better performance. It integrates with [anime-spotlight-api](https://github.com/plhsu19/anime-spotlight-api) for robust backend data handling.
+[Anime Spotlight](https://anime-spotlight.vercel.app/) is a responsive web application designed for anime fans to explore, manage, and contribute to a curated anime series list. Developed with React.js and Next.js, it offers detailed series information, editing capabilities, and new entry addition, enhanced by server-side rendering for better performance. It integrates with [anime-spotlight-api](https://github.com/plhsu19/anime-spotlight-api) for robust backend data handling.
 
 ## Features
 
@@ -19,6 +19,27 @@
 
 - **Reusable Components**: Leverages reusable components to streamline development and maintain consistency across the application.
 - **State Management**: Employs React Context and Reducer for global state management, enhancing data consistency and component interaction for a cohesive UI.
+
+## Application Preview
+
+### Home Page
+
+![homepage.png](/public/images/homepage.png)
+
+### Detailed Anime View
+
+![anime-details.png](/public/images/anime-details.png)
+
+### Add Anime Page
+
+![add-anime.png](/public/images/add-anime.png)
+
+### Mobile Views
+
+<p float="left">
+  <img src="/public/images/anime-details-mobile.png" width="100" />
+  <img src="/public/images/anime-edit-mobile.png" width="100" />
+</p>
 
 ## Pages
 
@@ -57,9 +78,12 @@
 - A versatile card component that succinctly presents anime information in an engaging visual layout.
 - Features interactive elements such as delete and edit options, allowing direct management of anime entries from the card itself.
 
-## **State Management**
+## State Management
 
-The application's state is managed using **`AnimeContext`** combined with an **`animeReducer`**, orchestrating the state flow and interaction with the **`AnimeApiService`** for backend communication.
+The application's global state is managed using **`anime-context.tsx`** and **`anime-reducer.ts`**, which provide a centralized solution for:
+
+1. Managing the global UI status, including loading indicators, error messages, and informational prompts, accessible and modifiable from different components within the application.
+2. Facilitating add, update, and delete operations for anime series by interfacing with the **`anime-api-service.ts`**, ensuring coherent backend communication and state synchronization.
 
 ## **Installation and Setup**
 
@@ -128,3 +152,7 @@ This project is open source - see the [License](notion://www.notion.so/LICENSE) 
 ## Feedback and Support
 
 For feedback, issues, or support, please open an issue on the GitHub repository, and I’ll get back to you promptly.
+
+## Disclaimer
+
+"Anime Spotlight" is a demonstration web app for anime fans, designed for easy access and management of anime information. All anime content and images are sourced from the internet, mainly from [Kitsu.io](http://kitsu.io/)—a social platform for anime enthusiasts—and are not intended for commercial use.
