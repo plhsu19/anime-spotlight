@@ -37,8 +37,8 @@
 ### Mobile Views
 
 <p float="left">
-  <img src="/public/images/anime-details-mobile.png" width="100" />
-  <img src="/public/images/anime-edit-mobile.png" width="100" />
+  <img src="/public/images/anime-details-mobile.png" width="200" />
+  <img src="/public/images/anime-edit-mobile.png" width="200" />
 </p>
 
 ## Pages
