@@ -19,11 +19,16 @@
 ![add-anime.png](/public/images/add-anime.png)
 
 ### Mobile Views
-
-<p float="left">
-  <img src="/public/images/anime-details-mobile.png" width="250" />
-  <img src="/public/images/anime-edit-mobile.png" width="250" />
-</p>
+<div style="display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 2rem;">
+  <div>
+    <h4>Detailed Anime View (Mobile)</h4>
+    <img src="/public/images/anime-details-mobile.png" width="250" />
+  </div>
+  <div>
+    <h4>Edit Anime View (Mobile)</h4>
+    <img src="/public/images/anime-edit-mobile.png" width="250" />
+  </div>
+</div>
 
 ## Features
 
