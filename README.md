@@ -41,6 +41,37 @@
 - **Reusable Components**: Leverages reusable components to streamline development and maintain consistency across the application.
 - **State Management**: Employs React Context and Reducer for global state management, enhancing data consistency and component interaction for a cohesive UI.
 
+## **Getting Started**
+
+Before you begin, ensure you have [Node.js](https://nodejs.org/) and npm (comes with Node.js) installed on your system.
+
+### **Clone the repository and install dependencies:**
+
+```bash
+git clone https://github.com/plhsu19/anime-spotlight-ui.git
+cd anime-spotlight-ui
+npm install
+```
+
+### **Running the Server**
+
+To get the development server running:
+
+```bash
+npm run dev
+```
+
+This command will start a local development server at **`http://localhost:3000`**. The app will automatically reload if you make changes to the code.
+
+For a production build:
+
+```bash
+npm run build
+npm run start
+```
+
+After building the project, **`npm run start`** will run the application in production mode.
+
 ## Pages
 
 ### Home Page (`index.tsx`)
@@ -84,52 +115,6 @@ The application's global state is managed using **`anime-context.tsx`** and **`a
 
 1. Managing the global UI status, including loading indicators, error messages, and informational prompts, accessible and modifiable from different components within the application.
 2. Facilitating add, update, and delete operations for anime series by interfacing with the **`anime-api-service.ts`**, ensuring coherent backend communication and state synchronization.
-
-## **Installation and Setup**
-
-Before you begin, ensure you have [Node.js](https://nodejs.org/) and npm (comes with Node.js) installed on your system.
-
-### **Clone the Repository**
-
-```bash
-git clone https://github.com/plhsu19/anime-spotlight-ui.git
-cd anime-spotlight-ui
-```
-
-### **Install Dependencies**
-
-```bash
-npm install
-```
-
-This will install all the necessary dependencies listed in **`package.json`**, including React, Next.js, and Material-UI libraries.
-
-### **Running the Server**
-
-To get the development server running:
-
-```bash
-npm run dev
-```
-
-This command will start a local development server at **`http://localhost:3000`**. The app will automatically reload if you make changes to the code.
-
-For a production build:
-
-```bash
-npm run build
-npm run start
-```
-
-After building the project, **`npm run start`** will run the application in production mode.
-
-### **Linting**
-
-To ensure your code conforms to the project's coding standards, run the linter:
-
-```bash
-npm run lint
-```
 
 ## Technologies
 
