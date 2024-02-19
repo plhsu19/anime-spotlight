@@ -22,7 +22,7 @@
 
 <p>
   <img src="/public/images/anime-details-mobile.png" width="250" />
-  <span>   </span>
+  <span>                                                </span>
   <img src="/public/images/anime-edit-mobile.png" width="250" />
 </p>
 
