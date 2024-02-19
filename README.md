@@ -20,8 +20,10 @@
 
 ### Mobile Views
 
-<img src="/public/images/anime-details-mobile.png" width="250" />
-<img src="/public/images/anime-edit-mobile.png" width="250" />
+<p>
+  <img src="/public/images/anime-details-mobile.png" width="250" />
+  <img src="/public/images/anime-edit-mobile.png" width="250" />
+</p>
 
 ## Features
 
