@@ -18,10 +18,11 @@
 
 ![add-anime.png](/public/images/add-anime.png)
 
-### Mobile Views
+### Detailed/Edit Anime Views (Mobile)
 
 <p>
   <img src="/public/images/anime-details-mobile.png" width="250" />
+  <span>   </span>
   <img src="/public/images/anime-edit-mobile.png" width="250" />
 </p>
 
