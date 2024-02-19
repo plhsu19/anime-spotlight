@@ -4,7 +4,7 @@
 
 [Anime Spotlight](https://anime-spotlight.vercel.app/) is a responsive web application designed for anime fans to explore, manage, and contribute to a curated anime series list. Developed with React.js and Next.js, it offers detailed series information, editing capabilities, and new entry addition, enhanced by server-side rendering for better performance. It integrates with [anime-spotlight-api](https://github.com/plhsu19/anime-spotlight-api) for robust backend data handling.
 
-## Application Preview
+## App Preview
 
 ### Home Page
 
