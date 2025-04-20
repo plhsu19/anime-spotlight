@@ -120,6 +120,8 @@ The application's global state is managed using **`anime-context.tsx`** and **`a
 
 - **Next.js**: A React framework for server-side rendering and static site generation.
 - **Material-UI**: A React component library for implementing Google's Material Design.
+- **Node.js**: A JavaScript runtime environment used to build the backend logic of the application.
+- **Express**: A minimal and flexible Node.js web framework for building API endpoints and handling routing.
 - **Joi**: A powerful schema description language and validator for JavaScript objects.
 
 ## Contributions
